@@ -1,0 +1,64 @@
+#! /bin/bash -e
+
+TYPE="b"
+
+function usage {
+    echo -e "\n    USAGE: ./configure [ option ]"
+    echo -e "\n    Options:\n\t--type=TYPE\tSet to b (default) for binary executable"
+    echo -e "\t\t\ts for Python script\n"
+    echo -e "\t--help\t\tShow this help text\n\n"
+}
+
+if [ "${#}" -gt "1" ]
+then
+    usage
+    exit 1
+elif [ "${1}" == "--help" ]
+then
+    usage
+    exit 0
+fi
+
+ARG=($(echo ${1} | tr  "=" " "))
+if [ "${ARG[0]}" == "--type" ]
+then
+    if [ "${ARG[1]}" == "b" ]
+    then
+        TYPE="${ARG[1]}"
+    elif [ "${ARG[1]}" == "s" ]
+    then
+        TYPE="${ARG[1]}"
+    else
+        echo -e "\nBad argument for option \"${ARG[0]}\"\n"
+        exit 1
+    fi
+elif [ "${1}" != "" ]
+then
+    echo -e "\nBad option \"${ARG[0]}\"\n"
+    exit 1
+fi
+
+if [ "${TYPE}" == "b" ]
+then
+    MAKE="bin2header: src/bin2header.cpp\n\tg++ -O2 -s src/bin2header.cpp -o bin2header"
+elif [ "${TYPE}" == "s" ]
+then
+    MAKE="bin2header:\n\tcp src/bin2header.py bin2header"
+fi
+
+# Install file
+#INSTALL="#! /bin/bash\n\ncp bin2header /usr/local/bin\ncp man/bin2header.1.gz /usr/#share/man/man1"
+#echo -e "${INSTALL}" > "install"
+#chmod +x "install"
+
+#MAKEINSTALL="install:\n\t./install"
+MAKEINSTALL="install:\n\tcp bin2header /usr/local/bin && cp man/bin2header.1.gz /usr/share/man/man1"
+MAKEUNINSTALL="uninstall:\n\trm /usr/local/bin/bin2header /usr/share/man/man1/bin2header.1.gz"
+MAKEDISTCLEAN="distclean:\n\trm bin2header"
+MAKEFILE="${MAKE}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKEDISTCLEAN}"
+echo -e "${MAKEFILE}" > Makefile
+echo -e "\nDone!"
+echo -e "\nNow run \"make\" and \"make install\"\n"
+
+exit 0
+    
