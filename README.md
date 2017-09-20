@@ -12,7 +12,7 @@ applications. The data is stored as a character array.
 
 ### **Licensing:**
 
-Distributed under the terms and conditions of the [GNU LGPL](http://www.gnu.org/licenses/lgpl.html).
+[MIT](LICENSE.txt)
 
 
 ### **Building:**
