@@ -54,8 +54,9 @@ fi
 #MAKEINSTALL="install:\n\t./install"
 MAKEINSTALL="install:\n\t@cp -v bin2header \$(DESTDIR)/usr/local/bin && cp -v man/bin2header.1.gz \$(DESTDIR)/usr/share/man/man1"
 MAKEUNINSTALL="uninstall:\n\t@rm -vf \$(DESTDIR)/usr/local/bin/bin2header \$(DESTDIR)/usr/share/man/man1/bin2header.1.gz"
-MAKEDISTCLEAN="distclean:\n\t@rm -vf bin2header"
-MAKEFILE="${MAKE}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKEDISTCLEAN}"
+MAKECLEAN="clean:\n\t@rm -vf man/bin2header.1.gz bin2header"
+MAKEDISTCLEAN="distclean: clean"
+MAKEFILE="${MAKE}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
 echo -e "${MAKEFILE}" > Makefile
 echo -e "\nDone!"
 echo -e "\nNow run \"make\" and \"make install\"\n"
