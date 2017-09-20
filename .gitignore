@@ -1,5 +1,6 @@
 # Eclipse project files & folders
 /.project
+/.pydevproject
 
 # Output build
 build/
