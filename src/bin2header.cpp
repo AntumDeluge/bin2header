@@ -27,14 +27,8 @@ int PrintUsage(string exe="bin2header") {
 int main(int argc, char** argv) {
     string executable = argv[0];
     executable = GetFileName(executable);
-    //int split = executable.find_last_of('/');
-    //executable.erase(0, split + 1);
-
-    //string usage = "\n\tUsage:\t" + executable + " infile\n";
 
     if (argc < 2) {
-        //cout << usage << endl;
-        //return 1;
         return PrintUsage(executable);
     }
 
@@ -42,8 +36,6 @@ int main(int argc, char** argv) {
     test = fopen(argv[1], "r");
     if (!test) {
         cout << "\nFile: \"" << argv[1] << "\" does not exist\n";
-        //cout << usage << endl;
-        //return 1;
         return PrintUsage(executable);
     }
     fclose(test);
