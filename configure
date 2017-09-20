@@ -53,7 +53,7 @@ fi
 
 #MAKEINSTALL="install:\n\t./install"
 MAKEMAN=".PHONY: man\nman: man/bin2header.1\n\tgzip -fk9 man/bin2header.1"
-MAKEINSTALL="install:\n\t@cp -v bin2header \$(DESTDIR)/usr/local/bin && cp -v man/bin2header.1.gz \$(DESTDIR)/usr/share/man/man1"
+MAKEINSTALL="install:\n\t@mkdir -vp \$(DESTDIR)/usr/local/bin \$(DESTDIR)/usr/share/man/man1\n\t@cp -v bin2header \$(DESTDIR)/usr/local/bin && cp -v man/bin2header.1.gz \$(DESTDIR)/usr/share/man/man1"
 MAKEUNINSTALL="uninstall:\n\t@rm -vf \$(DESTDIR)/usr/local/bin/bin2header \$(DESTDIR)/usr/share/man/man1/bin2header.1.gz"
 MAKECLEAN="clean:\n\t@rm -vf man/bin2header.1.gz bin2header"
 MAKEDISTCLEAN="distclean: clean"
