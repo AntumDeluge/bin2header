@@ -17,7 +17,6 @@ string GetFileName(string f) {
 #endif
     f.erase(0, split + 1);
     return f;
-#
 }
 
 int PrintUsage(string exe="bin2header") {
