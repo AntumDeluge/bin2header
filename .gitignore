@@ -1,2 +1,5 @@
 # Eclipse project files & folders
 /.project
+
+# Output build
+build/
