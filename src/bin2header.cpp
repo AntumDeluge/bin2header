@@ -20,7 +20,7 @@ string GetFileName(string f) {
 #
 }
 
-int PrintUsage(string exe = "bin2cpp") {
+int PrintUsage(string exe="bin2header") {
     cout << "\nbin2header version 0.0.1\n2011 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " file\n" << endl;
     return 1;
 }
