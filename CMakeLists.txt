@@ -13,19 +13,19 @@ add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
 add_custom_target(man ALL)
 add_custom_command(
 	TARGET man
-	COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/man/${PROJECT_NAME}.1" "${CMAKE_CURRENT_BINARY_DIR}"
+	COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/share/man/${PROJECT_NAME}.1" "${CMAKE_CURRENT_BINARY_DIR}"
 	COMMAND gzip -f9 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1"
 )
 
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION bin
 )
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION man/man1)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION share/man/man1)
 
 # Uninstallation
 add_custom_target(uninstall ALL)
 add_custom_command(
 	TARGET uninstall
 	COMMAND rm -vf "${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}"
-	COMMAND rm -vf "${CMAKE_INSTALL_PREFIX}/man/man1/${PROJECT_NAME}.1.gz"
+	COMMAND rm -vf "${CMAKE_INSTALL_PREFIX}/share/man/man1/${PROJECT_NAME}.1.gz"
 )
