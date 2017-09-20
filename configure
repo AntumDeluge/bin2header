@@ -43,7 +43,7 @@ then
     MAKE="bin2header: src/bin2header.cpp\n\tg++ -O2 -s src/bin2header.cpp -o bin2header"
 elif [ "${TYPE}" == "s" ]
 then
-    MAKE="bin2header:\n\tcp src/bin2header.py bin2header"
+    MAKE="bin2header:\n\t@cp -v src/bin2header.py bin2header"
 fi
 
 # Install file
@@ -52,9 +52,9 @@ fi
 #chmod +x "install"
 
 #MAKEINSTALL="install:\n\t./install"
-MAKEINSTALL="install:\n\tcp bin2header /usr/local/bin && cp man/bin2header.1.gz /usr/share/man/man1"
-MAKEUNINSTALL="uninstall:\n\trm /usr/local/bin/bin2header /usr/share/man/man1/bin2header.1.gz"
-MAKEDISTCLEAN="distclean:\n\trm bin2header"
+MAKEINSTALL="install:\n\t@cp -v bin2header /usr/local/bin && cp -v man/bin2header.1.gz /usr/share/man/man1"
+MAKEUNINSTALL="uninstall:\n\t@rm -vf /usr/local/bin/bin2header /usr/share/man/man1/bin2header.1.gz"
+MAKEDISTCLEAN="distclean:\n\t@rm -vf bin2header"
 MAKEFILE="${MAKE}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKEDISTCLEAN}"
 echo -e "${MAKEFILE}" > Makefile
 echo -e "\nDone!"
