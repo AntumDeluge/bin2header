@@ -7,6 +7,9 @@ using namespace std;
 
 #include <cstdio>
 
+
+const string version = "0.1.0";
+
 #define len(a) (sizeof(a)/sizeof(*a))
 
 string GetFileName(string f) {
@@ -20,7 +23,8 @@ string GetFileName(string f) {
 }
 
 int PrintUsage(string exe="bin2header") {
-    cout << "\nbin2header version 0.0.1\n2011 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " file\n" << endl;
+    cout << "\nbin2header version " << version << endl;
+    cout << "2011 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " <file>\n" << endl;
     return 1;
 }
 
