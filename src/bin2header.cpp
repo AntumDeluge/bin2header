@@ -24,7 +24,7 @@ string GetFileName(string f) {
 
 int PrintUsage(string exe="bin2header") {
     cout << "\nbin2header version " << version << endl;
-    cout << "2011 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " <file>\n" << endl;
+    cout << "2017 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " <file>\n" << endl;
     return 1;
 }
 
