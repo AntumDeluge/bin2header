@@ -40,10 +40,10 @@ fi
 
 if [ "${TYPE}" == "b" ]
 then
-    MAKE="bin2header: src/bin2header.cpp\n\tg++ -O2 -s src/bin2header.cpp -o bin2header"
+    MAKE="bin2header: man src/bin2header.cpp\n\tg++ -O2 -s src/bin2header.cpp -o bin2header"
 elif [ "${TYPE}" == "s" ]
 then
-    MAKE="bin2header:\n\t@cp -v src/bin2header.py bin2header"
+    MAKE="bin2header: man src/bin2header.py\n\t@cp -v src/bin2header.py bin2header"
 fi
 
 # Install file
@@ -52,11 +52,12 @@ fi
 #chmod +x "install"
 
 #MAKEINSTALL="install:\n\t./install"
+MAKEMAN=".PHONY: man\nman: man/bin2header.1\n\tgzip -fk9 man/bin2header.1"
 MAKEINSTALL="install:\n\t@cp -v bin2header \$(DESTDIR)/usr/local/bin && cp -v man/bin2header.1.gz \$(DESTDIR)/usr/share/man/man1"
 MAKEUNINSTALL="uninstall:\n\t@rm -vf \$(DESTDIR)/usr/local/bin/bin2header \$(DESTDIR)/usr/share/man/man1/bin2header.1.gz"
 MAKECLEAN="clean:\n\t@rm -vf man/bin2header.1.gz bin2header"
 MAKEDISTCLEAN="distclean: clean"
-MAKEFILE="${MAKE}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
+MAKEFILE="${MAKE}\n${MAKEMAN}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
 echo -e "${MAKEFILE}" > Makefile
 echo -e "\nDone!"
 echo -e "\nNow run \"make\" and \"make install\"\n"
