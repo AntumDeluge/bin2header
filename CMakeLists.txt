@@ -13,7 +13,7 @@ add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
 add_custom_target(man ALL)
 add_custom_command(
 	TARGET man
-	COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/share/man/${PROJECT_NAME}.1" "${CMAKE_CURRENT_BINARY_DIR}"
+	COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/man/${PROJECT_NAME}.1" "${CMAKE_CURRENT_BINARY_DIR}"
 	COMMAND gzip -f9 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1"
 )
 
