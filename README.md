@@ -17,6 +17,25 @@ applications. The data is stored as a character array.
 
 ### **Building:**
 
+#### 'configure' script:
+
 To build native binary, run: `./configure && make && sudo make install`
 
 To build python version, run: `./configure --type=s && make && sudo make install`
+
+#### CMake (native binary only):
+
+Build in source root directory:
+
+```sh
+cmake ./ && make && sudo make install
+```
+
+Build in separate directory:
+
+```sh
+mkdir build
+cd build
+cmake ../
+make && sudo make install
+```
