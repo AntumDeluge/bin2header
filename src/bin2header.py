@@ -6,12 +6,12 @@ import sys, os, array
 def PrintUsage():
     executable = os.path.basename(__file__)
     print u'\nbin2header version 0.0.1 (python)\n2011 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable)
-    sys.exit(1)
 
 def Bin2Header(argv):
     if not os.path.isfile(argv[1]):
         print u'\nFile "{}" does not exist'.format(argv[1])
         PrintUsage()
+        sys.exit(1)
     
     ### Get Filenames and Path ###
     path = argv[1]
