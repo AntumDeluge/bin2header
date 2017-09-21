@@ -19,17 +19,11 @@ add_custom_command(
 
 set(DOCDIR "share/doc/${PROJECT_NAME}")
 
-add_custom_target(docs ALL)
-add_custom_command(
-	TARGET docs
-	COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" "${CMAKE_CURRENT_BINARY_DIR}"
-)
-
 install(TARGETS ${PROJECT_NAME}
 	RUNTIME DESTINATION bin
 )
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION share/man/man1)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt" DESTINATION ${DOCDIR})
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" DESTINATION ${DOCDIR})
 
 # Uninstallation
 add_custom_target(uninstall)
@@ -42,5 +36,5 @@ add_custom_command(
 
 set_property(
 	DIRECTORY
-	PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_NAME}.1.gz LICENSE.txt
+	PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_NAME}.1.gz
 )
