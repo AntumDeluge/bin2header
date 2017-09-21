@@ -5,7 +5,7 @@ import sys, os, array
 
 def PrintUsage():
     executable = os.path.basename(__file__)
-    print u'\nbin2header version 0.1.0 (python)\n2017 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable)
+    print u'\nbin2header version 0.1.1 (python)\n2017 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable)
 
 def Bin2Header(argv):
     if not os.path.isfile(argv[1]):
