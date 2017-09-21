@@ -11,4 +11,4 @@ applications. The data is stored as a character array.
 
 - Downloads:
   - [Stable](https://github.com/AntumDeluge/bin2header/releases/latest)
-- [Manpage](reference/man.1.html)
+- [Manpage](reference/bin2header.1.html)
