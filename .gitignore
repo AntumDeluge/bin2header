@@ -4,3 +4,6 @@
 
 # Output build
 build/
+
+# Distribution files
+bin2header-*.tar.xz
