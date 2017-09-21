@@ -23,7 +23,7 @@ install(TARGETS ${PROJECT_NAME}
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION share/man/man1)
 
 # Uninstallation
-add_custom_target(uninstall ALL)
+add_custom_target(uninstall)
 add_custom_command(
 	TARGET uninstall
 	COMMAND rm -vf "${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}"
