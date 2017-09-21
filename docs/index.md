@@ -3,4 +3,4 @@
 
 ### **Links:**
 
-- [HTML Reference](reference)
+- [Manpage](reference/man.html)
