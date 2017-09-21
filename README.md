@@ -3,10 +3,9 @@
 
 ### **Description:**
 
-Converter for binary files to C/C++ headers (0.0.1)
+Converter for binary files to C/C++ headers.
 
-***bin2header*** takes any file as an argument and converts
-its binary data into a source header file for use in C/C++
+***bin2header*** takes any file as an argument and converts its binary data into a source header file for use in C/C++
 applications. The data is stored as a character array.
 
 
