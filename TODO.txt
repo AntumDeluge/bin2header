@@ -1,1 +1,2 @@
-- replace "/" characer with underscore ("_") in header guards
+- replace "/" characer with underscore ("_") in header guards & variable name:
+  - alternate option: use file basename
