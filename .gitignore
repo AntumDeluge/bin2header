@@ -4,6 +4,7 @@
 
 # Output build
 build/
+Makefile
 
 # Distribution files
 bin2header-*.tar.xz
