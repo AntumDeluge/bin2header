@@ -38,11 +38,12 @@ int main(int argc, char** argv) {
 
 	FILE* test;
 	test = fopen(argv[1], "r");
+	fclose(test);
+
 	if (!test) {
 		cout << "\nFile: \"" << argv[1] << "\" does not exist\n";
 		return PrintUsage(executable);
 	}
-	fclose(test);
 
 	/* Get Filenames and Path */
 	string path = argv[1];
