@@ -3,6 +3,30 @@
 
 import sys, os, array
 
+
+__WIN32__ = u'windows' in os.getenv(u'OS').lower();
+
+
+## Normalizes the path for they current system
+def NormalizePath(path):
+	new_path = path
+	to_replace = u'\\'
+	replace_with = u'/'
+
+	if __WIN32__:
+		to_replace = u'/'
+		replace_with = u'\\'
+
+	new_path = new_path.replace(to_replace, replace_with)
+
+	if __WIN32__:
+		# MSYS2/MinGW paths
+		if new_path.lower().startswith(u'\\c\\'):
+			new_path = u'C:{}'.format(new_path[2:])
+
+	return new_path;
+
+
 def PrintUsage():
 	executable = os.path.basename(__file__)
 	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))

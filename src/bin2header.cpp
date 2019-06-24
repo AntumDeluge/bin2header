@@ -1,3 +1,4 @@
+#include <algorithm> // transform
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -11,6 +12,45 @@ using namespace std;
 const string version = "0.1.1";
 
 #define len(a) (sizeof(a)/sizeof(*a))
+
+
+/** Normalizes the path for they current system */
+string NormalizePath(string path) {
+	string new_path = path;
+	string to_replace;
+	string replace_with;
+
+#ifdef __WIN32__
+	to_replace = '/';
+	replace_with = '\\';
+#else
+	to_replace = '\\';
+	replace_with = '/';
+#endif
+
+	string cur_char;
+	for (int idx = 0; idx < path.length(); idx++) {
+		cur_char = path[idx];
+		if (cur_char == to_replace) {
+			new_path.replace(idx, 1, replace_with);
+		}
+	}
+
+#ifdef __WIN32__
+	// MSYS2/MinGW paths
+	string first_chars = new_path.substr(0, 3);
+	// FIXME: use tolower from cstio?
+	transform(first_chars.begin(), first_chars.end(), first_chars.begin(), ::tolower);
+
+	// TODO: support all drive letters
+	if (first_chars == "\\c\\") {
+		new_path.replace(0, 2, "C:");
+	}
+#endif
+
+	return new_path;
+}
+
 
 string GetBaseName(string f) {
 #if defined (__WIN32__)
