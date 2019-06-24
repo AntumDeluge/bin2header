@@ -73,6 +73,7 @@ int main(int argc, char** argv) {
 	executable = GetBaseName(executable);
 
 	if (argc < 2) {
+		cout << "\nERROR: Missing <file> argument\n";
 		return PrintUsage(executable);
 	}
 

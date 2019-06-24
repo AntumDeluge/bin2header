@@ -95,6 +95,7 @@ def main(argv):
 
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
+		print(u'\nERROR: Missing <file> argument')
 		PrintUsage()
 		sys.exit(1)
 
