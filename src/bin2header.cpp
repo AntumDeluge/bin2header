@@ -105,18 +105,20 @@ int main(int argc, char** argv) {
 		return PrintUsage(executable);
 	}
 
+	string source_file = NormalizePath(argv[1]);
+
+	// Check if file exists
 	FILE* test;
-	test = fopen(argv[1], "r");
+	test = fopen(source_file.c_str(), "r");
 	fclose(test);
 
 	if (!test) {
-		cout << "\nFile: \"" << argv[1] << "\" does not exist\n";
+		cout << "\nFile: \"" << source_file << "\" does not exist\n";
 		return PrintUsage(executable);
 	}
 
 	/* Get Filenames and Path */
-	string path = argv[1];
-	string filename = GetBaseName(path);
+	string filename = GetBaseName(source_file);
 	string hname = filename;
 
 	/* START Remove Unwanted Characters */
@@ -134,9 +136,9 @@ int main(int argc, char** argv) {
 	}
 	/* END Remove Unwanted Characters */
 
-	/* START Uppercase Name for Header */
 	filename += ".h";
 
+	/* START Uppercase Name for Header */
 	char hname_upper[hname_len + 2];
 	current = 0;
 	for (current; current < len(hname_upper); current++) {
@@ -150,7 +152,7 @@ int main(int argc, char** argv) {
 
 	/* START Read Data In */
 	ifstream infile;
-	infile.open(path.c_str(), ifstream::binary);
+	infile.open(source_file.c_str(), ifstream::binary);
 
 	int data_length;
 	infile.seekg(0, ifstream::end);

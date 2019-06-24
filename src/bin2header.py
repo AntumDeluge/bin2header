@@ -53,16 +53,18 @@ def PrintUsage():
 
 
 def main(argv):
-	if not os.path.isfile(argv[1]):
-		print(u'\nFile "{}" does not exist'.format(argv[1]))
+	source_file = NormalizePath(argv[1])
+
+    # Check if file exists
+	if not os.path.isfile(source_file):
+		print(u'\nFile "{}" does not exist'.format(source_file))
 		PrintUsage()
 		sys.exit(1)
 
 	### Get Filenames and Path ###
-	path = argv[1]
-	filename = list(os.path.basename(path))
+	filename = list(GetBaseName(source_file))
 	hname = list(filename)
-	target_dir = os.path.dirname(path)
+	target_dir = GetDirName(source_file)
 
 	### Remove Unwanted Characters ###
 	badchars = (u'\\', u'+', u'-', u'*', u' ')
@@ -81,7 +83,7 @@ def main(argv):
 	hname_upper += u'_H'
 
 	### Read Data In ###
-	data = array.array('B', open(path, 'rb').read())
+	data = array.array('B', open(source_file, 'rb').read())
 
 	### START Read Data Out to Header ###
 	target_file = os.path.join(target_dir, filename)
