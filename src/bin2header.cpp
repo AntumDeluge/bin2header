@@ -116,5 +116,7 @@ int main(int argc, char** argv) {
 	outfile.close();
 	/* END Read Data Out to Header */
 
+	cout << "Exported to: " << filename << endl;
+
 	return 0;
 }

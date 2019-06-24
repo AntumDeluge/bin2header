@@ -64,6 +64,8 @@ def main(argv):
 	outfile.close()
 	### END Read Data Out to Header ###
 
+	print(u'Exported to: {}'.format(target_file))
+
 	return 0
 
 
