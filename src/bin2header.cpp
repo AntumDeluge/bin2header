@@ -62,12 +62,15 @@ string JoinPath(string a, string b) {
 
 
 string GetBaseName(string f) {
-#if defined (__WIN32__)
-	int split = f.find_last_of('\\');
+	int split;
+
+#ifdef __WIN32__
+	split = f.find_last_of('\\');
 #else
-	int split = f.find_last_of('/');
+	split = f.find_last_of('/');
 #endif
 	f.erase(0, split + 1);
+
 	return f;
 }
 
