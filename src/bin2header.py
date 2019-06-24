@@ -49,7 +49,8 @@ def GetDirName(f):
 
 def PrintUsage():
 	executable = os.path.basename(__file__)
-	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))
+	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(executable))
+
 
 def main(argv):
 	if not os.path.isfile(argv[1]):
