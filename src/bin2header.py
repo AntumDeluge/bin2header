@@ -7,7 +7,7 @@ def PrintUsage():
 	executable = os.path.basename(__file__)
 	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))
 
-def Bin2Header(argv):
+def main(argv):
 	if not os.path.isfile(argv[1]):
 		print(u'\nFile "{}" does not exist'.format(argv[1]))
 		PrintUsage()
@@ -17,6 +17,7 @@ def Bin2Header(argv):
 	path = argv[1]
 	filename = list(os.path.basename(path))
 	hname = list(filename)
+	target_dir = os.path.dirname(path)
 
 	### Remove Unwanted Characters ###
 	badchars = (u'\\', u'+', u'-', u'*', u' ')
@@ -38,7 +39,8 @@ def Bin2Header(argv):
 	data = array.array('B', open(path, 'rb').read())
 
 	### START Read Data Out to Header ###
-	outfile = open(filename, 'w')
+	target_file = os.path.join(target_dir, filename)
+	outfile = open(target_file, 'w')
 
 	text = u'#ifndef {}\n#define {}\n\nstatic const unsigned char {}[] = {}\n'.format(hname_upper, hname_upper, hname, u'{')
 
@@ -70,4 +72,4 @@ if __name__ == '__main__':
 		PrintUsage()
 		sys.exit(1)
 
-	Bin2Header(sys.argv)
+	main(sys.argv)
