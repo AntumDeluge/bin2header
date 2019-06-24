@@ -5,11 +5,11 @@ import sys, os, array
 
 def PrintUsage():
 	executable = os.path.basename(__file__)
-	print u'\nbin2header version 0.1.1 (python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable)
+	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))
 
 def Bin2Header(argv):
 	if not os.path.isfile(argv[1]):
-		print u'\nFile "{}" does not exist'.format(argv[1])
+		print(u'\nFile "{}" does not exist'.format(argv[1]))
 		PrintUsage()
 		sys.exit(1)
 
