@@ -4,6 +4,11 @@
 import sys, os, array
 
 
+if sys.version_info.major < 3:
+	print('\nERROR: Python ' + str(sys.version_info.major) + ' not supported. Please upgrade to Python 3.\n')
+	sys.exit(2)
+
+
 __WIN32__ = 'windows' in os.getenv('OS').lower();
 
 
