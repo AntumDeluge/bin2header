@@ -86,7 +86,9 @@ def main(argv):
 	data = array.array('B', open(source_file, 'rb').read())
 
 	### START Read Data Out to Header ###
-	outfile = open(target_file, 'w')
+
+	# currently only support LF line endings output
+	outfile = open(target_file, 'w', newline=u'\n')
 
 	text = u'#ifndef {}\n#define {}\n\nstatic const unsigned char {}[] = {}\n'.format(hname_upper, hname_upper, hname, u'{')
 

@@ -166,7 +166,7 @@ int main(int argc, char** argv) {
 	/* END Read Data In */
 
 	/* START Read Data Out to Header */
-	ofstream outfile(target_file.c_str());
+	ofstream outfile(target_file.c_str(), ofstream::binary); // currently only support LF line endings output
 	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n\nstatic const unsigned char " << hname << "[] = {\n";
 
 	for (current = 0; current < data_length; current++) {
