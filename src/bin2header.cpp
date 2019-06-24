@@ -122,11 +122,10 @@ int main(int argc, char** argv) {
 	/* START Remove Unwanted Characters */
 	int hname_len = hname.length();
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
-	int current = 0;
-	int x = 0;
-	for (current; current < hname_len; current++) {
-		x = 0;
-		for (x; x < len(badchars); x++) {
+	int current;
+	int x;
+	for (current = 0; current < hname_len; current++) {
+		for (x = 0; x < len(badchars); x++) {
 			if ((hname[current] == badchars[x]) or (hname[current] == '.'))
 				hname.replace(current, 1, "_");
 			if (filename[current] == badchars[x])
