@@ -27,6 +27,16 @@ def NormalizePath(path):
 	return new_path;
 
 
+def GetBaseName(f):
+	base_name = os.path.basename(f)
+
+	# MSYS versions of Python appear to not understand Windows paths
+	if __WIN32__ and u'\\' in base_name:
+		base_name = base_name.split(u'\\')[-1]
+
+	return base_name
+
+
 def PrintUsage():
 	executable = os.path.basename(__file__)
 	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))
