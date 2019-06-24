@@ -37,6 +37,16 @@ def GetBaseName(f):
 	return base_name
 
 
+def GetDirName(f):
+	dir_name = os.path.dirname(f)
+
+	# MSYS versions of Python appear to not understand Windows paths
+	if not dir_name and __WIN32__:
+		dir_name = u'\\'.join(f.split(u'\\')[:-1])
+
+	return dir_name
+
+
 def PrintUsage():
 	executable = os.path.basename(__file__)
 	print(u'\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} file\n'.format(executable))

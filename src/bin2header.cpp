@@ -74,6 +74,21 @@ string GetBaseName(string f) {
 	return f;
 }
 
+
+string GetDirName(string f) {
+	int split;
+
+#ifdef __WIN32__
+	split = f.find_last_of('\\');
+#else
+	split = f.find_last_of('/');
+#endif
+	f.erase(split, f.length() - split);
+
+	return f;
+}
+
+
 int PrintUsage(string exe="bin2header") {
 	cout << "\nbin2header version " << version << endl;
 	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " <file>\n" << endl;
