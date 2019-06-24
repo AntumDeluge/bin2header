@@ -117,9 +117,10 @@ int main(int argc, char** argv) {
 		return PrintUsage(executable);
 	}
 
-	/* Get Filenames and Path */
+	/* Get filenames and target directory */
 	string filename = GetBaseName(source_file);
 	string hname = filename;
+	const string target_dir = GetDirName(source_file);
 
 	/* START Remove Unwanted Characters */
 	int hname_len = hname.length();
@@ -136,7 +137,7 @@ int main(int argc, char** argv) {
 	}
 	/* END Remove Unwanted Characters */
 
-	filename += ".h";
+	const string target_file = JoinPath(target_dir, filename).append(".h");
 
 	/* START Uppercase Name for Header */
 	char hname_upper[hname_len + 2];
@@ -165,7 +166,7 @@ int main(int argc, char** argv) {
 	/* END Read Data In */
 
 	/* START Read Data Out to Header */
-	ofstream outfile(filename.c_str());
+	ofstream outfile(target_file.c_str());
 	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n\nstatic const unsigned char " << hname << "[] = {\n";
 
 	for (current = 0; current < data_length; current++) {
@@ -184,7 +185,7 @@ int main(int argc, char** argv) {
 	outfile.close();
 	/* END Read Data Out to Header */
 
-	cout << "Exported to: " << filename << endl;
+	cout << "Exported to: " << target_file << endl;
 
 	return 0;
 }

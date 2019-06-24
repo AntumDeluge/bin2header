@@ -1,5 +1,3 @@
-- replace "/" characer with underscore ("_") in header guards & variable name:
-  - alternate option: use file basename
 - store in std::vector for C++
   - make optional
 - get version info from config.h

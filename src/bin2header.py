@@ -61,7 +61,7 @@ def main(argv):
 		PrintUsage()
 		sys.exit(1)
 
-	### Get Filenames and Path ###
+	### Get filenames and target directory ###
 	filename = list(GetBaseName(source_file))
 	hname = list(filename)
 	target_dir = GetDirName(source_file)
@@ -75,8 +75,8 @@ def main(argv):
 			filename[x] = '_'
 
 	filename = u''.join(filename)
-	filename += u'.h'
 	hname = u''.join(hname)
+	target_file = os.path.join(target_dir, filename) + u'.h'
 
 	### Uppercase Name for Header ###
 	hname_upper = hname.upper()
@@ -86,7 +86,6 @@ def main(argv):
 	data = array.array('B', open(source_file, 'rb').read())
 
 	### START Read Data Out to Header ###
-	target_file = os.path.join(target_dir, filename)
 	outfile = open(target_file, 'w')
 
 	text = u'#ifndef {}\n#define {}\n\nstatic const unsigned char {}[] = {}\n'.format(hname_upper, hname_upper, hname, u'{')
