@@ -140,8 +140,7 @@ int main(int argc, char** argv) {
 
 	/* START Uppercase Name for Header */
 	char hname_upper[hname_len + 2];
-	current = 0;
-	for (current; current < len(hname_upper); current++) {
+	for (current = 0; current < len(hname_upper); current++) {
 		hname_upper[current] = hname[current];
 		hname_upper[current] = toupper(hname_upper[current]);
 	}
@@ -169,8 +168,7 @@ int main(int argc, char** argv) {
 	ofstream outfile(filename.c_str());
 	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n\nstatic const unsigned char " << hname << "[] = {\n";
 
-	current = 0;
-	for (current; current < data_length; current++) {
+	for (current = 0; current < data_length; current++) {
 		if ((current % 12) == 0) outfile << "    ";
 
 		stringstream ss;
