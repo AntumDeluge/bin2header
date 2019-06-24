@@ -12,7 +12,7 @@ const string version = "0.1.1";
 
 #define len(a) (sizeof(a)/sizeof(*a))
 
-string GetFileName(string f) {
+string GetBaseName(string f) {
 #if defined (__WIN32__)
 	int split = f.find_last_of('\\');
 #else
@@ -30,7 +30,7 @@ int PrintUsage(string exe="bin2header") {
 
 int main(int argc, char** argv) {
 	string executable = argv[0];
-	executable = GetFileName(executable);
+	executable = GetBaseName(executable);
 
 	if (argc < 2) {
 		return PrintUsage(executable);
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 
 	/* Get Filenames and Path */
 	string path = argv[1];
-	string filename = GetFileName(path);
+	string filename = GetBaseName(path);
 	string hname = filename;
 
 	/* START Remove Unwanted Characters */
