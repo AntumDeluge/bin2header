@@ -52,6 +52,15 @@ string NormalizePath(string path) {
 }
 
 
+string JoinPath(string a, string b) {
+#ifdef __WIN32__
+	return a.append("\\").append(b);
+#else
+	return a.append("/").append(b);
+#endif
+}
+
+
 string GetBaseName(string f) {
 #if defined (__WIN32__)
 	int split = f.find_last_of('\\');
