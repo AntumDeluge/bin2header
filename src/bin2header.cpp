@@ -95,8 +95,9 @@ int PrintUsage(string exe="bin2header") {
 	return 1;
 }
 
+
 int main(int argc, char** argv) {
-	string executable = argv[0];
+	string executable = NormalizePath(argv[0]);
 	executable = GetBaseName(executable);
 
 	if (argc < 2) {
