@@ -82,7 +82,7 @@ def main(argv):
 
 		current += 1
 
-	text += u'\n};\n\n#endif\n'
+	text += u'\n};\n\n#endif /* ' + hname_upper + u' */\n'
 
 	outfile.write(text)
 	outfile.close()

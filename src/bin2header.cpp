@@ -152,7 +152,7 @@ int main(int argc, char** argv) {
 		if ((current % 12) == 11) outfile << "\n";
 	}
 
-	outfile << "\n};\n\n#endif\n";
+	outfile << "\n};\n\n#endif /* " << name_upper_h << " */\n";
 	outfile.close();
 	/* END Read Data Out to Header */
 
