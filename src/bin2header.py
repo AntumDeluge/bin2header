@@ -92,10 +92,17 @@ def main(argv):
 
 	### START Read Data Out to Header ###
 
+	# adds C++ std::vector support
+	# TODO: make optional
+	store_vector = True
+
 	# currently only support LF line endings output
 	outfile = open(target_file, 'w', newline='\n')
 
-	text = '#ifndef {}\n#define {}\n\nstatic const unsigned char {}[] = {}\n'.format(hname_upper, hname_upper, hname, '{')
+	text = '#ifndef {0}\n#define {0}\n'.format(hname_upper)
+	if store_vector:
+		text += '\n#ifdef __cplusplus\n#include <vector>\n#endif\n'
+	text += '\nstatic const unsigned char {}[] = {{\n'.format(hname)
 
 	current = 0
 	data_length = len(data)
@@ -111,7 +118,12 @@ def main(argv):
 
 		current += 1
 
-	text += '\n};\n\n#endif /* ' + hname_upper + ' */\n'
+	text += '\n};\n'
+	if store_vector:
+		text += '\n#ifdef __cplusplus\nstatic const std::vector<char> ' \
+		+ hname + '_v(' + hname + ', ' + hname + ' + sizeof(' + hname \
+		+ '));\n#endif\n'
+	text +='\n#endif /* {} */\n'.format(hname_upper)
 
 	outfile.write(text)
 	outfile.close()

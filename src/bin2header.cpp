@@ -166,8 +166,17 @@ int main(int argc, char** argv) {
 	/* END Read Data In */
 
 	/* START Read Data Out to Header */
+
+	// adds C++ std::vector support
+	// TODO: make optional
+	bool store_vector = true;
+
 	ofstream outfile(target_file.c_str(), ofstream::binary); // currently only support LF line endings output
-	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n\nstatic const unsigned char " << hname << "[] = {\n";
+	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
+	if (store_vector) {
+		outfile << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
+	}
+	outfile << "\nstatic const unsigned char " << hname << "[] = {\n";
 
 	for (current = 0; current < data_length; current++) {
 		if ((current % 12) == 0) outfile << "    ";
@@ -181,8 +190,16 @@ int main(int argc, char** argv) {
 		if ((current % 12) == 11) outfile << "\n";
 	}
 
-	outfile << "\n};\n\n#endif /* " << name_upper_h << " */\n";
+	outfile << "\n};\n";
+	if (store_vector) {
+		outfile << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
+				<< hname << "_v(" << hname << ", " << hname << " + sizeof("
+				<< hname << "));\n#endif\n";
+	}
+	outfile << "\n#endif /* " << name_upper_h << " */\n";
+
 	outfile.close();
+
 	/* END Read Data Out to Header */
 
 	cout << "Exported to: " << target_file << endl;
