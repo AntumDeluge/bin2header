@@ -12,6 +12,8 @@ if sys.version_info.major < 3:
 __WIN32__ = 'windows' in os.getenv('OS').lower();
 
 
+version = '0.1.2'
+
 ## Normalizes the path for they current system
 def NormalizePath(path):
 	new_path = path
@@ -54,13 +56,13 @@ def GetDirName(f):
 
 def PrintUsage():
 	executable = os.path.basename(__file__)
-	print('\nbin2header version 0.1.1 (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(executable))
+	print('\nbin2header version {} (Python)\n2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
 
 
 def main(argv):
 	source_file = NormalizePath(argv[1])
 
-    # Check if file exists
+	# Check if file exists
 	if not os.path.isfile(source_file):
 		print('\nFile "{}" does not exist'.format(source_file))
 		PrintUsage()

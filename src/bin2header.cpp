@@ -9,7 +9,7 @@ using namespace std;
 #include <cstdio>
 
 
-const string version = "0.1.1";
+const string version = "0.1.2";
 
 #define len(a) (sizeof(a)/sizeof(*a))
 
