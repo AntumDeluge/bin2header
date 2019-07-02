@@ -1,4 +1,4 @@
-## bin2header
+## Binary to Header
 
 
 ### **Description:**
@@ -16,18 +16,26 @@ applications. The data is stored as a character array.
 
 ### **Building:**
 
-#### 'configure' script:
+#### 'configure' script (currently recommended):
 
-To build native binary, run: `./configure && make && sudo make install`
+<blockquote style="padding-left:2em; font-family:monospace;">
+<b>USAGE:</b> ./configure [--help] [--type=TYPE] [--static]<br><br>
+Options:<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--help</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Show this help text<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--type=TYPE</span> &nbsp; Set to "b" (default) for binary executable "s" for Python script<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--static</span> &nbsp;&nbsp;&nbsp;&nbsp; Create statically linked executable (binary only)
+</blockquote>
 
-To build python version, run: `./configure --type=s && make && sudo make install`
+- To build native binary, run: `./configure && make`
+- To build static native binary, run: `./configure --static && make`
+- To build python version, run: `./configure --type=s && make`
 
 #### CMake (native binary only):
 
 Build in source root directory:
 
 ```sh
-cmake ./ && make && sudo make install
+cmake ./ && make
 ```
 
 Build in separate directory:
@@ -35,6 +43,5 @@ Build in separate directory:
 ```sh
 mkdir build
 cd build
-cmake ../
-make && sudo make install
+cmake ../ && make
 ```
