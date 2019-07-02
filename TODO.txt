@@ -2,3 +2,4 @@
 - get version info from config.h
 - allow user input to set line endings
 - use tabs instead of spaces after newlines
+- create icon
