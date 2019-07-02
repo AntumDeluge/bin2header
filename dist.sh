@@ -3,7 +3,7 @@
 # Script for creating a distributable archive
 
 NAME=bin2header
-VERSION=0.1.1
+VERSION=0.1.2
 STAGE="${NAME}-${VERSION}"
 DIRS="docs man src"
 FILES="CMakeLists.txt configure dist.sh LICENSE.txt README.md"
