@@ -1,5 +1,7 @@
 C++ bugs:
 - cannot open large files
 - CMake build linking to winpthreads
+- error in GetDirName function:
+  - fails if input file not in nested directory structure
 
 Python bugs:
