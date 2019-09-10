@@ -67,7 +67,9 @@ string GetBaseName(string f) {
 #else
 	split = f.find_last_of('/');
 #endif
-	f.erase(0, split + 1);
+	if (split >= 0) {
+		f.erase(0, split + 1);
+	}
 
 	return f;
 }
@@ -81,7 +83,15 @@ string GetDirName(string f) {
 #else
 	split = f.find_last_of('/');
 #endif
-	f.erase(split, f.length() - split);
+	if (split < 0) {
+		// working directory
+		return ".";
+	} else if (split == 0) {
+		// root of the filesystem
+		return NormalizePath("/");
+	} else {
+		f.erase(split, f.length() - split);
+	}
 
 	return f;
 }
