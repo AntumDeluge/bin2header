@@ -9,6 +9,11 @@ message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
 add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
 
+if(WIN32)
+	# static link to libgcc & libstdc++
+	set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++")
+endif()
+
 # Manpage package/install
 add_custom_target(man ALL)
 add_custom_command(
