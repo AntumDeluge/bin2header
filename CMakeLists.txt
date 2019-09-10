@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 cmake_policy(SET CMP0048 NEW)
 project(bin2header
-	VERSION 0.1.2
+	VERSION 0.1.3
 	LANGUAGES CXX
 )
 set(PROJECT_PY_VERSION 0.1.2)

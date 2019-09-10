@@ -9,7 +9,7 @@
 using namespace std;
 
 
-const string version = "0.1.2";
+const string version = "0.1.3";
 
 
 int PrintUsage(string exe="bin2header") {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-VER=0.1.2
-PYVER=${VER}
+VER=0.1.3
+PYVER=0.1.2
 
 DIR_ROOT="$(dirname "$0")"
 cd "${DIR_ROOT}"
