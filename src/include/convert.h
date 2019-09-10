@@ -13,7 +13,7 @@
 
 extern void setChunkSize(const unsigned int sz);
 
-extern int convert(const std::string fin, const std::string fout, const std::string hname);
+extern int convert(const std::string fin, const std::string fout, const std::string hname, const bool store_vector=false);
 
 
 #endif /* B2H_CONVERT_H_ */

@@ -1,4 +1,4 @@
-- make std::vector support optional
+- use command line switch to enable storing std::vector
 - get version info from config.h
 - allow user input to set line endings
 - use tabs instead of spaces after newlines

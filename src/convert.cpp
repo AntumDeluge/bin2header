@@ -19,7 +19,7 @@ unsigned int chunk_size = 64;
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 
 
-int convert(const string fin, const string fout, const string hname) {
+int convert(const string fin, const string fout, const string hname, const bool store_vector) {
 	// TODO: read/write in chunks
 	//char chunk[chunk_size];
 
@@ -40,10 +40,6 @@ int convert(const string fin, const string fout, const string hname) {
 		/* END Read Data In */
 
 		/* START Read Data Out to Header */
-
-		// adds C++ std::vector support
-		// TODO: make optional
-		bool store_vector = true;
 
 		ofstream outfile(fout.c_str(), ofstream::binary); // currently only support LF line endings output
 		outfile << "#ifndef " << hname.c_str() << "\n#define " << hname.c_str() << "\n";
