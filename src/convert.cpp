@@ -23,6 +23,19 @@ int convert(const string fin, const string fout, const string hname, const bool 
 	// TODO: read/write in chunks
 	//char chunk[chunk_size];
 
+	int current;
+
+	/* START Uppercase Name for Header */
+	char hname_upper[hname.length() + 2];
+	for (current = 0; current < len(hname_upper); current++) {
+		hname_upper[current] = hname[current];
+		hname_upper[current] = toupper(hname_upper[current]);
+	}
+
+	string name_upper_h = hname_upper;
+	name_upper_h.append("_H");
+	/* END Uppercase Name for Header */
+
 	try {
 		/* START Read Data In */
 		ifstream infile;
@@ -42,13 +55,13 @@ int convert(const string fin, const string fout, const string hname, const bool 
 		/* START Read Data Out to Header */
 
 		ofstream outfile(fout.c_str(), ofstream::binary); // currently only support LF line endings output
-		outfile << "#ifndef " << hname.c_str() << "\n#define " << hname.c_str() << "\n";
+		outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
 		if (store_vector) {
 			outfile << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
 		}
 		outfile << "\nstatic const unsigned char " << hname << "[] = {\n";
 
-		for (int current = 0; current < data_length; current++) {
+		for (current = 0; current < data_length; current++) {
 			if ((current % 12) == 0) outfile << "    ";
 
 			stringstream ss;
@@ -66,7 +79,7 @@ int convert(const string fin, const string fout, const string hname, const bool 
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
 					<< hname << "));\n#endif\n";
 		}
-		outfile << "\n#endif /* " << hname << " */\n";
+		outfile << "\n#endif /* " << name_upper_h << " */\n";
 
 		outfile.close();
 

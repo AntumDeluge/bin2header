@@ -11,8 +11,6 @@ using namespace std;
 
 const string version = "0.1.2";
 
-#define len(a) (sizeof(a)/sizeof(*a))
-
 
 int PrintUsage(string exe="bin2header") {
 	cout << "\nbin2header version " << version << endl;
@@ -43,39 +41,26 @@ int main(int argc, char** argv) {
 	}
 
 	/* Get filenames and target directory */
-	string filename = GetBaseName(source_file);
-	string hname = filename;
+	string basename = GetBaseName(source_file);
+	string hname = basename;
 	const string target_dir = GetDirName(source_file);
 
 	/* START Remove Unwanted Characters */
-	int hname_len = hname.length();
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
-	int current;
 	int x;
-	for (current = 0; current < hname_len; current++) {
+	for (int current = 0; current < hname.length(); current++) {
 		for (x = 0; x < len(badchars); x++) {
 			if ((hname[current] == badchars[x]) or (hname[current] == '.'))
 				hname.replace(current, 1, "_");
-			if (filename[current] == badchars[x])
-				filename.replace(current, 1, "_");
+			if (basename[current] == badchars[x])
+				basename.replace(current, 1, "_");
 		}
 	}
 	/* END Remove Unwanted Characters */
 
-	const string target_file = JoinPath(target_dir, filename).append(".h");
+	const string target_file = JoinPath(target_dir, basename).append(".h");
 
-	/* START Uppercase Name for Header */
-	char hname_upper[hname_len + 2];
-	for (current = 0; current < len(hname_upper); current++) {
-		hname_upper[current] = hname[current];
-		hname_upper[current] = toupper(hname_upper[current]);
-	}
-
-	string name_upper_h = hname_upper;
-	name_upper_h.append("_H");
-	/* END Uppercase Name for Header */
-
-	int ret = convert(source_file, target_file, name_upper_h);
+	int ret = convert(source_file, target_file, hname);
 
 	if (ret == 0)
 		cout << "Exported to: " << target_file << endl;
