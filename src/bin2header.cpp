@@ -1,14 +1,12 @@
 
+#include "convert.h"
 #include "paths.h"
 
+#include <cctype> // toupper
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <string>
-#include <iomanip>
-using namespace std;
 
-#include <cstdio>
+using namespace std;
 
 
 const string version = "0.1.2";
@@ -77,57 +75,7 @@ int main(int argc, char** argv) {
 	name_upper_h.append("_H");
 	/* END Uppercase Name for Header */
 
-	/* START Read Data In */
-	ifstream infile;
-	infile.open(source_file.c_str(), ifstream::binary);
-
-	int data_length;
-	infile.seekg(0, ifstream::end);
-	data_length = infile.tellg();
-	infile.seekg(0, ifstream::beg);
-
-	char data[data_length];
-
-	infile.read(data, data_length);
-	infile.close();
-	/* END Read Data In */
-
-	/* START Read Data Out to Header */
-
-	// adds C++ std::vector support
-	// TODO: make optional
-	bool store_vector = true;
-
-	ofstream outfile(target_file.c_str(), ofstream::binary); // currently only support LF line endings output
-	outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
-	if (store_vector) {
-		outfile << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
-	}
-	outfile << "\nstatic const unsigned char " << hname << "[] = {\n";
-
-	for (current = 0; current < data_length; current++) {
-		if ((current % 12) == 0) outfile << "    ";
-
-		stringstream ss;
-		ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) data[current];
-		outfile << ss.str();
-
-		if ((current + 1) < data_length) outfile << ", ";
-
-		if ((current % 12) == 11) outfile << "\n";
-	}
-
-	outfile << "\n};\n";
-	if (store_vector) {
-		outfile << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
-				<< hname << "_v(" << hname << ", " << hname << " + sizeof("
-				<< hname << "));\n#endif\n";
-	}
-	outfile << "\n#endif /* " << name_upper_h << " */\n";
-
-	outfile.close();
-
-	/* END Read Data Out to Header */
+	convert(source_file, target_file, name_upper_h);
 
 	cout << "Exported to: " << target_file << endl;
 
