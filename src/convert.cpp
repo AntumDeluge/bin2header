@@ -62,7 +62,7 @@ int convert(const string fin, const string fout, const string hname, const bool 
 		outfile << "\nstatic const unsigned char " << hname << "[] = {\n";
 
 		for (current = 0; current < data_length; current++) {
-			if ((current % 12) == 0) outfile << "    ";
+			if ((current % 12) == 0) outfile << "\t";
 
 			stringstream ss;
 			ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) data[current];
