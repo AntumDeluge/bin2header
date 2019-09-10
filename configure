@@ -2,6 +2,19 @@
 
 # This script is here for compatibility & may be removed in the future.
 
+# get root directory
+DIR_WORK="$(pwd)"
+DIR_ROOT="$(dirname $0)"
+cd "${DIR_ROOT}"
+DIR_ROOT="$(pwd)"
+DIR_SRC="${DIR_ROOT}/src"
+DIR_INC="${DIR_SRC}/include"
+
+if test ! -d "${DIR_SRC}"; then
+	echo -e "\nERROR: could not find source directory: ${DIR_SRC}"
+	exit 1
+fi
+
 TYPE="b"
 STATIC=0
 
@@ -58,15 +71,16 @@ if [[ "${TYPE}" == "s" && "${STATIC}" -ne "0" ]]; then
 	exit 1
 fi
 
+FILES_C="$(echo `find "${DIR_SRC}" -type f -name "*.cpp"` | sed -e 's|\n| |g')"
 
 # create Makefile
 if [ "${TYPE}" == "b" ]
 then
 	if [ "${STATIC}" -gt "0" ]
 	then
-		MAKE="bin2header: man src/bin2header.cpp\n\tg++ -static -O2 -s src/bin2header.cpp -o bin2header"
+		MAKE="bin2header: man ${FILES_C}\n\tg++ -static -O2 -s ${FILES_C} -I${DIR_INC} -o bin2header"
 	else
-		MAKE="bin2header: man src/bin2header.cpp\n\tg++ -O2 -s src/bin2header.cpp -o bin2header"
+		MAKE="bin2header: man ${FILES_C}\n\tg++ -O2 -s ${FILES_C} -I${DIR_INC} -o bin2header"
 	fi
 elif [ "${TYPE}" == "s" ]
 then
@@ -74,18 +88,19 @@ then
 fi
 
 # Install file
-#INSTALL="#! /bin/bash\n\ncp bin2header /usr/local/bin\ncp man/bin2header.1.gz /usr/#share/man/man1"
+#INSTALL="#! /bin/bash\n\ncp bin2header /usr/local/bin\ncp ${DIR_ROOT}/man/bin2header.1.gz /usr/#share/man/man1"
 #echo -e "${INSTALL}" > "install"
 #chmod +x "install"
 
 #MAKEINSTALL="install:\n\t./install"
-MAKEMAN=".PHONY: man\nman: man/bin2header.1\n\tgzip -fk9 man/bin2header.1"
+MAKEMAN=".PHONY: man\nman: ${DIR_ROOT}/man/bin2header.1\n\tgzip -fk9 ${DIR_ROOT}/man/bin2header.1; \\
+\n\tmv ${DIR_ROOT}/man/bin2header.1.gz ./"
 MAKEINSTALL="install:\n\t@mkdir -vp \$(DESTDIR)/usr/local/bin \$(DESTDIR)/usr/share/man/man1\n\t@cp -v bin2header \$(DESTDIR)/usr/local/bin && cp -v man/bin2header.1.gz \$(DESTDIR)/usr/share/man/man1"
 MAKEUNINSTALL="uninstall:\n\t@rm -vf \$(DESTDIR)/usr/local/bin/bin2header \$(DESTDIR)/usr/share/man/man1/bin2header.1.gz"
-MAKECLEAN="clean:\n\t@rm -vf man/bin2header.1.gz bin2header"
+MAKECLEAN="clean:\n\t@rm -vf bin2header.1.gz bin2header"
 MAKEDISTCLEAN="distclean: clean"
 MAKEFILE="${MAKE}\n${MAKEMAN}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
-echo -e "${MAKEFILE}" > Makefile
+echo -e "${MAKEFILE}" > "${DIR_WORK}/Makefile"
 echo -e "\nDone!"
 echo -e "\nNow run \"make\" and \"make install\"\n"
 
