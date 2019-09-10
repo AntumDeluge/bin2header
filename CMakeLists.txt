@@ -7,7 +7,10 @@ project(bin2header
 
 message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-add_executable(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
+# retrieve source files
+file(GLOB FILES_C "${CMAKE_SOURCE_DIR}/src/*.cpp")
+include_directories("${CMAKE_SOURCE_DIR}/src/include")
+add_executable(${PROJECT_NAME} ${FILES_C})
 
 if(WIN32)
 	# static link to libgcc & libstdc++
