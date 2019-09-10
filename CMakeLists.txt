@@ -4,6 +4,7 @@ project(bin2header
 	VERSION 0.1.2
 	LANGUAGES CXX
 )
+set(PROJECT_PY_VERSION 0.1.2)
 
 message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
