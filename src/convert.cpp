@@ -68,9 +68,8 @@ int convert(const string fin, const string fout, const string hname, const bool 
 			ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) data[current];
 			outfile << ss.str();
 
-			if ((current + 1) < data_length) outfile << ", ";
-
-			if ((current % 12) == 11) outfile << "\n";
+			if ((current % 12) == 11) outfile << ",\n";
+			else if ((current + 1) < data_length) outfile << ", ";
 		}
 
 		outfile << "\n};\n";
