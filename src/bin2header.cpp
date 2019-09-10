@@ -75,9 +75,12 @@ int main(int argc, char** argv) {
 	name_upper_h.append("_H");
 	/* END Uppercase Name for Header */
 
-	convert(source_file, target_file, name_upper_h);
+	int ret = convert(source_file, target_file, name_upper_h);
 
-	cout << "Exported to: " << target_file << endl;
+	if (ret == 0)
+		cout << "Exported to: " << target_file << endl;
+	else
+		cout << "An error occured. Error code: " << ret << endl;
 
-	return 0;
+	return ret;
 }
