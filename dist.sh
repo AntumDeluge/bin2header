@@ -10,8 +10,8 @@ DIR_ROOT="$(pwd)"
 . "${DIR_ROOT}/info.cfg"
 
 STAGE="${NAME}-${VERSION}"
-DIRS="docs man src"
-FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md CHANGES.txt"
+DIRS="docs man src data"
+FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md BUGS.txt TODO.txt CHANGES.txt"
 
 # Ensure creation of fresh staging directory & dist package
 if [ -d "${STAGE}" ]; then
