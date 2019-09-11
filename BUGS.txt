@@ -1,4 +1,5 @@
 C++ bugs:
 - CMake build linking to winpthreads
+- CMake builds larger executable
 
 Python bugs:
