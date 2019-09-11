@@ -7,82 +7,114 @@
 
 #include "convert.h"
 
+#include <cmath> // ceil
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 using namespace std;
 
 
-unsigned int chunk_size = 64;
+unsigned int chunk_size = 1024 * 1024; // default 1MB
 
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 
 
 int convert(const string fin, const string fout, const string hname, const bool store_vector) {
-	// TODO: read/write in chunks
-	//char chunk[chunk_size];
-
-	int current;
+	// file streams
+	ifstream ifs;
+	ofstream ofs;
 
 	/* START Uppercase Name for Header */
+
 	char hname_upper[hname.length() + 2];
-	for (current = 0; current < len(hname_upper); current++) {
+	for (int current = 0; current < len(hname_upper); current++) {
 		hname_upper[current] = hname[current];
 		hname_upper[current] = toupper(hname_upper[current]);
 	}
 
 	string name_upper_h = hname_upper;
 	name_upper_h.append("_H");
-	/* END Uppercase Name for Header */
 
 	try {
 		/* START Read Data In */
-		ifstream infile;
-		infile.open(fin.c_str(), ifstream::binary);
 
-		int data_length;
-		infile.seekg(0, ifstream::end);
-		data_length = infile.tellg();
-		infile.seekg(0, ifstream::beg);
+		ifs.open(fin.c_str(), ifstream::binary);
 
-		char data[data_length];
+		unsigned long long data_length;
+		ifs.seekg(0, ifstream::end);
+		data_length = ifs.tellg();
+		ifs.seekg(0, ifstream::beg);
 
-		infile.read(data, data_length);
-		infile.close();
-		/* END Read Data In */
+		unsigned long long chunk_count = ceil((double) data_length / chunk_size);
+
+		cout << "File size: " << to_string(data_length) << " bytes" << endl;
+		cout << "Chunk size: " << to_string(chunk_size) << " bytes" << endl;
 
 		/* START Read Data Out to Header */
 
-		ofstream outfile(fout.c_str(), ofstream::binary); // currently only support LF line endings output
-		outfile << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
+		ofs.open(fout.c_str(), ofstream::binary); // currently only support LF line endings output
+		ofs << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
 		if (store_vector) {
-			outfile << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
+			ofs << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
 		}
-		outfile << "\nstatic const unsigned char " << hname << "[] = {\n";
+		ofs << "\nstatic const unsigned char " << hname << "[] = {\n";
 
-		for (current = 0; current < data_length; current++) {
-			if ((current % 12) == 0) outfile << "\t";
+		// empty line
+		cout << endl;
 
-			stringstream ss;
-			ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) data[current];
-			outfile << ss.str();
+		// write array data
+		unsigned long long bytes_written = 0;
+		unsigned long long chunk_idx;
+		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
+			cout << "\rWriting chunk " << to_string(chunk_idx + 1) << " out of " << to_string(chunk_count) << " (Ctrl+C to cancel)";
 
-			if ((current % 12) == 11) outfile << ",\n";
-			else if ((current + 1) < data_length) outfile << ", ";
+			char chunk[chunk_size];
+			ifs.seekg(chunk_idx * chunk_size);
+			ifs.read(chunk, chunk_size);
+
+			unsigned int byte_idx;
+			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
+				if ((bytes_written % 12) == 0) {
+					ofs << "\t";
+				}
+
+				stringstream ss;
+				ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) chunk[byte_idx];
+
+				ofs << ss.str();
+				bytes_written++;
+
+				if (((bytes_written - 1) % 12) == 11) {
+					ofs << ",\n";
+				} else if (bytes_written != data_length) {
+					ofs << ", ";
+				}
+			}
 		}
 
-		outfile << "\n};\n";
+		// flush stdout
+		cout << endl << endl;
+
+		// release input file after read
+		ifs.close();
+
+		ofs << "\n};\n";
 		if (store_vector) {
-			outfile << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
+			ofs << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
 					<< hname << "));\n#endif\n";
 		}
-		outfile << "\n#endif /* " << name_upper_h << " */\n";
+		ofs << "\n#endif /* " << name_upper_h << " */\n";
 
-		outfile.close();
+		ofs.close();
 
-		/* END Read Data Out to Header */
+		if (bytes_written != data_length) {
+			cout << "WARNING: input file size (" << to_string(data_length) << ") and bytes written (" << to_string(bytes_written) << ") do not match" << endl;
+		} else {
+			cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
+		}
 	} catch (int e) {
 		return e;
 	}

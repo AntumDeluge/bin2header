@@ -1,5 +1,4 @@
 C++ bugs:
-- cannot open large files
 - CMake build linking to winpthreads
 
 Python bugs:
