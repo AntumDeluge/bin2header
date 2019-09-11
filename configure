@@ -10,7 +10,9 @@ DIR_ROOT="$(pwd)"
 DIR_SRC="${DIR_ROOT}/src"
 DIR_INC="${DIR_SRC}/include"
 
-PREFIX=/usr/local
+if test -z "${PREFIX}"; then
+	PREFIX=/usr/local
+fi
 
 if test ! -d "${DIR_SRC}"; then
 	echo -e "\nERROR: could not find source directory: ${DIR_SRC}"
@@ -27,7 +29,9 @@ function usage {
     echo -e "\n\t--type=TYPE\tSet to \"b\" (default) for binary executable"
     echo -e "\t\t\t\"s\" for Python script"
     echo -e "\n\t--static\tCreate statically linked executable (binary"
-	echo -e "\t\t\tonly)\n\n"
+	echo -e "\t\t\tonly)"
+	echo -e "\n    Environment Variables:"
+	echo -e "\tPREFIX\t\tSets install prefix for 'make install' target\n\t\t\tType: string (default: /usr/local)\n\n"
 }
 
 MAX_ARGS=2
