@@ -22,7 +22,7 @@ add_executable(${PROJECT_NAME} ${FILES_C})
 
 if(WIN32)
 	# static link to libgcc & libstdc++
-	set(CMAKE_CXX_FLAGS "-static-libgcc -static-libstdc++")
+	set(CMAKE_CXX_FLAGS "-static")
 endif()
 
 # Manpage package/install
