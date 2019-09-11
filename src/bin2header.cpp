@@ -4,6 +4,7 @@
 
 #include <cctype> // toupper
 #include <iostream>
+#include <sstream>
 #include <string>
 
 using namespace std;
@@ -21,10 +22,27 @@ void showVersion() {
 
 
 /** Prints usage info */
-int showUsage() {
+void showUsage() {
 	showVersion();
 	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " <file>\n" << endl;
-	return 1;
+}
+
+
+/** Prints a message to stderr & exits program.
+ *
+ * @tparam string msg Message to print.
+ * @tparam int ecode Error code to exit with.
+ * @tparam bool show_usage If `true` will print usage info
+ */
+void exitWithError(const string msg, const int ecode, const bool show_usage) {
+	cerr << "\nERROR: " << msg << endl;
+	if (show_usage) showUsage();
+	exit(errno);
+}
+
+/** Overloaded function defaulting to not show usage info */
+void exitWithError(const string msg, const int ecode) {
+	exitWithError(msg, ecode, false);
 }
 
 
@@ -40,8 +58,8 @@ int main(int argc, char** argv) {
 	signal(SIGINT, sigintHandler);
 
 	if (argc < 2) {
-		cout << "\nERROR: Missing <file> argument\n";
-		return showUsage();
+		// FIXME: correct error return code
+		exitWithError("Missing <file> argument", 1, true);
 	}
 
 	string source_file = NormalizePath(argv[1]);
@@ -52,8 +70,11 @@ int main(int argc, char** argv) {
 	fclose(test);
 
 	if (!test) {
-		cout << "\nFile: \"" << source_file << "\" does not exist\n";
-		return showUsage();
+		stringstream ss;
+		ss << "File: \"" << source_file << "\" does not exist";
+
+		// FIXME: correct error return code?
+		exitWithError(ss.str(), 1, true);
 	}
 
 	/* Get filenames and target directory */
