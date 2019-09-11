@@ -73,12 +73,18 @@ int convert(const string fin, const string fout, const string hname, const bool 
 		// empty line
 		cout << endl;
 
+		// to check if we are at the end of file
+		// FIXME: better method?
+		bool eof = false;
+
 		// write array data
 		unsigned long long bytes_written = 0;
 		unsigned long long chunk_idx;
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
 			if (cancelled) {
 				cout << "\nCancelled" << endl;
+				break;
+			} else if (eof) {
 				break;
 			}
 
@@ -104,7 +110,10 @@ int convert(const string fin, const string fout, const string hname, const bool 
 
 				if (((bytes_written - 1) % 12) == 11) {
 					ofs << ",\n";
-				} else if (bytes_written != data_length) {
+				} else if (bytes_written >= data_length) {
+					eof = true;
+					break;
+				} else {
 					ofs << ", ";
 				}
 			}
