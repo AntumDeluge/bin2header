@@ -1,19 +1,24 @@
 .\"Created with GNOME Manpages Editor
 .\"http://sourceforge.net/projects/gmanedit2
 
-.\"Replace <program> with the program name, x with the Section Number
-.TH bin2header 1 "Sep 21, 2017" "bin2header-0.1.1" "Binary to header converter"
+.TH bin2header 1 "Sep 11, 2019" "bin2header-0.1.3"
 
 .SH NAME
-bin2header \- Binary to header
+Binary to Header
 
-.SH USAGE
+.SH SYNOPSIS
 .B bin2header
+.RI [options]
 .RI <file>
 .br
 
-.SH SYNOPSIS
-Convert a binary file into a C/C++ header.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Print help information & exit.
+.TP
+.BR \-v ", " \-\-version
+Print version information & exit.
 
 .SH DESCRIPTION
 bin2header takes any file as an argument and converts its binary data into a source header file for use in C/C++ applications. The data is stored as a character array.

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 project(bin2header
 	VERSION 0.1.3
@@ -7,6 +7,8 @@ project(bin2header
 set(PROJECT_PY_VERSION 0.1.2)
 
 message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
+
+set(CMAKE_CXX_STANDARD 11)
 
 if(NOT CMAKE_BUILD_TYPE)
 	# set build to release

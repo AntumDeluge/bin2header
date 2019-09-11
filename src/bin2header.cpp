@@ -1,5 +1,6 @@
 
 #include "convert.h"
+#include "cxxopts.hpp"
 #include "paths.h"
 
 #include <cctype> // toupper
@@ -24,7 +25,10 @@ void showVersion() {
 /** Prints usage info */
 void showUsage() {
 	showVersion();
-	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " <file>\n" << endl;
+	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " [options] <file>" << endl;
+	cout << "\n  Options:" << endl;
+	cout << "\t-h|--help\tPrint help information & exit." << endl;
+	cout << "\t-v|--version\tPrint version information & exit." << endl;
 }
 
 
@@ -53,6 +57,21 @@ int main(int argc, char** argv) {
 	// remove extension from executable name
 	const unsigned int ext_idx = executable.find_last_of(".");
 	executable = executable.substr(0, ext_idx);
+
+	cxxopts::Options options(executable, "help_string");
+	options.add_options()
+			("h,help", "help")
+			("v,version", "version");
+
+	auto args = options.parse(argc, argv);
+
+	if (args["help"].as<bool>()) {
+		showUsage();
+		return 0;
+	} else if (args["version"].as<bool>()) {
+		showVersion();
+		return 0;
+	}
 
 	// set SIGINT (Ctrl+C) handler
 	signal(SIGINT, sigintHandler);
