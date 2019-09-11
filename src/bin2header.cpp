@@ -74,11 +74,19 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
+	// too many input files
+	// XXX: should we allow multiple inputs?
+	if (argc > 2) {
+		// FIXME: correct error return code?
+		exitWithError("Too many input files specified", 1, true);
+	}
+
 	if (argc < 2) {
 		// FIXME: correct error return code
 		exitWithError("Missing <file> argument", 1, true);
 	}
 
+	// only remaining argument should be input file
 	string source_file = NormalizePath(argv[1]);
 
 	// Check if file exists
