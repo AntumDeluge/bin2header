@@ -28,8 +28,9 @@ void showUsage() {
 	showVersion();
 	cout << "\n  Usage:\n\t" << executable << " [options] <file>" << endl;
 	cout << "\n  Options:" << endl;
-	cout << "\t-h|--help\tPrint help information & exit." << endl;
-	cout << "\t-v|--version\tPrint version information & exit." << endl;
+	cout << "\t-h, --help\tPrint help information & exit." << endl;
+	cout << "\t-v, --version\tPrint version information & exit." << endl;
+	cout << "\t    --stdvector\tAdditionally store data in std::vector for C++." << endl;
 }
 
 
@@ -62,7 +63,8 @@ int main(int argc, char** argv) {
 	cxxopts::Options options(executable, "help_string");
 	options.add_options()
 			("h,help", "help")
-			("v,version", "version");
+			("v,version", "version")
+			("stdvector", "vector");
 
 	auto args = options.parse(argc, argv);
 
@@ -125,7 +127,7 @@ int main(int argc, char** argv) {
 	// set SIGINT (Ctrl+C) handler
 	signal(SIGINT, sigintHandler);
 
-	int ret = convert(source_file, target_file, hname);
+	int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
 
 	if (ret == 0)
 		cout << "Exported to: " << target_file << endl;

@@ -1,4 +1,3 @@
-- use command line switch to enable storing std::vector
 - get version info from config.h
 - allow user input to set line endings
 - create icon
