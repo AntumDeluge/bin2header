@@ -20,7 +20,8 @@ endif()
 include_directories("${CMAKE_SOURCE_DIR}/src/include")
 add_executable(${PROJECT_NAME} ${FILES_C})
 
-if(WIN32)
+set(STATIC OFF CACHE BOOL "Link statically to libgcc & libstdc++")
+if(STATIC)
 	# static link to libgcc & libstdc++
 	set(CMAKE_CXX_FLAGS "-static")
 endif()
