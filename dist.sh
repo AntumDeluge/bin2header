@@ -2,11 +2,16 @@
 
 # Script for creating a distributable archive
 
-NAME=bin2header
-VERSION=0.1.3
+DIR_ROOT="$(dirname $0)"
+cd "${DIR_ROOT}"
+DIR_ROOT="$(pwd)"
+
+# import settings
+. "${DIR_ROOT}/info.cfg"
+
 STAGE="${NAME}-${VERSION}"
 DIRS="docs man src"
-FILES="CMakeLists.txt configure dist.sh LICENSE.txt README.md"
+FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md"
 
 # Ensure creation of fresh staging directory & dist package
 if [ -d "${STAGE}" ]; then
