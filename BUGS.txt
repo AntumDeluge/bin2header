@@ -1,4 +1,3 @@
 C++ bugs:
-- CMake builds larger executable
 
 Python bugs:

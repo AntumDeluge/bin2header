@@ -8,8 +8,12 @@ set(PROJECT_PY_VERSION 0.1.2)
 
 message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-# set build to release
-set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type: \"Release\" or \"Debug\"" FORCE)
+if(NOT CMAKE_BUILD_TYPE)
+	# set build to release
+	set(CMAKE_BUILD_TYPE "Release")
+endif()
+# strip binary for release builds
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
 if(WIN32)
 	set(EMBED_ICON OFF CACHE BOOL "Embeds icon resource into executable on Win32")
