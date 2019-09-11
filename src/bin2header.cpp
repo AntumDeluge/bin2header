@@ -19,13 +19,14 @@ string executable;
 /** Prints app name & version */
 void showVersion() {
 	cout << "\n" << appname << " version " << version << endl;
+	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
 }
 
 
 /** Prints usage info */
 void showUsage() {
 	showVersion();
-	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " [options] <file>" << endl;
+	cout << "\n  Usage:\n\t" << executable << " [options] <file>" << endl;
 	cout << "\n  Options:" << endl;
 	cout << "\t-h|--help\tPrint help information & exit." << endl;
 	cout << "\t-v|--version\tPrint version information & exit." << endl;
