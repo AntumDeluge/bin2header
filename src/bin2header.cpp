@@ -20,6 +20,9 @@ int PrintUsage(string exe="bin2header") {
 
 
 int main(int argc, char** argv) {
+	// set SIGINT (Ctrl+C) handler
+	signal(SIGINT, sigintHandler);
+
 	string executable = NormalizePath(argv[0]);
 	executable = GetBaseName(executable);
 

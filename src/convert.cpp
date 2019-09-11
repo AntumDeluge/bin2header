@@ -18,8 +18,17 @@ using namespace std;
 
 unsigned int chunk_size = 1024 * 1024; // default 1MB
 
+bool cancelled = false;
+
+
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 
+// Cancels current write iteration.
+void sigintHandler(int sig_num) {
+	cancelled = true;
+	// reset handler to catch SIGINT next time
+	signal(SIGINT, sigintHandler);
+}
 
 int convert(const string fin, const string fout, const string hname, const bool store_vector) {
 	// file streams
@@ -68,6 +77,11 @@ int convert(const string fin, const string fout, const string hname, const bool 
 		unsigned long long bytes_written = 0;
 		unsigned long long chunk_idx;
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
+			if (cancelled) {
+				cout << "\nCancelled" << endl;
+				break;
+			}
+
 			cout << "\rWriting chunk " << to_string(chunk_idx + 1) << " out of " << to_string(chunk_count) << " (Ctrl+C to cancel)";
 
 			char chunk[chunk_size];
@@ -76,6 +90,8 @@ int convert(const string fin, const string fout, const string hname, const bool 
 
 			unsigned int byte_idx;
 			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
+				if (cancelled) break;
+
 				if ((bytes_written % 12) == 0) {
 					ofs << "\t";
 				}
