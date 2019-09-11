@@ -74,9 +74,6 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	// set SIGINT (Ctrl+C) handler
-	signal(SIGINT, sigintHandler);
-
 	if (argc < 2) {
 		// FIXME: correct error return code
 		exitWithError("Missing <file> argument", 1, true);
@@ -116,6 +113,9 @@ int main(int argc, char** argv) {
 	/* END Remove Unwanted Characters */
 
 	const string target_file = JoinPath(target_dir, basename).append(".h");
+
+	// set SIGINT (Ctrl+C) handler
+	signal(SIGINT, sigintHandler);
 
 	int ret = convert(source_file, target_file, hname);
 
