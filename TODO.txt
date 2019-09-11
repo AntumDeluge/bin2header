@@ -4,3 +4,5 @@
 - create icon
 - create tests
 - create GUI frontend
+- catch cancel events with Ctrl+C to close input/output file streams before exiting
+- optimize for speed
