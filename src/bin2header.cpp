@@ -10,12 +10,19 @@ using namespace std;
 
 
 const string version = "0.1.3";
+const string appname = "Binary to Header";
 string executable;
+
+
+/** Prints app name & version */
+void showVersion() {
+	cout << "\n" << appname << " version " << version << endl;
+}
 
 
 /** Prints usage info */
 int showUsage() {
-	cout << "\nbin2header version " << version << endl;
+	showVersion();
 	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " <file>\n" << endl;
 	return 1;
 }
