@@ -10,25 +10,31 @@ using namespace std;
 
 
 const string version = "0.1.3";
+string executable;
 
 
-int PrintUsage(string exe="bin2header") {
+/** Prints usage info */
+int PrintUsage() {
 	cout << "\nbin2header version " << version << endl;
-	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << exe << " <file>\n" << endl;
+	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " <file>\n" << endl;
 	return 1;
 }
 
 
 int main(int argc, char** argv) {
+	// get executable name
+	executable = GetBaseName(NormalizePath(argv[0]));
+
+	// remove extension from executable name
+	const unsigned int ext_idx = executable.find_last_of(".");
+	executable = executable.substr(0, ext_idx);
+
 	// set SIGINT (Ctrl+C) handler
 	signal(SIGINT, sigintHandler);
 
-	string executable = NormalizePath(argv[0]);
-	executable = GetBaseName(executable);
-
 	if (argc < 2) {
 		cout << "\nERROR: Missing <file> argument\n";
-		return PrintUsage(executable);
+		return PrintUsage();
 	}
 
 	string source_file = NormalizePath(argv[1]);
@@ -40,7 +46,7 @@ int main(int argc, char** argv) {
 
 	if (!test) {
 		cout << "\nFile: \"" << source_file << "\" does not exist\n";
-		return PrintUsage(executable);
+		return PrintUsage();
 	}
 
 	/* Get filenames and target directory */
