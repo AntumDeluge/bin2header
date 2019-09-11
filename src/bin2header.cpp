@@ -14,7 +14,7 @@ string executable;
 
 
 /** Prints usage info */
-int PrintUsage() {
+int showUsage() {
 	cout << "\nbin2header version " << version << endl;
 	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t" << executable << " <file>\n" << endl;
 	return 1;
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 
 	if (argc < 2) {
 		cout << "\nERROR: Missing <file> argument\n";
-		return PrintUsage();
+		return showUsage();
 	}
 
 	string source_file = NormalizePath(argv[1]);
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
 	if (!test) {
 		cout << "\nFile: \"" << source_file << "\" does not exist\n";
-		return PrintUsage();
+		return showUsage();
 	}
 
 	/* Get filenames and target directory */
