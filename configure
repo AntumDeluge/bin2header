@@ -14,6 +14,10 @@ if test -z "${PREFIX}"; then
 	PREFIX=/usr/local
 fi
 
+if test -z "${EMBED_ICON}"; then
+	EMBED_ICON=false
+fi
+
 if test ! -d "${DIR_SRC}"; then
 	echo -e "\nERROR: could not find source directory: ${DIR_SRC}"
 	exit 1
@@ -31,7 +35,8 @@ function usage {
     echo -e "\n\t--static\tCreate statically linked executable (binary"
 	echo -e "\t\t\tonly)"
 	echo -e "\n    Environment Variables:"
-	echo -e "\tPREFIX\t\tSets install prefix for 'make install' target\n\t\t\tType: string (default: /usr/local)\n\n"
+	echo -e "\tPREFIX\t\tSets install prefix for 'make install' target\n\t\t\tType: string (default: /usr/local)"
+	echo -e "\n\tEMBED_ICON\tEmbeds icon resource in executable (Win32\n\t\t\tonly)\n\t\t\tType: bool (default: false)\n\n"
 }
 
 MAX_ARGS=2
@@ -78,6 +83,9 @@ if [[ "${TYPE}" == "s" && "${STATIC}" -ne "0" ]]; then
 fi
 
 FILES_C="$(echo `find "${DIR_SRC}" -type f -name "*.cpp"` | sed -e 's|\n| |g')"
+if ${EMBED_ICON}; then
+	FILES_C="${FILES_C} icon_resource.o"
+fi
 
 # create Makefile
 if [ "${TYPE}" == "b" ]
@@ -103,9 +111,10 @@ MAKEMAN=".PHONY: man\nman: ${DIR_ROOT}/man/bin2header.1\n\tgzip -fk9 ${DIR_ROOT}
 \n\tmv ${DIR_ROOT}/man/bin2header.1.gz ./"
 MAKEINSTALL="install:\n\t@mkdir -vp \$(DESTDIR)${PREFIX}/bin \$(DESTDIR)${PREFIX}/share/man/man1\n\t@cp -v bin2header \$(DESTDIR)${PREFIX}/bin && cp -v bin2header.1.gz \$(DESTDIR)${PREFIX}/share/man/man1"
 MAKEUNINSTALL="uninstall:\n\t@rm -vf \$(DESTDIR)${PREFIX}/bin/bin2header \$(DESTDIR)${PREFIX}/share/man/man1/bin2header.1.gz"
-MAKECLEAN="clean:\n\t@rm -vf bin2header.1.gz bin2header"
+MAKEICON="icon_resource.o: ${DIR_ROOT}/icon_resource.rc\n\twindres ${DIR_ROOT}/icon_resource.rc icon_resource.o"
+MAKECLEAN="clean:\n\t@rm -vf bin2header.1.gz bin2header *.o"
 MAKEDISTCLEAN="distclean: clean"
-MAKEFILE="${MAKE}\n${MAKEMAN}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
+MAKEFILE="${MAKE}\n${MAKEICON}\n${MAKEMAN}\n${MAKEINSTALL}\n${MAKEUNINSTALL}\n${MAKECLEAN}\n${MAKEDISTCLEAN}"
 echo -e "${MAKEFILE}" > "${DIR_WORK}/Makefile"
 echo -e "\nDone!"
 echo -e "\nNow run \"make\" and \"make install\"\n"

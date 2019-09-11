@@ -8,8 +8,15 @@ set(PROJECT_PY_VERSION 0.1.2)
 
 message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
+if(WIN32)
+	set(EMBED_ICON OFF CACHE BOOL "Embeds icon resource into executable on Win32")
+endif()
+
 # retrieve source files
 file(GLOB FILES_C "${CMAKE_SOURCE_DIR}/src/*.cpp")
+if(WIN32 AND EMBED_ICON)
+	set(FILES_C ${FILES_C} "${CMAKE_SOURCE_DIR}/icon_resource.rc")
+endif()
 include_directories("${CMAKE_SOURCE_DIR}/src/include")
 add_executable(${PROJECT_NAME} ${FILES_C})
 
