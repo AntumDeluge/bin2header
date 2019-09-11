@@ -10,8 +10,6 @@ DIR_ROOT="$(pwd)"
 . "${DIR_ROOT}/info.cfg"
 
 STAGE="${NAME}-${VERSION}"
-DIRS="docs man src data"
-FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md BUGS.txt TODO.txt CHANGES.txt"
 
 # Ensure creation of fresh staging directory & dist package
 if [ -d "${STAGE}" ]; then
@@ -23,8 +21,8 @@ fi
 
 echo "Staging files ..."
 mkdir -p "${STAGE}"
-cp -R ${DIRS} "${STAGE}"
-cp ${FILES} "${STAGE}"
+cp -R ${DISTDIRS} "${STAGE}"
+cp ${DISTFILES} "${STAGE}"
 echo "Creating distribution archive: ${STAGE}.tar.xz ..."
 tar -cJf "${STAGE}.tar.xz" "${STAGE}"
 echo "Cleaning staging directory ..."
