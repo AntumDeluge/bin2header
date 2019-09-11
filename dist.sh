@@ -11,7 +11,7 @@ DIR_ROOT="$(pwd)"
 
 STAGE="${NAME}-${VERSION}"
 DIRS="docs man src"
-FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md"
+FILES="CMakeLists.txt configure dist.sh version.sh info.cfg LICENSE.txt README.md CHANGES.txt"
 
 # Ensure creation of fresh staging directory & dist package
 if [ -d "${STAGE}" ]; then

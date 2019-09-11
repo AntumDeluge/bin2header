@@ -1,0 +1,30 @@
+Next
+- Split writing data out into chunks instead of attempting to write the entire file at once
+  - Fixes file size limitation
+- Added some progress feedback output
+- Pressing Ctrl-C will close file buffers & exit cleanly
+
+0.1.3
+- Cleaned up trailing whitespace in output file
+- Use tabs instead of spaces after newlines
+- Disabled storing as std::vector
+- Fixed files not being read if not in nested directory structure
+
+0.1.2
+- Support copying char data in std::vector for C++
+- Always use LF line endings in output file
+- Fixed output filename & directory
+- Ouput comment with header guard name after "#endif" statement
+- Print "exported" message on success
+- Fixed closing file buffer before exiting if file doesn't exist
+
+0.1.2 (Python)
+- Python 2 support ended
+- Always use LF line endings in output file
+
+0.1.0
+- Changed license to MIT
+- Support building with CMake
+
+0.0.1
+- Initial release
