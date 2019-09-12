@@ -30,6 +30,7 @@ void showUsage() {
 	cout << "\n  Options:" << endl;
 	cout << "\t-h, --help\tPrint help information & exit." << endl;
 	cout << "\t-v, --version\tPrint version information & exit." << endl;
+	cout << "\t-s, --chunksize\tSet the buffer chunk size (in bytes).\n\t\t\tDefault: 1048576 (1 megabyte)" << endl;
 	cout << "\t    --stdvector\tAdditionally store data in std::vector for C++." << endl;
 }
 
@@ -64,9 +65,20 @@ int main(int argc, char** argv) {
 	options.add_options()
 			("h,help", "help")
 			("v,version", "version")
+			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
 			("stdvector", "vector");
 
-	auto args = options.parse(argc, argv);
+	// FIXME: don't know how to initialize cxxopts::ParseResult
+	/*
+	cxxopts::ParseResult args;
+	try {
+		args = options.parse(argc, argv);
+	} catch (const cxxopts::OptionParseException& e) {
+		exitWithError(e.what(), 1, true);
+	}
+	*/
+
+	cxxopts::ParseResult args = options.parse(argc, argv);
 
 	if (args["help"].as<bool>()) {
 		showUsage();
@@ -74,6 +86,13 @@ int main(int argc, char** argv) {
 	} else if (args["version"].as<bool>()) {
 		showVersion();
 		return 0;
+	}
+
+	// string stream for concatenating error messages
+	stringstream ss;
+
+	if (args.count("chunksize") > 0) {
+		setChunkSize(args["chunksize"].as<unsigned int>());
 	}
 
 	// too many input files
@@ -97,7 +116,8 @@ int main(int argc, char** argv) {
 	fclose(test);
 
 	if (!test) {
-		stringstream ss;
+		// clear stringstream
+		ss.str("");
 		ss << "File: \"" << source_file << "\" does not exist";
 
 		// FIXME: correct error return code?
