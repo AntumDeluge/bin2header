@@ -44,7 +44,7 @@ void showUsage() {
 void exitWithError(const string msg, const int ecode, const bool show_usage) {
 	cerr << "\nERROR: " << msg << endl;
 	if (show_usage) showUsage();
-	exit(errno);
+	exit(ecode);
 }
 
 /** Overloaded function defaulting to not show usage info */
