@@ -3,4 +3,3 @@
 - create tests
 - create GUI frontend
 - optimize for speed
-- update copyright year in license text & source with version.sh script

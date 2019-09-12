@@ -19,7 +19,7 @@ string executable;
 /** Prints app name & version */
 void showVersion() {
 	cout << "\n" << appname << " version " << version << endl;
-	cout << "2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
+	cout << "Copyright © 2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
 }
 
 
