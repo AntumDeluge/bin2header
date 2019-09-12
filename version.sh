@@ -21,3 +21,6 @@ files_src="$(find "${DIR_ROOT}/src" -type f -not -name "cxxopts.hpp") LICENSE.tx
 for F in ${files_src}; do
 	sed -i -e "s|Copyright © [^ ]*|Copyright © ${year}|g" -e "s|Copyright (C) [^ ]*|Copyright (C) ${year}|g" "${F}"
 done
+
+# set changelog entry labelled "Next" to current version
+sed -i -e "s|^Next$|${VERSION}|" "${DIR_ROOT}/CHANGES.txt"
