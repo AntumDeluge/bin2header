@@ -3,6 +3,11 @@ Next
   - Fixes file size limitation
 - Added some progress feedback output
 - Pressing Ctrl-C will close file buffers & exit cleanly
+- Support command-line options:
+  - help: show a help message
+  - version: show version info
+  - chunksize: set chunk write size
+  - stdvector: additionally store data in std::vector
 
 0.1.3
 - Cleaned up trailing whitespace in output file
