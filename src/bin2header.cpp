@@ -14,6 +14,11 @@
 #include <sstream>
 #include <string>
 
+#ifdef WIN32
+// FIXME: should this only be done for GNU compilers?
+#include <fcntl.h> // _setmode & _O_U16TEXT
+#endif
+
 using namespace std;
 
 
@@ -25,7 +30,7 @@ string executable;
 /** Prints app name & version */
 void showVersion() {
 	cout << "\n" << appname << " version " << version << endl;
-	cout << "Copyright © 2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
+	wcout << L"Copyright © 2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
 }
 
 
@@ -60,6 +65,11 @@ void exitWithError(const string msg, const int ecode) {
 
 
 int main(int argc, char** argv) {
+#ifdef WIN32
+	// enable printing wide characters on Windows
+	_setmode(_fileno(stdout), _O_U16TEXT);
+#endif
+
 	// get executable name
 	executable = GetBaseName(NormalizePath(argv[0]));
 
