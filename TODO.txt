@@ -1,6 +1,6 @@
 - get version info from config.h
 - allow user input to set line endings
-- create tests
 - create GUI frontend
 - optimize for speed
 - use non-resizable type instead of std::vector for C++
+- run "export_flower" test after build
