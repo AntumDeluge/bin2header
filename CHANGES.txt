@@ -1,4 +1,4 @@
-Next
+0.2.0
 - Split writing data out into chunks instead of attempting to write the entire file at once
   - Fixes file size limitation
 - Added some progress feedback output

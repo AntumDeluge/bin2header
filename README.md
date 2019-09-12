@@ -15,7 +15,7 @@ applications. The data is stored as a character array.
 
 ### **Downloads:**
 
-- Latest release: [v0.1.3](https://github.com/AntumDeluge/bin2header/releases/tag/v0.1.3)
+- Latest release: [v0.2.0](https://github.com/AntumDeluge/bin2header/releases/tag/v0.2.0)
 - Latest Python release: [v0.1.2](https://github.com/AntumDeluge/bin2header/releases/tag/v0.1.2)
 
 
