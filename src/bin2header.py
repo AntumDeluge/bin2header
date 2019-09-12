@@ -61,7 +61,7 @@ def GetDirName(f):
 
 def PrintUsage():
 	executable = os.path.basename(__file__)
-	print('\nbin2header version {} (Python)\nCopyright © 2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, year, executable))
+	print('\nbin2header version {} (Python)\nCopyright © 2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
 
 
 def main(argv):
