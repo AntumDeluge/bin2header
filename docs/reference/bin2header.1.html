@@ -1,48 +1,47 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<HTML><HEAD><TITLE>Man page of bin2header</TITLE>
-</HEAD><BODY>
-<H1>bin2header</H1>
-Section: Binary to header converter (1)<BR>Updated: Sep 21, 2017<BR><A HREF="#index">Index</A>
-<A HREF="../">Return to Main Contents</A><HR>
-
-<P>
-<A NAME="lbAB">&nbsp;</A>
-<H2>NAME</H2>
-
-bin2header - Binary to header
-<P>
-<A NAME="lbAC">&nbsp;</A>
-<H2>USAGE</H2>
-
-<B>bin2header</B>
-
-&lt;file&gt;
-
-<BR>
-
-<P>
-<A NAME="lbAD">&nbsp;</A>
-<H2>SYNOPSIS</H2>
-
-Convert a binary file into a C/C++ header.
-<P>
-<A NAME="lbAE">&nbsp;</A>
-<H2>DESCRIPTION</H2>
-
-bin2header takes any file as an argument and converts its binary data into a source header file for use in C/C++ applications. The data is stored as a character array.
-
-<HR>
-<A NAME="index">&nbsp;</A><H2>Index</H2>
-<DL>
-<DT><A HREF="#lbAB">NAME</A><DD>
-<DT><A HREF="#lbAC">USAGE</A><DD>
-<DT><A HREF="#lbAD">SYNOPSIS</A><DD>
-<DT><A HREF="#lbAE">DESCRIPTION</A><DD>
-</DL>
-<HR>
-This document was created by
-<A HREF="../">man2html</A>,
-using the manual pages.<BR>
-Time: 07:52:25 GMT, September 21, 2017
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>bin2header</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">bin2header</h1>
+<p class="date">Sep 11, 2019</p>
+</header>
+<h1>NAME</h1>
+<p>Binary to Header</p>
+<h1>SYNOPSIS</h1>
+<p><strong>bin2header</strong> [options] file<br />
+</p>
+<h1>OPTIONS</h1>
+<dl>
+<dt><strong>-h</strong>, <strong>--help</strong></dt>
+<dd><p>Print help information &amp; exit.</p>
+</dd>
+<dt><strong>-v</strong>, <strong>--version</strong></dt>
+<dd><p>Print version information &amp; exit.</p>
+</dd>
+<dt><strong>-s</strong>, <strong>--chunksize</strong></dt>
+<dd><p>Set the buffer chunk size (in bytes).<br />
+Default: 1048576 (1 megabyte)</p>
+</dd>
+<dt><strong>--stdvector</strong></dt>
+<dd><p>Additionally store data in std::vector for C++.</p>
+</dd>
+</dl>
+<h1>DESCRIPTION</h1>
+<p>bin2header takes any file as an argument and converts its binary data into a source header file for use in C/C++ applications. The data is stored as a character array.</p>
+</body>
+</html>
