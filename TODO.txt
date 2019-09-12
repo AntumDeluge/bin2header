@@ -3,3 +3,4 @@
 - create tests
 - create GUI frontend
 - optimize for speed
+- use non-resizable type instead of std::vector for C++
