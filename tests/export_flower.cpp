@@ -1,4 +1,6 @@
 
+// Flower image source (CC0): http://www.clker.com/clipart-1953.html
+
 #include "flower.png.h"
 
 #include <fstream>
