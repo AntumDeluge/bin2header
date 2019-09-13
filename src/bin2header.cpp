@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
 	const unsigned int ext_idx = executable.find_last_of(".");
 	executable = executable.substr(0, ext_idx);
 
-	cxxopts::Options options(executable, "help_string");
+	cxxopts::Options options(executable, "Convert binary files to C/C++ headers");
 	options.add_options()
 			("h,help", "help")
 			("v,version", "version")
