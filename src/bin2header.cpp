@@ -70,9 +70,9 @@ void exitWithError(const string msg, const int ecode) {
  * @tparam argv char**
  * @treturn cxxopts::ParseResult
  */
-cxxopts::ParseResult parseArgs(cxxopts::Options opts, int argc, char** argv) {
+cxxopts::ParseResult parseArgs(cxxopts::Options opts, int* argc, char*** argv) {
 	try {
-		cxxopts::ParseResult res = opts.parse(argc, argv);
+		cxxopts::ParseResult res = opts.parse(*argc, *argv);
 		return res;
 	} catch (const cxxopts::OptionParseException& e) {
 		exitWithError(e.what(), 1, true);
@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
 			("stdvector", "vector");
 
-	cxxopts::ParseResult args = parseArgs(options, argc, argv);
+	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
 
 	if (args["help"].as<bool>()) {
 		showUsage();
