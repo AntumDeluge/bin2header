@@ -63,6 +63,23 @@ void exitWithError(const string msg, const int ecode) {
 }
 
 
+/** Parses command line arguments & returns result.
+ *
+ * @tparam opts cxxopts::Options
+ * @tparam argc int
+ * @tparam argv char**
+ * @treturn cxxopts::ParseResult
+ */
+cxxopts::ParseResult parseArgs(cxxopts::Options opts, int argc, char** argv) {
+	try {
+		cxxopts::ParseResult res = opts.parse(argc, argv);
+		return res;
+	} catch (const cxxopts::OptionParseException& e) {
+		exitWithError(e.what(), 1, true);
+	}
+}
+
+
 int main(int argc, char** argv) {
 	// get executable name
 	executable = GetBaseName(NormalizePath(argv[0]));
@@ -78,17 +95,7 @@ int main(int argc, char** argv) {
 			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
 			("stdvector", "vector");
 
-	// FIXME: don't know how to initialize cxxopts::ParseResult
-	/*
-	cxxopts::ParseResult args;
-	try {
-		args = options.parse(argc, argv);
-	} catch (const cxxopts::OptionParseException& e) {
-		exitWithError(e.what(), 1, true);
-	}
-	*/
-
-	cxxopts::ParseResult args = options.parse(argc, argv);
+	cxxopts::ParseResult args = parseArgs(options, argc, argv);
 
 	if (args["help"].as<bool>()) {
 		showUsage();
