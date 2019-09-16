@@ -4,3 +4,4 @@
 - optimize for speed
 - use non-resizable type instead of std::vector for C++
 - run "export_flower" test after build
+- show a timer (that can optionally be disable) to show elapsed time
