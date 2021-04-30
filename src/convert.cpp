@@ -108,15 +108,16 @@ int convert(const string fin, const string fout, const string hname, const bool 
 				ofs << ss.str();
 				bytes_written++;
 
-				if (((bytes_written - 1) % 12) == 11) {
-					ofs << ",\n";
-				} else if (bytes_written >= data_length) {
+				if (bytes_written >= data_length) {
 					eof = true;
 					break;
 				} else {
 					ofs << ", ";
+					if ((bytes_written % 12) == 0) {
+						ofs << "\n";
+					}
 				}
-			}
+			}	/* for (byte_idx...) */
 		}
 
 		// flush stdout
