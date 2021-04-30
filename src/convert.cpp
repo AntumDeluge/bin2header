@@ -20,6 +20,14 @@ unsigned int chunk_size = 1024 * 1024; // default 1MB
 
 bool cancelled = false;
 
+char toPrintableChar(char c)
+{
+	if ((c >= ' ') && (c <= '~') ) {
+		return c;
+	} else {
+		return '.';
+	}
+}
 
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 
@@ -86,6 +94,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// write array data
 		unsigned long long bytes_written = 0;
 		unsigned long long chunk_idx;
+		std::string comment = "";
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
 			if (cancelled) {
 				cout << "\nCancelled" << endl;
@@ -106,24 +115,31 @@ int convert(const string fin, const string fout, string hname, const bool store_
 
 				if ((bytes_written % 12) == 0) {
 					ofs << "\t";
+					comment = "";
 				}
 
 				stringstream ss;
 				ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) chunk[byte_idx];
-
 				ofs << ss.str();
+				comment += toPrintableChar(chunk[byte_idx]);
 				bytes_written++;
 
 				if (bytes_written >= data_length) {
 					eof = true;
 					break;
-				} else if ((bytes_written % 12) == 0) {
-                        		ofs << ",\n";
-                    		}
-                    		else {
-                        		ofs << ", ";
-                    		}
-			}	/* for (byte_idx...) */
+				} else {
+					if ((bytes_written % 12) == 0) {
+						ofs << ", /* " << comment << " */";
+						ofs << "\n";
+					} else {
+						ofs << ", ";
+					}
+				}
+			}
+			if (eof) {
+				ofs << " /* " << comment << " */";
+				ofs << "\n";
+			}
 		}
 
 		// flush stdout
@@ -132,7 +148,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// release input file after read
 		ifs.close();
 
-		ofs << "\n};\n";
+		ofs << "};\n";
 		if (store_vector) {
 			ofs << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
