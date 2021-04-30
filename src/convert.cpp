@@ -30,10 +30,16 @@ void sigintHandler(int sig_num) {
 	signal(SIGINT, sigintHandler);
 }
 
-int convert(const string fin, const string fout, const string hname, const bool store_vector) {
+int convert(const string fin, const string fout, string hname, const bool store_vector) {
 	// file streams
 	ifstream ifs;
 	ofstream ofs;
+
+	/* Add '_' when first char is a number */
+	if (isdigit(hname[0]))
+	{
+		hname.insert(0, 1, '_');
+	}
 
 	/* START Uppercase Name for Header */
 
