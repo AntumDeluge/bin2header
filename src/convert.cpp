@@ -117,15 +117,12 @@ int convert(const string fin, const string fout, string hname, const bool store_
 				if (bytes_written >= data_length) {
 					eof = true;
 					break;
-				} else {
-                    ofs << ",";
-                    if ((bytes_written % 12) == 0) {
-                        ofs << "\n";
-                    }
-                    else {
-                        ofs << " ";
-                    }
-				}
+				} else if ((bytes_written % 12) == 0) {
+                        		ofs << ",\n";
+                    		}
+                    		else {
+                        		ofs << ", ";
+                    		}
 			}	/* for (byte_idx...) */
 		}
 
