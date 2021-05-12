@@ -17,8 +17,11 @@ using namespace std;
 
 
 unsigned int chunk_size = 1024 * 1024; // default 1MB
+unsigned int nbData     = 12;          // default 12 as before
+bool showDataContent    = false;       // default 
 
 bool cancelled = false;
+
 
 char toPrintableChar(char c)
 {
@@ -30,6 +33,10 @@ char toPrintableChar(char c)
 }
 
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
+
+void setNumberDataPerLine(const unsigned int nd) { nbData = nd; }
+
+void setShowDataContent(const bool dc) { showDataContent = dc; }
 
 // Cancels current write iteration.
 void sigintHandler(int sig_num) {
@@ -113,7 +120,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
 				if (cancelled) break;
 
-				if ((bytes_written % 12) == 0) {
+				if ((bytes_written % nbData) == 0) {
 					ofs << "\t";
 					comment = "";
 				}
@@ -121,25 +128,33 @@ int convert(const string fin, const string fout, string hname, const bool store_
 				stringstream ss;
 				ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) chunk[byte_idx];
 				ofs << ss.str();
-				comment += toPrintableChar(chunk[byte_idx]);
+				if (showDataContent) {
+					comment += toPrintableChar(chunk[byte_idx]);
+				}
 				bytes_written++;
 
 				if (bytes_written >= data_length) {
 					eof = true;
+					if (showDataContent) {
+						for (int i = (bytes_written % nbData); i < nbData; i++) {
+							ofs << "      ";
+						}
+						ofs << "  /* " << comment << " */";
+					}
+					ofs << "\n";
 					break;
 				} else {
-					if ((bytes_written % 12) == 0) {
-						ofs << ", /* " << comment << " */";
+					if ((bytes_written % nbData) == 0) {
+						ofs << ",";
+						if (showDataContent) {
+							ofs << " /* " << comment << " */";
+						}
 						ofs << "\n";
 					} else {
 						ofs << ", ";
 					}
 				}
-			}
-			if (eof) {
-				ofs << " /* " << comment << " */";
-				ofs << "\n";
-			}
+			}	/* for (byte_idx...) */
 		}
 
 		// flush stdout
