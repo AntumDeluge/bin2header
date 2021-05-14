@@ -15,6 +15,8 @@
 #define len(a) (sizeof(a)/sizeof(*a))
 
 extern void setChunkSize(const unsigned int sz);
+extern void setNumberDataPerLine(const unsigned int nd);
+extern void setShowDataContent(const bool dc);
 
 extern void sigintHandler(int sig_num);
 
