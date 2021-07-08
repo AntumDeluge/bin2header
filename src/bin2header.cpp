@@ -38,14 +38,15 @@ void showUsage() {
 	showVersion();
 	cout << "\n  Usage:\n\t" << executable << " [options] <file>" << endl;
 	cout << "\n  Options:" << endl;
-	cout << "\t-h, --help\tPrint help information & exit." << endl;
-	cout << "\t-v, --version\tPrint version information & exit." << endl;
-	cout << "\t-o, --output\tSet output file name" << endl;
-	cout << "\t-n, --hname\tSet header name" << endl;
-	cout << "\t-s, --chunksize\tSet the buffer chunk size (in bytes).\n\t\t\tDefault: 1048576 (1 megabyte)" << endl;
-	cout << "\t-d, --nbdata\tSet number of byte per line" << endl;
-	cout << "\t-c, --datacontent\tShow data content as comment" << endl;
-	cout << "\t    --stdvector\tAdditionally store data in std::vector for C++." << endl;
+	cout << "\t-h, --help\t\tPrint help information & exit." << endl;
+	cout << "\t-v, --version\t\tPrint version information & exit." << endl;
+	cout << "\t-o, --output\t\tSet output file name." << endl;
+	cout << "\t-n, --hname\t\tSet header name." << endl;
+	cout << "\t-s, --chunksize\t\tSet the buffer chunk size (in bytes)." << endl;
+	cout << "\t\t\t\t  Default: 1048576 (1 megabyte)" << endl;
+	cout << "\t-d, --nbdata\t\tSet number of bytes per line." << endl;
+	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
+	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
 }
 
 
