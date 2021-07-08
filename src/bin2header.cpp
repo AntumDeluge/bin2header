@@ -125,11 +125,10 @@ int main(int argc, char** argv) {
 		setNumberDataPerLine(args["nbdata"].as<unsigned int>());
 	}
 
-
 	if (args["datacontent"].as<bool>()) {
 		setShowDataContent(true);
 	}
-	
+
 	// too many input files
 	// XXX: should we allow multiple inputs?
 	#if 0	/* Multiple switches */
