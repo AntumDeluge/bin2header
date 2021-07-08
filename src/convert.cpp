@@ -17,11 +17,26 @@ using namespace std;
 
 
 unsigned int chunk_size = 1024 * 1024; // default 1MB
+unsigned int nbData     = 12;          // default 12 as before
+bool showDataContent    = false;       // default 
 
 bool cancelled = false;
 
 
+char toPrintableChar(char c)
+{
+	if ((c >= ' ') && (c <= '~') ) {
+		return c;
+	} else {
+		return '.';
+	}
+}
+
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
+
+void setNumberDataPerLine(const unsigned int nd) { nbData = nd; }
+
+void setShowDataContent(const bool dc) { showDataContent = dc; }
 
 // Cancels current write iteration.
 void sigintHandler(int sig_num) {
@@ -86,6 +101,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// write array data
 		unsigned long long bytes_written = 0;
 		unsigned long long chunk_idx;
+		std::string comment = "";
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
 			if (cancelled) {
 				cout << "\nCancelled" << endl;
@@ -104,25 +120,40 @@ int convert(const string fin, const string fout, string hname, const bool store_
 			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
 				if (cancelled) break;
 
-				if ((bytes_written % 12) == 0) {
+				if ((bytes_written % nbData) == 0) {
 					ofs << "\t";
+					comment = "";
 				}
 
 				stringstream ss;
 				ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) chunk[byte_idx];
-
 				ofs << ss.str();
+				if (showDataContent) {
+					comment += toPrintableChar(chunk[byte_idx]);
+				}
 				bytes_written++;
 
 				if (bytes_written >= data_length) {
 					eof = true;
+					if (showDataContent) {
+						for (int i = (bytes_written % nbData); i < nbData; i++) {
+							ofs << "      ";
+						}
+						ofs << "  /* " << comment << " */";
+					}
+					ofs << "\n";
 					break;
-				} else if ((bytes_written % 12) == 0) {
-                        		ofs << ",\n";
-                    		}
-                    		else {
-                        		ofs << ", ";
-                    		}
+				} else {
+					if ((bytes_written % nbData) == 0) {
+						ofs << ",";
+						if (showDataContent) {
+							ofs << " /* " << comment << " */";
+						}
+						ofs << "\n";
+					} else {
+						ofs << ", ";
+					}
+				}
 			}	/* for (byte_idx...) */
 		}
 
@@ -132,7 +163,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// release input file after read
 		ifs.close();
 
-		ofs << "\n};\n";
+		ofs << "};\n";
 		if (store_vector) {
 			ofs << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("

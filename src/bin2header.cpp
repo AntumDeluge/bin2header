@@ -40,7 +40,11 @@ void showUsage() {
 	cout << "\n  Options:" << endl;
 	cout << "\t-h, --help\tPrint help information & exit." << endl;
 	cout << "\t-v, --version\tPrint version information & exit." << endl;
+	cout << "\t-o, --output\tSet output file name" << endl;
+	cout << "\t-n, --hname\tSet header name" << endl;
 	cout << "\t-s, --chunksize\tSet the buffer chunk size (in bytes).\n\t\t\tDefault: 1048576 (1 megabyte)" << endl;
+	cout << "\t-d, --nbdata\tSet number of byte per line" << endl;
+	cout << "\t-c, --datacontent\tShow data content as comment" << endl;
 	cout << "\t    --stdvector\tAdditionally store data in std::vector for C++." << endl;
 }
 
@@ -92,8 +96,12 @@ int main(int argc, char** argv) {
 	options.add_options()
 			("h,help", "help")
 			("v,version", "version")
-			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
-			("stdvector", "vector");
+		    ("o,output", "Output file name", cxxopts::value<string>())
+		    ("n,hname", "Header name", cxxopts::value<string>())
+		    ("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
+		    ("d,nbdata", "Number of byte per line", cxxopts::value<unsigned int>())
+		    ("c,datacontent", "Show data content")
+		    ("stdvector", "vector");
 
 	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
 
@@ -112,12 +120,23 @@ int main(int argc, char** argv) {
 		setChunkSize(args["chunksize"].as<unsigned int>());
 	}
 
+	if (args.count("nbdata") > 0) {
+		setNumberDataPerLine(args["nbdata"].as<unsigned int>());
+	}
+
+
+	if (args["datacontent"].as<bool>()) {
+		setShowDataContent(true);
+	}
+	
 	// too many input files
 	// XXX: should we allow multiple inputs?
+	#if 0	/* Multiple switches */
 	if (argc > 2) {
 		// FIXME: correct error return code?
 		exitWithError("Too many input files specified", 1, true);
 	}
+	#endif
 
 	if (argc < 2) {
 		// FIXME: correct error return code
@@ -144,7 +163,10 @@ int main(int argc, char** argv) {
 	/* Get filenames and target directory */
 	string basename = GetBaseName(source_file);
 	string hname = basename;
-	const string target_dir = GetDirName(source_file);
+
+	if (args.count("hname") > 0) {
+		hname = args["hname"].as<string>();
+	}
 
 	/* START Remove Unwanted Characters */
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
@@ -159,7 +181,18 @@ int main(int argc, char** argv) {
 	}
 	/* END Remove Unwanted Characters */
 
-	const string target_file = JoinPath(target_dir, basename).append(".h");
+	/* Add '_' when first char is a number */
+	if (isdigit(hname[0])){
+		hname.insert(0, 1, '_');
+	}
+
+	string target_file;
+	if (args.count("output") > 0) {
+		target_file = args["output"].as<string>();
+	} else {
+		const string target_dir = GetDirName(source_file);
+		target_file = JoinPath(target_dir, basename).append(".h");
+	}
 
 	// set SIGINT (Ctrl+C) handler
 	signal(SIGINT, sigintHandler);
