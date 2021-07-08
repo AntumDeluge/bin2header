@@ -18,7 +18,7 @@ using namespace std;
 
 unsigned int chunk_size = 1024 * 1024; // default 1MB
 unsigned int nbData     = 12;          // default 12 as before
-bool showDataContent    = false;       // default 
+bool showDataContent    = false;       // default
 
 bool cancelled = false;
 
