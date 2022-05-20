@@ -25,6 +25,18 @@ Set the buffer chunk size (in bytes).
 .br
 Default: 1048576 (1 megabyte)
 .TP
+.BR \-f ", " \-\-offset
+Discard front bytes
+.TP
+.BR \-l ", " \-\-length
+Precess only this number of bytes from file
+.TP
+.BR \-p ", " \-\-pack
+Pack results into 8/16/32 bit as int 
+.TP
+.BR \-e ", " \-\-swap
+Swap endianess when packing to 16/32 bit ints 
+.TP
 .BR \-\-stdvector
 Additionally store data in std::vector for C++.
 

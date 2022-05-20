@@ -17,6 +17,10 @@
 extern void setChunkSize(const unsigned int sz);
 extern void setNumberDataPerLine(const unsigned int nd);
 extern void setShowDataContent(const bool dc);
+extern void setOutputBitLength(const unsigned int bl);
+extern void setReadOffset(const unsigned long ofs);
+extern void setReadLength(const unsigned long lgt);
+extern void setSwapEndianess(void);
 
 extern void sigintHandler(int sig_num);
 

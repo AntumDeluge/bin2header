@@ -18,7 +18,11 @@ using namespace std;
 
 unsigned int chunk_size = 1024 * 1024; // default 1MB
 unsigned int nbData     = 12;          // default 12 as before
+unsigned long offset = 0;              // Start processing the file from this position
+unsigned long length = 0;              // process only given amount of bytes (0 - disables)
 bool showDataContent    = false;       // default
+unsigned int outlen     = 8;           // output type bit length (8/16/32)
+bool swap_bytes         = false;       // swap byte order for bigger types (changes endianess)
 
 bool cancelled = false;
 
@@ -37,6 +41,11 @@ void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 void setNumberDataPerLine(const unsigned int nd) { nbData = nd; }
 
 void setShowDataContent(const bool dc) { showDataContent = dc; }
+
+void setOutputBitLength(const unsigned int bl) { if ((bl==16)||(bl==32)) outlen = bl;}
+void setReadOffset(const unsigned long ofs) { offset = ofs; }
+void setReadLength(const unsigned long lgt) { length = lgt; }
+void setSwapEndianess(void) {swap_bytes = true; }
 
 // Cancels current write iteration.
 void sigintHandler(int sig_num) {
@@ -73,14 +82,30 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		ifs.open(fin.c_str(), ifstream::binary);
 
 		unsigned long long data_length;
+		unsigned char wordbytes = outlen/8;
 		ifs.seekg(0, ifstream::end);
 		data_length = ifs.tellg();
 		ifs.seekg(0, ifstream::beg);
 
-		unsigned long long chunk_count = ceil((double) data_length / chunk_size);
+		if (offset > data_length) {
+			cout<<"ERROR: offset bigger than file length"<<endl;
+			return -1;
+		}
+
+		unsigned long long chunk_count = ceil((double) (data_length-offset) / chunk_size);
 
 		cout << "File size: " << to_string(data_length) << " bytes" << endl;
+
+		if(chunk_size%wordbytes){
+			cout << "Warning: Chunk size truncated to full words length" << endl;
+			chunk_size-=chunk_size%wordbytes;
+		}
 		cout << "Chunk size: " << to_string(chunk_size) << " bytes" << endl;
+
+		if (offset) cout << "Start from position: " << to_string(offset) << endl;
+		if (length) cout << "Process maximum " << to_string(length)<<" bytes" << endl;
+		if (outlen!= 8) cout << "Pack into "<< to_string(outlen)<<" bit ints" << endl;
+		if (outlen>8 && swap_bytes) cout << "Swap endianess"<< endl;
 
 		/* START Read Data Out to Header */
 
@@ -89,7 +114,10 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		if (store_vector) {
 			ofs << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
 		}
-		ofs << "\nstatic const unsigned char " << hname << "[] = {\n";
+
+		if (outlen ==32) ofs << "\nstatic const unsigned int " << hname << "[] = {\n";
+		else if (outlen == 16 ) ofs << "\nstatic const unsigned short " << hname << "[] = {\n";
+		else ofs << "\nstatic const unsigned char " << hname << "[] = {\n";
 
 		// empty line
 		cout << endl;
@@ -100,6 +128,18 @@ int convert(const string fin, const string fout, string hname, const bool store_
 
 		// write array data
 		unsigned long long bytes_written = 0;
+
+		//How many bytes to write
+		unsigned long long bytes_to_go = data_length-offset;
+		if(length>0 && length<bytes_to_go) bytes_to_go=length;
+
+		//Check if there are any bytes to omit during packing (not full words will not be processed)
+		int omit = bytes_to_go%(outlen/8);
+		if(omit) {
+			cout << "Warning: Last"<< to_string(omit)<<" byte(s) will be ignored as not forming full data word" << endl;
+			bytes_to_go-=omit;
+		}
+
 		unsigned long long chunk_idx;
 		std::string comment = "";
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
@@ -113,30 +153,58 @@ int convert(const string fin, const string fout, string hname, const bool store_
 			cout << "\rWriting chunk " << to_string(chunk_idx + 1) << " out of " << to_string(chunk_count) << " (Ctrl+C to cancel)";
 
 			char chunk[chunk_size];
-			ifs.seekg(chunk_idx * chunk_size);
+			ifs.seekg(chunk_idx * chunk_size + offset);
 			ifs.read(chunk, chunk_size);
 
 			unsigned int byte_idx;
 			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
 				if (cancelled) break;
 
-				if ((bytes_written % nbData) == 0) {
+				if ((bytes_written % (nbData*wordbytes)) == 0) {
 					ofs << "\t";
 					comment = "";
 				}
 
 				stringstream ss;
-				ss << "0x" << hex << setw(2) << setfill('0') << (int) (unsigned char) chunk[byte_idx];
+				unsigned int word;
+				if(wordbytes==2) {
+					//Pack input bytes into 16 bit ints
+					if(swap_bytes){
+						word = (unsigned char)chunk[byte_idx++];
+						word += (unsigned char)chunk[byte_idx]<<8;
+					} else {
+						word = (unsigned char)chunk[byte_idx++]<<8;
+						word += (unsigned char)chunk[byte_idx];
+					}
+					ss << "0x" << hex << setw(4) << setfill('0') << (short)word;
+				} else if (wordbytes == 4) {
+					//pack input bytes into 32 bit words
+					if(swap_bytes){
+						word = (unsigned char)chunk[byte_idx++];
+						word += (unsigned char)chunk[byte_idx++]<<8;
+						word += (unsigned char)chunk[byte_idx++]<<16;
+						word += (unsigned char)chunk[byte_idx]<<24;
+					} else {
+						word = (unsigned char)chunk[byte_idx++]<<24;
+						word += (unsigned char)chunk[byte_idx++]<<16;
+						word += (unsigned char)chunk[byte_idx++]<<8;
+						word += (unsigned char)chunk[byte_idx];
+					}
+					ss << "0x" << hex << setw(8) << setfill('0') << (int)word;
+				} else{
+					//Pack single bytes
+					ss << "0x" << hex << setw(2) << setfill('0') << (int)(unsigned char) chunk[byte_idx];
+				}
 				ofs << ss.str();
 				if (showDataContent) {
 					comment += toPrintableChar(chunk[byte_idx]);
 				}
-				bytes_written++;
+				bytes_written+=wordbytes;
 
-				if (bytes_written >= data_length) {
+				if (bytes_written >= bytes_to_go) {
 					eof = true;
 					if (showDataContent) {
-						for (int i = (bytes_written % nbData); i < nbData; i++) {
+						for (int i = (bytes_written % (nbData*wordbytes)); i < (nbData*wordbytes); i++) {
 							ofs << "      ";
 						}
 						ofs << "  /* " << comment << " */";
@@ -144,7 +212,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 					ofs << "\n";
 					break;
 				} else {
-					if ((bytes_written % nbData) == 0) {
+					if ((bytes_written % (nbData*wordbytes)) == 0) {
 						ofs << ",";
 						if (showDataContent) {
 							ofs << " /* " << comment << " */";
@@ -173,11 +241,8 @@ int convert(const string fin, const string fout, string hname, const bool store_
 
 		ofs.close();
 
-		if (bytes_written != data_length) {
-			cout << "WARNING: input file size (" << to_string(data_length) << ") and bytes written (" << to_string(bytes_written) << ") do not match" << endl;
-		} else {
-			cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
-		}
+		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
+		
 	} catch (int e) {
 		return e;
 	}
