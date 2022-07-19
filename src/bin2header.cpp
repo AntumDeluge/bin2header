@@ -48,7 +48,7 @@ void showUsage() {
 	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
 	cout << "\t-f  --offset\t\tStart reading with a given offset from file start" << endl;
 	cout << "\t-l  --length\t\tProcess given length of file (in byted)" << endl;
-	cout << "\t-p  --pack\t\tGenerate header with 16 32 or 64 bit int types" << endl;
+	cout << "\t-p  --pack\t\tGenerate header with 16 or 32 bit int types" << endl;
 	cout << "\t-e  --endianess\t\tSwap endianess when packing into larger datatypes" << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
 }
