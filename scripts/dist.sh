@@ -2,7 +2,7 @@
 
 # Script for creating a distributable archive
 
-DIR_ROOT="$(dirname $0)"
+DIR_ROOT="$(dirname $0)/../"
 cd "${DIR_ROOT}"
 DIR_ROOT="$(pwd)"
 
