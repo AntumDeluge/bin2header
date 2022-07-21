@@ -19,7 +19,7 @@ sed -i -e "s|\"bin2header-.*\"|\"bin2header-${VERSION}\"|" "${DIR_ROOT}/man/bin2
 files_src="$(find "${DIR_ROOT}/src" -type f -not -name "cxxopts.hpp") LICENSE.txt"
 
 for F in ${files_src}; do
-	sed -i -e "s|Copyright © [^ ]*|Copyright © ${year}|g" -e "s|Copyright (C) [^ ]*|Copyright (C) ${year}|g" "${F}"
+	sed -i -e "s|Copyright © [^ ]*|Copyright © 2017-${year}|g" -e "s|Copyright (C) [^ ]*|Copyright (C) 2017-${year}|g" "${F}"
 done
 
 # set changelog entry labelled "Next" to current version

@@ -26,9 +26,9 @@ string executable;
 void showVersion() {
 	cout << "\n" << appname << " version " << version << endl;
 #ifdef WIN32
-	cout << "Copyright (C) 2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
+	cout << "Copyright (C) 2017-2022 Jordan Irwin <antumdeluge@gmail.com>" << endl;
 #else
-	cout << "Copyright © 2019 Jordan Irwin <antumdeluge@gmail.com>" << endl;
+	cout << "Copyright © 2017-2022 Jordan Irwin <antumdeluge@gmail.com>" << endl;
 #endif
 }
 
