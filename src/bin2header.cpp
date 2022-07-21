@@ -101,16 +101,16 @@ int main(int argc, char** argv) {
 	options.add_options()
 			("h,help", "help")
 			("v,version", "version")
-		    ("o,output", "Output file name", cxxopts::value<string>())
-		    ("n,hname", "Header name", cxxopts::value<string>())
-		    ("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
-		    ("d,nbdata", "Number of byte per line", cxxopts::value<unsigned int>())
-		    ("c,datacontent", "Show data content")
+			("o,output", "Output file name", cxxopts::value<string>())
+			("n,hname", "Header name", cxxopts::value<string>())
+			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
+			("d,nbdata", "Number of byte per line", cxxopts::value<unsigned int>())
+			("c,datacontent", "Show data content")
 			("f,offset", "Process file with given offset", cxxopts::value<unsigned long>())
 			("l,length", "Process given amount of bytes only", cxxopts::value<unsigned long>())
 			("p,pack", "Pack into 16 or 32 bit int", cxxopts::value<unsigned int>())
 			("e,swap", "Swap endianess when using -p option")
-		    ("stdvector", "vector");
+			("stdvector", "vector");
 
 	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
 

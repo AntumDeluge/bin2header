@@ -242,7 +242,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		ofs.close();
 
 		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
-		
+
 	} catch (int e) {
 		return e;
 	}
