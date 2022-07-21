@@ -75,3 +75,9 @@ cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX="$(pwd)/install" -DSTATIC=ON -
 cmake --build ./
 cmake --install ./
 ```
+
+### **Acknowledgements:**
+
+See: [list of contributors](https://github.com/AntumDeluge/bin2header/graphs/contributors)
+
+This project uses [cxxopts](https://github.com/jarro2783/cxxopts).
