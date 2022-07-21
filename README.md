@@ -21,7 +21,7 @@ applications. The data is stored as a character array.
 
 ### **Building:**
 
-#### 'configure' script (currently recommended):
+#### 'configure' script:
 
 <blockquote style="padding-left:2em; font-family:monospace;">
 <b>USAGE:</b> ./configure [--help] [--type=TYPE] [--static]<br><br>
@@ -37,16 +37,41 @@ Options:<br>
 
 #### CMake (native binary only):
 
-Build in source root directory:
+To configure & build run `cmake <path_to_source> && cmake --build ./`.
+
+Example of building from source root directory:
 
 ```sh
-cmake ./ && make
+cmake ./ && cmake --build ./
 ```
 
-Build in separate directory:
+Example of building from sub-directory in source root:
 
 ```sh
 mkdir build
 cd build
-cmake ../ && make
+cmake ../ && cmake --build ./
+```
+
+After building is complete, files can be installed with:
+
+```sh
+cmake --install ./
+```
+
+To get a list of available CMake configuration options run `cmake -LA <path_to_source>`.
+
+Notable CMake configuration options:
+
+- `CMAKE_INSTALL_PREFIX`: target directory where files are installed with `cmake --install`
+- `STATIC`: link to dependencies statically (default: OFF)
+- `EMBED_ICON`: (Windows only) add icon resource to PE32 executable (default: OFF)
+
+Example of building on Windows with MinGW:
+
+```sh
+mkdir build-win32 && cd build-win32
+cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX="$(pwd)/install" -DSTATIC=ON -DEMBED_ICON=ON ../
+cmake --build ./
+cmake --install ./
 ```
