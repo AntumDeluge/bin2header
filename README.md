@@ -1,7 +1,7 @@
-## Binary to Header
+# Binary to Header
 
 
-### **Description:**
+## Description
 
 Converter for binary files to C/C++ headers.
 
@@ -9,19 +9,19 @@ Converter for binary files to C/C++ headers.
 applications. The data is stored as a character array.
 
 
-### **Licensing:**
+## Licensing
 
 [MIT](LICENSE.txt)
 
-### **Downloads:**
+## Downloads
 
 - Latest release: [v0.2.0](https://github.com/AntumDeluge/bin2header/releases/tag/v0.2.0)
 - Latest Python release: [v0.1.2](https://github.com/AntumDeluge/bin2header/releases/tag/v0.1.2)
 
 
-### **Building:**
+## Building
 
-#### 'configure' script:
+### 'configure' Script
 
 <blockquote style="padding-left:2em; font-family:monospace;">
 <b>USAGE:</b> ./configure [--help] [--type=TYPE] [--static]<br><br>
@@ -35,7 +35,7 @@ Options:<br>
 - To build static native binary, run: `./configure --static && make`
 - To build python version, run: `./configure --type=s && make`
 
-#### CMake (native binary only):
+### CMake (native binary only)
 
 To configure & build run `cmake <path_to_source> && cmake --build ./`.
 
@@ -76,7 +76,7 @@ cmake --build ./
 cmake --install ./
 ```
 
-### **Acknowledgements:**
+## Acknowledgements
 
 See: [list of contributors](https://github.com/AntumDeluge/bin2header/graphs/contributors)
 
