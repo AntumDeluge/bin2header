@@ -81,8 +81,7 @@ void exitWithError(const string msg, const int ecode) {
  */
 cxxopts::ParseResult parseArgs(cxxopts::Options opts, int* argc, char*** argv) {
 	try {
-		cxxopts::ParseResult res = opts.parse(*argc, *argv);
-		return res;
+		return opts.parse(*argc, *argv);
 	} catch (const cxxopts::OptionParseException& e) {
 		exitWithError(e.what(), 1, true);
 	}
