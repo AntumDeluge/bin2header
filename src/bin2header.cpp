@@ -46,6 +46,10 @@ void showUsage() {
 	cout << "\t\t\t\t  Default: 1048576 (1 megabyte)" << endl;
 	cout << "\t-d, --nbdata\t\tSet number of bytes per line." << endl;
 	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
+	cout << "\t-f  --offset\t\tStart reading with a given offset from file start" << endl;
+	cout << "\t-l  --length\t\tProcess given length of file (in byted)" << endl;
+	cout << "\t-p  --pack\t\tGenerate header with 16 or 32 bit int types" << endl;
+	cout << "\t-e  --endianess\t\tSwap endianess when packing into larger datatypes" << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
 }
 
@@ -102,6 +106,10 @@ int main(int argc, char** argv) {
 		    ("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
 		    ("d,nbdata", "Number of byte per line", cxxopts::value<unsigned int>())
 		    ("c,datacontent", "Show data content")
+			("f,offset", "Process file with given offset", cxxopts::value<unsigned long>())
+			("l,length", "Process given amount of bytes only", cxxopts::value<unsigned long>())
+			("p,pack", "Pack into 16 or 32 bit int", cxxopts::value<unsigned int>())
+			("e,swap", "Swap endianess when using -p option")
 		    ("stdvector", "vector");
 
 	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
@@ -127,6 +135,22 @@ int main(int argc, char** argv) {
 
 	if (args["datacontent"].as<bool>()) {
 		setShowDataContent(true);
+	}
+
+	if (args.count("offset") > 0) {
+		setReadOffset(args["offset"].as<unsigned long>());
+	}
+
+	if (args.count("pack") > 0) {
+		setOutputBitLength(args["pack"].as<unsigned int>());
+	}
+
+	if (args.count("length") > 0) {
+		setReadLength(args["length"].as<unsigned long>());
+	}
+
+	if (args.count("swap") > 0) {
+		setSwapEndianess();
 	}
 
 	// too many input files
