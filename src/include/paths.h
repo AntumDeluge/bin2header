@@ -1,5 +1,5 @@
 
-/* Copyright © 2019 Jordan Irwin (AntumDeluge) <antumdeluge@gmail.com>
+/* Copyright © 2017-2022 Jordan Irwin (AntumDeluge) <antumdeluge@gmail.com>
  *
  * This file is part of the bin2header project & is distributed under the
  * terms of the MIT/X11 license. See: LICENSE.txt
