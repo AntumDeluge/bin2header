@@ -46,10 +46,11 @@ void showUsage() {
 	cout << "\t\t\t\t  Default: 1048576 (1 megabyte)" << endl;
 	cout << "\t-d, --nbdata\t\tSet number of bytes per line." << endl;
 	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
-	cout << "\t-f  --offset\t\tStart reading with a given offset from file start" << endl;
-	cout << "\t-l  --length\t\tProcess given length of file (in bytes)" << endl;
-	cout << "\t-p  --pack\t\tGenerate header with 16 or 32 bit int types" << endl;
-	cout << "\t-e  --endianess\t\tSwap endianess when packing into larger datatypes" << endl;
+	cout << "\t-f  --offset\t\tStart reading at given offset from file beginning." << endl;
+	cout << "\t-l  --length\t\tNumber of bytes to process." << endl;
+	cout << "\t-p  --pack\t\tStore data using 8, 16, or 32 bit integer types." << endl;
+	cout << "\t\t\t\t  Default: 8" << endl;
+	cout << "\t-e  --endianess\t\tSwap endianess for 16 or 32 bit integer types." << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
 }
 
