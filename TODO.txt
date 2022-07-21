@@ -1,3 +1,5 @@
+
+TODO:
 - get version info from config.h
 - allow user input to set line endings
 - create GUI frontend
@@ -5,3 +7,4 @@
 - use non-resizable type instead of std::vector for C++
 - run "export_flower" test after build
 - show a timer (that can optionally be disable) to show elapsed time
+- deploy github-pages build on new tag only
