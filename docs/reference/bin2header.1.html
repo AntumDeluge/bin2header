@@ -6,10 +6,153 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>bin2header</title>
   <style>
-      code{white-space: pre-wrap;}
-      span.smallcaps{font-variant: small-caps;}
-      span.underline{text-decoration: underline;}
-      div.column{display: inline-block; vertical-align: top; width: 50%;}
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
@@ -18,7 +161,7 @@
 <body>
 <header id="title-block-header">
 <h1 class="title">bin2header</h1>
-<p class="date">Sep 11, 2019</p>
+<p class="date">Jul 21, 2022</p>
 </header>
 <h1>NAME</h1>
 <p>Binary to Header</p>
@@ -28,20 +171,59 @@
 <h1>OPTIONS</h1>
 <dl>
 <dt><strong>-h</strong>, <strong>--help</strong></dt>
-<dd><p>Print help information &amp; exit.</p>
+<dd>
+<p>Print help information &amp; exit.</p>
 </dd>
 <dt><strong>-v</strong>, <strong>--version</strong></dt>
-<dd><p>Print version information &amp; exit.</p>
+<dd>
+<p>Print version information &amp; exit.</p>
+</dd>
+<dt><strong>-o</strong>, <strong>--output</strong></dt>
+<dd>
+<p>Set output file name.</p>
+</dd>
+<dt><strong>-n</strong>, <strong>--hname</strong></dt>
+<dd>
+<p>Set header name.</p>
 </dd>
 <dt><strong>-s</strong>, <strong>--chunksize</strong></dt>
-<dd><p>Set the buffer chunk size (in bytes).<br />
+<dd>
+<p>Set the buffer chunk size (in bytes).<br />
 Default: 1048576 (1 megabyte)</p>
 </dd>
+<dt><strong>-d</strong>, <strong>--nbdata</strong></dt>
+<dd>
+<p>Set number of bytes per line.</p>
+</dd>
+<dt><strong>-c</strong>, <strong>--datacontent</strong></dt>
+<dd>
+<p>Show data content as comment.</p>
+</dd>
+<dt><strong>-f</strong>, <strong>--offset</strong></dt>
+<dd>
+<p>Start reading at given offset from file beginning.</p>
+</dd>
+<dt><strong>-l</strong>, <strong>--length</strong></dt>
+<dd>
+<p>Number of bytes to process.</p>
+</dd>
+<dt><strong>-p</strong>, <strong>--pack</strong></dt>
+<dd>
+<p>Store data using 8, 16, or 32 bit integer types.<br />
+Default: 8</p>
+</dd>
+<dt><strong>-e</strong>, <strong>--swap</strong></dt>
+<dd>
+<p>Swap endianess for 16 or 32 bit integer types.</p>
+</dd>
 <dt><strong>--stdvector</strong></dt>
-<dd><p>Additionally store data in std::vector for C++.</p>
+<dd>
+<p>Additionally store data in std::vector for C++.</p>
 </dd>
 </dl>
 <h1>DESCRIPTION</h1>
-<p>bin2header takes any file as an argument and converts its binary data into a source header file for use in C/C++ applications. The data is stored as a character array.</p>
+<p>bin2header takes any file as an argument and converts its binary data
+into a source header file for use in C/C++ applications. The data is
+stored as a character array.</p>
 </body>
 </html>
