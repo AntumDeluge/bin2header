@@ -1,7 +1,7 @@
 .\"Created with GNOME Manpages Editor
 .\"http://sourceforge.net/projects/gmanedit2
 
-.TH bin2header 1 "Sep 11, 2019" "bin2header-0.2.0"
+.TH bin2header 1 "Jul 21, 2022" "bin2header-0.2.0"
 
 .SH NAME
 Binary to Header
@@ -20,22 +20,36 @@ Print help information & exit.
 .BR \-v ", " \-\-version
 Print version information & exit.
 .TP
+.BR \-o ", " \-\-output
+Set output file name.
+.TP
+.BR \-n ", " \-\-hname
+Set header name.
+.TP
 .BR \-s ", " \-\-chunksize
 Set the buffer chunk size (in bytes).
 .br
 Default: 1048576 (1 megabyte)
 .TP
+.BR \-d ", " \-\-nbdata
+Set number of bytes per line.
+.TP
+.BR \-c ", " \-\-datacontent
+Show data content as comment.
+.TP
 .BR \-f ", " \-\-offset
-Discard front bytes
+Start reading at given offset from file beginning.
 .TP
 .BR \-l ", " \-\-length
-Precess only this number of bytes from file
+Number of bytes to process.
 .TP
 .BR \-p ", " \-\-pack
-Pack results into 8/16/32 bit as int 
+Store data using 8, 16, or 32 bit integer types.
+.br
+Default: 8
 .TP
 .BR \-e ", " \-\-swap
-Swap endianess when packing to 16/32 bit ints 
+Swap endianess for 16 or 32 bit integer types.
 .TP
 .BR \-\-stdvector
 Additionally store data in std::vector for C++.
