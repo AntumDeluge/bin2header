@@ -29,7 +29,7 @@ jobs:
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             ../../
-          cmake --build ./ --target install
+          cmake --build ./
 
       - name: Compile 32-bit
         run: |
@@ -40,4 +40,26 @@ jobs:
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             ../../
-          cmake --build ./ --target install
+          cmake --build ./
+
+      # - name: Package
+        # run: |
+          # VERSION="$(grep "^VERSION=" info.cfg | sed -e 's/^VERSION=//')"
+          # zip builds/bin2header_${VERSION}_win64.zip builds/win64/bin2header.exe LICENSE.txt
+          # zip builds/bin2header_${VERSION}_win32.zip builds/win32/bin2header.exe LICENSE.txt
+
+      - name: Upload 64-bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin2header_win64
+          path: |
+            builds/win64/bin2header.exe
+            LICENSE.txt
+
+      - name: Upload 32-bit
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin2header_win32
+          path: |
+            builds/win32/bin2header.exe
+            LICENSE.txt
