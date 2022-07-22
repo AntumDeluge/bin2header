@@ -1,0 +1,43 @@
+
+# creates 32 & 64 bit builds for Windows
+
+name: PE32 Builds
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up build dependencies
+        run: sudo apt install mingw-w64 cmake
+
+      - name: Compile 64-bit
+        run: |
+          mkdir -p builds/win64 && cd builds/win64
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-x86_64.cmake \
+            -DCMAKE_INSTALL_PREFIX="$(pwd)/install/bin2header/" \
+            -DSTATIC=ON \
+            -DEMBED_ICON=ON \
+            ../../
+          cmake --build ./ --target install
+
+      - name: Compile 32-bit
+        run: |
+          mkdir -p builds/win32 && cd builds/win32
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-i686.cmake \
+            -DCMAKE_INSTALL_PREFIX="$(pwd)/install/bin2header/" \
+            -DSTATIC=ON \
+            -DEMBED_ICON=ON \
+            ../../
+          cmake --build ./ --target install
