@@ -1,0 +1,35 @@
+
+name: Create Release Package
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run packaging script
+        run: ./scripts/dist.sh
+
+      - name: Get changes
+        run: sed -e '/^$/,$d' -e '1 s/^.*$/Changes:/' CHANGES.txt > release_notes.tmp
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body_path: release_notes.tmp
+          files: bin2header-*.tar.xz
+          prerelease: true
