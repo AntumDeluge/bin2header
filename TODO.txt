@@ -1,6 +1,5 @@
 
 TODO:
-- get version info from config.h
 - allow user input to set line endings
 - create GUI frontend
 - optimize for speed
