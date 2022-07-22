@@ -1,5 +1,5 @@
 0.2.1
-- Added option -f to reading at given offset from file beginning
+- Added option -f to read at given offset from file beginning
 - Added option -l to process exact length in bytes
 - Added option -p to pack data into 8, 16, or 32 bit words
 - Added option -e to swap endianess for 16 or 32 bit words
