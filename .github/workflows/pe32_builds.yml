@@ -22,7 +22,7 @@ jobs:
 
       - name: Compile 64-bit
         run: |
-          mkdir -p builds/win64 && cd builds/win64
+          mkdir -p builds/win64/stage/bin2header/ && cd builds/win64
           cmake -G "Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-x86_64.cmake \
             -DCMAKE_INSTALL_PREFIX="$(pwd)/install/bin2header/" \
@@ -30,10 +30,12 @@ jobs:
             -DEMBED_ICON=ON \
             ../../
           cmake --build ./
+          cp bin2header.exe stage/bin2header/
+          cp ../../LICENSE.txt stage/bin2header/
 
       - name: Compile 32-bit
         run: |
-          mkdir -p builds/win32 && cd builds/win32
+          mkdir -p builds/win32/stage/bin2header/ && cd builds/win32
           cmake -G "Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-i686.cmake \
             -DCMAKE_INSTALL_PREFIX="$(pwd)/install/bin2header/" \
@@ -41,6 +43,8 @@ jobs:
             -DEMBED_ICON=ON \
             ../../
           cmake --build ./
+          cp bin2header.exe stage/bin2header/
+          cp ../../LICENSE.txt stage/bin2header/
 
       # - name: Package
         # run: |
@@ -52,14 +56,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bin2header_win64
-          path: |
-            builds/win64/bin2header.exe
-            LICENSE.txt
+          path: builds/win64/stage/bin2header/*
 
       - name: Upload 32-bit
         uses: actions/upload-artifact@v3
         with:
           name: bin2header_win32
-          path: |
-            builds/win32/bin2header.exe
-            LICENSE.txt
+          path: builds/win32/stage/bin2header/*
