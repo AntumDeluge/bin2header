@@ -45,7 +45,7 @@ void setShowDataContent(const bool dc) { showDataContent = dc; }
 void setOutputBitLength(const unsigned int bl) { if ((bl == 16) || (bl == 32)) outlen = bl; }
 void setReadOffset(const unsigned long ofs) { offset = ofs; }
 void setReadLength(const unsigned long lgt) { length = lgt; }
-void setSwapEndianess(void) {swap_bytes = true; }
+void setSwapEndianess(void) { swap_bytes = true; }
 
 // Cancels current write iteration.
 void sigintHandler(int sig_num) {
@@ -115,8 +115,8 @@ int convert(const string fin, const string fout, string hname, const bool store_
 			ofs << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
 		}
 
-		if (outlen ==32) ofs << "\nstatic const unsigned int " << hname << "[] = {\n";
-		else if (outlen == 16 ) ofs << "\nstatic const unsigned short " << hname << "[] = {\n";
+		if (outlen == 32) ofs << "\nstatic const unsigned int " << hname << "[] = {\n";
+		else if (outlen == 16) ofs << "\nstatic const unsigned short " << hname << "[] = {\n";
 		else ofs << "\nstatic const unsigned char " << hname << "[] = {\n";
 
 		// empty line
