@@ -18,6 +18,7 @@ applications. The data is stored as a character array.
 
 - Project Pages:
 	- [GitHub](https://github.com/AntumDeluge/bin2header)
+	- [GitLab](https://gitlab.com/AntumDeluge/bin2header)
 	- [SourceForge](https://sourceforge.net/projects/bin2header)
 - Downloads:
 	- [Stable](https://github.com/AntumDeluge/bin2header/releases/latest)
