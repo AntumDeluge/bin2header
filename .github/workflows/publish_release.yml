@@ -24,7 +24,7 @@ jobs:
         run: ./scripts/dist.sh
 
       - name: Get changes
-        run: sed -e '/^$/,$d' -e '1 s/^.*$/Changes:/' CHANGES.txt > release_notes.tmp
+        run: sed -e '/^$/,$d' -e '1 s/^.*$/Changes:\n/' CHANGES.txt > release_notes.tmp
 
       - name: Publish
         uses: softprops/action-gh-release@v1
