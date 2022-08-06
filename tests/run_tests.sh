@@ -56,7 +56,7 @@ compare "nbdata"
 compare "vector"
 
 
-echo -e "\nChecking header data to flower copy export ..."
+echo -e "\nChecking header data to image copy export ..."
 g++ export_flower.cpp -o export_flower
 ./export_flower
 diff -q flower.png flower_copy.png
