@@ -1,8 +1,9 @@
-0.2.1
+next
 - Added option -f to begin reading file at given offset
 - Added option -l to process exact length in bytes
 - Added option -p to pack data into 8, 16, or 32 bit words
 - Added option -e to swap endianess for 16 or 32 bit words
+- Upgraded cxxopts to v3.0.0
 
 0.2.0
 - Split writing data out into chunks instead of attempting to write the entire file at once

@@ -73,22 +73,6 @@ void exitWithError(const string msg, const int ecode) {
 }
 
 
-/** Parses command line arguments & returns result.
- *
- * @tparam opts cxxopts::Options
- * @tparam argc int
- * @tparam argv char**
- * @treturn cxxopts::ParseResult
- */
-cxxopts::ParseResult parseArgs(cxxopts::Options opts, int* argc, char*** argv) {
-	try {
-		return opts.parse(*argc, *argv);
-	} catch (const cxxopts::OptionParseException& e) {
-		exitWithError(e.what(), 1, true);
-	}
-}
-
-
 int main(int argc, char** argv) {
 	// get executable name
 	executable = GetBaseName(NormalizePath(argv[0]));
@@ -112,7 +96,7 @@ int main(int argc, char** argv) {
 			("e,swap", "Swap endianess when using -p option")
 			("stdvector", "vector");
 
-	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
+	cxxopts::ParseResult args = options.parse(argc, argv);
 
 	if (args["help"].as<bool>()) {
 		showUsage();
