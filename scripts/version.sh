@@ -31,3 +31,5 @@ if test $? -eq 0; then
 	#pandoc --eol=lf -r man -w gfm -o docs/reference/bin2header.1.md man/bin2header.1
 	pandoc -s --eol=lf -r man -w html5 -o docs/reference/bin2header.1.html man/bin2header.1
 fi
+
+sed -i "s/^next$/${VERSION}/" CHANGES.txt
