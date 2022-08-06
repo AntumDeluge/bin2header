@@ -136,7 +136,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		//Check if there are any bytes to omit during packing (not full words will not be processed)
 		int omit = bytes_to_go % (outlen / 8);
 		if(omit) {
-			cout << "Warning: Last" << to_string(omit) << " byte(s) will be ignored as not forming full data word" << endl;
+			cout << "Warning: Last " << to_string(omit) << " byte(s) will be ignored as not forming full data word" << endl;
 			bytes_to_go -= omit;
 		}
 
