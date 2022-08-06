@@ -99,18 +99,18 @@ int main(int argc, char** argv) {
 
 	cxxopts::Options options(executable, "Convert binary files to C/C++ headers");
 	options.add_options()
-			("h,help", "help")
-			("v,version", "version")
-			("o,output", "Output file name", cxxopts::value<string>())
-			("n,hname", "Header name", cxxopts::value<string>())
-			("s,chunksize", "Buffer chunk size", cxxopts::value<unsigned int>())
-			("d,nbdata", "Number of byte per line", cxxopts::value<unsigned int>())
-			("c,datacontent", "Show data content")
-			("f,offset", "Process file with given offset", cxxopts::value<unsigned long>())
-			("l,length", "Process given amount of bytes only", cxxopts::value<unsigned long>())
-			("p,pack", "Pack into 16 or 32 bit int", cxxopts::value<unsigned int>())
-			("e,swap", "Swap endianess when using -p option")
-			("stdvector", "vector");
+			("h,help", "")
+			("v,version", "")
+			("o,output", "", cxxopts::value<string>())
+			("n,hname", "", cxxopts::value<string>())
+			("s,chunksize", "", cxxopts::value<unsigned int>())
+			("d,nbdata", "", cxxopts::value<unsigned int>())
+			("c,datacontent", "")
+			("f,offset", "", cxxopts::value<unsigned long>())
+			("l,length", "", cxxopts::value<unsigned long>())
+			("p,pack", "", cxxopts::value<unsigned int>())
+			("e,swap", "")
+			("stdvector", "");
 
 	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
 
