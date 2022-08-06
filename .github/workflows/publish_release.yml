@@ -1,5 +1,5 @@
 
-name: Create Release Package
+name: Publish Release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - 'v[0-9]*'
 
 jobs:
-  package:
+  main:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,7 +20,45 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run packaging script
+      - name: Set up build dependencies
+        run: sudo apt install mingw-w64 cmake
+
+      - name: Compile 64-bit
+        run: |
+          mkdir -p builds/win64/stage/ && cd builds/win64
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-x86_64.cmake \
+            -DSTATIC=ON \
+            -DEMBED_ICON=ON \
+            ../../
+          cmake --build ./
+          cp bin2header.exe stage/
+          cp ../../LICENSE.txt stage/
+
+      - name: Package 64-bit
+        run: |
+          pwd
+          cd builds/win64/stage/
+          zip ../../bin2header-$(grep "^VERSION=" ../../../info.cfg | sed -e 's/^VERSION=//')-win64.zip *
+
+      - name: Compile 32-bit
+        run: |
+          mkdir -p builds/win32/stage/ && cd builds/win32
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-i686.cmake \
+            -DSTATIC=ON \
+            -DEMBED_ICON=ON \
+            ../../
+          cmake --build ./
+          cp bin2header.exe stage/
+          cp ../../LICENSE.txt stage/
+
+      - name: Package 32-bit
+        run: |
+          cd builds/win32/stage/
+          zip ../../bin2header-$(grep "^VERSION=" ../../../info.cfg | sed -e 's/^VERSION=//')-win32.zip *
+
+      - name: Package source
         run: ./scripts/dist.sh
 
       - name: Get changes
@@ -31,5 +69,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: release_notes.tmp
-          files: bin2header-*.tar.xz
+          files: |
+            bin2header-*.tar.xz
+            builds/bin2header-*.zip
           prerelease: true
