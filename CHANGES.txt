@@ -1,4 +1,4 @@
-next
+0.3.0
 - Added option -f to begin reading file at given offset
 - Added option -l to process exact length in bytes
 - Added option -p to pack data into 8, 16, or 32 bit words
