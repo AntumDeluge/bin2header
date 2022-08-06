@@ -5,3 +5,4 @@ TODO:
 - use non-resizable type instead of std::vector for C++
 - show a timer (that can optionally be disable) to show elapsed time
 - deploy github-pages build on new tag only
+- update manpage date with version script
