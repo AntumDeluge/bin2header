@@ -45,6 +45,7 @@ void showUsage() {
 	cout << "\t-s, --chunksize\t\tSet the buffer chunk size (in bytes)." << endl;
 	cout << "\t\t\t\t  Default: 1048576 (1 megabyte)" << endl;
 	cout << "\t-d, --nbdata\t\tSet number of bytes per line." << endl;
+	cout << "\t\t\t\t  Default: 12" << endl;
 	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
 	cout << "\t-f  --offset\t\tStart reading at given offset from file beginning." << endl;
 	cout << "\t-l  --length\t\tNumber of bytes to process." << endl;
