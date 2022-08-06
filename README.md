@@ -22,21 +22,7 @@ See [manpage](https://antumdeluge.github.io/bin2header/reference/bin2header.1.ht
 
 ## Building
 
-### 'configure' Script
-
-<blockquote style="padding-left:2em; font-family:monospace;">
-<b>USAGE:</b> ./configure [--help] [--type=TYPE] [--static]<br><br>
-Options:<br>
-<span style="padding-left:2em; font-weight:bold; font-style:italic;">--help</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Show this help text<br>
-<span style="padding-left:2em; font-weight:bold; font-style:italic;">--type=TYPE</span> &nbsp; Set to "b" (default) for binary executable "s" for Python script<br>
-<span style="padding-left:2em; font-weight:bold; font-style:italic;">--static</span> &nbsp;&nbsp;&nbsp;&nbsp; Create statically linked executable (binary only)
-</blockquote>
-
-- To build native binary, run: `./configure && make`
-- To build static native binary, run: `./configure --static && make`
-- To build python version, run: `./configure --type=s && make`
-
-### CMake (native binary only)
+### CMake (recommended)
 
 To configure & build run `cmake <path_to_source> && cmake --build ./`.
 
@@ -65,8 +51,9 @@ To get a list of available CMake configuration options run `cmake -LA <path_to_s
 Notable CMake configuration options:
 
 - `CMAKE_INSTALL_PREFIX`: target directory where files are installed with `cmake --install`
-- `STATIC`: link to dependencies statically (default: OFF)
-- `EMBED_ICON`: (Windows only) add icon resource to PE32 executable (default: OFF)
+- `STATIC`: link to dependencies statically (default: OFF, native only)
+- `EMBED_ICON`: (Windows only) add icon resource to PE32 executable (default: OFF, native only)
+- `PYTHON`: configure for Python instead of native executable (default: OFF)
 
 Example of building on Windows with MinGW:
 
@@ -76,6 +63,20 @@ cmake -G "MinGW Makefiles" -DCMAKE_INSTALL_PREFIX="$(pwd)/install" -DSTATIC=ON -
 cmake --build ./
 cmake --install ./
 ```
+
+### 'configure' Script
+
+<blockquote style="padding-left:2em; font-family:monospace;">
+<b>USAGE:</b> ./configure [--help] [--type=TYPE] [--static]<br><br>
+Options:<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--help</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Show this help text<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--type=TYPE</span> &nbsp; Set to "b" (default) for binary executable "s" for Python script<br>
+<span style="padding-left:2em; font-weight:bold; font-style:italic;">--static</span> &nbsp;&nbsp;&nbsp;&nbsp; Create statically linked executable (binary only)
+</blockquote>
+
+- To build native binary, run: `./configure && make`
+- To build static native binary, run: `./configure --static && make`
+- To build python version, run: `./configure --type=s && make`
 
 ## Acknowledgements
 

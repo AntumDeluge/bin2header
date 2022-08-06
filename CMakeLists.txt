@@ -6,34 +6,46 @@ project(bin2header
 )
 set(PROJECT_PY_VERSION 0.1.2)
 
-message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
+set(PYTHON OFF CACHE BOOL "Configure for Python instead of native executable")
 
-set(CMAKE_CXX_STANDARD 11)
+if(NOT PYTHON)
+	message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
-if(NOT CMAKE_BUILD_TYPE)
-	# set build to release
-	set(CMAKE_BUILD_TYPE "Release")
-endif()
-# strip binary for release builds
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
+	set(CMAKE_CXX_STANDARD 11)
 
-if(WIN32)
-	set(EMBED_ICON OFF CACHE BOOL "Embeds icon resource into executable on Win32")
-endif()
+	if(NOT CMAKE_BUILD_TYPE)
+		# set build to release
+		set(CMAKE_BUILD_TYPE "Release")
+	endif()
+	# strip binary for release builds
+	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -s")
 
-# retrieve source files
-file(GLOB FILES_C "${CMAKE_SOURCE_DIR}/src/*.cpp")
-if(WIN32 AND EMBED_ICON)
-	set(FILES_C ${FILES_C} "${CMAKE_SOURCE_DIR}/icon_resource.rc")
-endif()
-include_directories("${CMAKE_SOURCE_DIR}/src/include")
-add_executable(${PROJECT_NAME} ${FILES_C})
+	if(WIN32)
+		set(EMBED_ICON OFF CACHE BOOL "Embeds icon resource into executable on Win32")
+	endif()
 
-set(STATIC OFF CACHE BOOL "Link statically to libgcc & libstdc++")
-if(STATIC)
-	# static link to libgcc & libstdc++
-	set(CMAKE_CXX_FLAGS "-static")
-endif()
+	# retrieve source files
+	file(GLOB FILES_C "${CMAKE_SOURCE_DIR}/src/*.cpp")
+	if(WIN32 AND EMBED_ICON)
+		set(FILES_C ${FILES_C} "${CMAKE_SOURCE_DIR}/icon_resource.rc")
+	endif()
+	include_directories("${CMAKE_SOURCE_DIR}/src/include")
+	add_executable(${PROJECT_NAME} ${FILES_C})
+
+	set(STATIC OFF CACHE BOOL "Link statically to libgcc & libstdc++")
+	if(STATIC)
+		# static link to libgcc & libstdc++
+		set(CMAKE_CXX_FLAGS "-static")
+	endif()
+else()
+	message("Configuring ${PROJECT_NAME} (Python) ${PROJECT_PY_VERSION}")
+
+	add_custom_target(${PROJECT_NAME} ALL)
+	add_custom_command(
+		TARGET ${PROJECT_NAME}
+		COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}.py" "${CMAKE_CURRENT_BINARY_DIR}"
+	)
+endif() # NOT PYTHON
 
 # Manpage package/install
 add_custom_target(man ALL)
@@ -45,9 +57,16 @@ add_custom_command(
 
 set(DOCDIR "share/doc/${PROJECT_NAME}")
 
-install(TARGETS ${PROJECT_NAME}
-	RUNTIME DESTINATION bin
-)
+if(NOT PYTHON)
+	install(TARGETS ${PROJECT_NAME}
+		RUNTIME DESTINATION bin
+	)
+else()
+	install(PROGRAMS "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.py"
+		DESTINATION "bin/"
+		RENAME "${PROJECT_NAME}"
+	)
+endif() # NOT PYTHON
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION share/man/man1)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" DESTINATION ${DOCDIR})
 
