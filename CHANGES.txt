@@ -1,3 +1,6 @@
+next
+- Updated cxxopts to v3.0.0
+
 0.3.0
 - Added option -f to begin reading file at given offset
 - Added option -l to process exact length in bytes

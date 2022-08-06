@@ -79,26 +79,6 @@ void exitWithError(const string msg, const int ecode) {
 }
 
 
-/** Parses command line arguments & returns result.
- *
- * @tparam cxxopts::Options opts
- *     Options object.
- * @tparam int argc
- *     Number of specified command line arguments.
- * @tparam char** argv
- *     Specified command line arguments.
- * @treturn cxxopts::ParseResult
- *     Result of parsing command line arguments.
- */
-cxxopts::ParseResult parseArgs(cxxopts::Options opts, int* argc, char*** argv) {
-	try {
-		return opts.parse(*argc, *argv);
-	} catch (const cxxopts::OptionParseException& e) {
-		exitWithError(e.what(), 1, true);
-	}
-}
-
-
 int main(int argc, char** argv) {
 	// get executable name
 	executable = GetBaseName(NormalizePath(argv[0]));
@@ -123,7 +103,13 @@ int main(int argc, char** argv) {
 			("stdvector", "")
 			("eol", "", cxxopts::value<string>());
 
-	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
+	cxxopts::ParseResult args;
+	try {
+		args = options.parse(argc, argv);
+	} catch (const cxxopts::OptionParseException& e) {
+		exitWithError(e.what(), 1, true);
+	}
+
 
 	if (args["help"].as<bool>()) {
 		showUsage();
@@ -183,7 +169,7 @@ int main(int argc, char** argv) {
 	}
 
 	// only remaining argument should be input file
-	string source_file = NormalizePath(argv[1]);
+	string source_file = NormalizePath(argv[argc-1]);
 
 	// Check if file exists
 	FILE* test;
