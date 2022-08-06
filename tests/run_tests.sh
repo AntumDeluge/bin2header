@@ -31,6 +31,12 @@ check_result $?
 ./bin2header -o "new/flower.default.h" "flower.png"
 compare "default"
 
+./bin2header --eol "cr" -o "new/flower.cr.h" "flower.png"
+compare "cr"
+
+./bin2header --eol "crlf" -o "new/flower.crlf.h" "flower.png"
+compare "crlf"
+
 ./bin2header -f 3 -l 5 -o "new/flower.truncate.h" "flower.png"
 compare "truncate"
 

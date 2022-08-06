@@ -23,6 +23,7 @@ unsigned long length    = 0;           // process only given amount of bytes (0 
 bool showDataContent    = false;       // default
 unsigned int outlen     = 8;           // output type bit length (8/16/32)
 bool swap_bytes         = false;       // swap byte order for bigger types (changes endianess)
+string eol              = "\n";        // end of line character
 
 bool cancelled = false;
 
@@ -46,6 +47,16 @@ void setOutputBitLength(const unsigned int bl) { if ((bl == 16) || (bl == 32)) o
 void setReadOffset(const unsigned long ofs) { offset = ofs; }
 void setReadLength(const unsigned long lgt) { length = lgt; }
 void setSwapEndianess(void) { swap_bytes = true; }
+
+void setEol(const string newEol) {
+	if (newEol == "cr") {
+		eol = "\r";
+	} else if (newEol == "crlf") {
+		eol = "\r\n";
+	} else if (newEol != "lf") {
+		cout << "\nWarning: Unknown eol type \"" << newEol << "\", using default \"lf\"\n" << endl;
+	}
+}
 
 // Cancels current write iteration.
 void sigintHandler(int sig_num) {
@@ -109,15 +120,15 @@ int convert(const string fin, const string fout, string hname, const bool store_
 
 		/* START Read Data Out to Header */
 
-		ofs.open(fout.c_str(), ofstream::binary); // currently only support LF line endings output
-		ofs << "#ifndef " << name_upper_h.c_str() << "\n#define " << name_upper_h.c_str() << "\n";
+		ofs.open(fout.c_str(), ofstream::binary);
+		ofs << "#ifndef " << name_upper_h.c_str() << eol << "#define " << name_upper_h.c_str() << eol;
 		if (store_vector) {
-			ofs << "\n#ifdef __cplusplus\n#include <vector>\n#endif\n";
+			ofs << eol << "#ifdef __cplusplus" << eol << "#include <vector>" << eol << "#endif" << eol;
 		}
 
-		if (outlen == 32) ofs << "\nstatic const unsigned int " << hname << "[] = {\n";
-		else if (outlen == 16) ofs << "\nstatic const unsigned short " << hname << "[] = {\n";
-		else ofs << "\nstatic const unsigned char " << hname << "[] = {\n";
+		if (outlen == 32) ofs << eol << "static const unsigned int " << hname << "[] = {" << eol;
+		else if (outlen == 16) ofs << eol << "static const unsigned short " << hname << "[] = {" << eol;
+		else ofs << eol << "static const unsigned char " << hname << "[] = {" << eol;
 
 		// empty line
 		cout << endl;
@@ -209,7 +220,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 						}
 						ofs << "  /* " << comment << " */";
 					}
-					ofs << "\n";
+					ofs << eol;
 					break;
 				} else {
 					if ((bytes_written % (nbData * wordbytes)) == 0) {
@@ -217,7 +228,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 						if (showDataContent) {
 							ofs << " /* " << comment << " */";
 						}
-						ofs << "\n";
+						ofs << eol;
 					} else {
 						ofs << ", ";
 					}
@@ -231,13 +242,13 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// release input file after read
 		ifs.close();
 
-		ofs << "};\n";
+		ofs << "};" << eol;
 		if (store_vector) {
-			ofs << "\n#ifdef __cplusplus\nstatic const std::vector<char> "
+			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
-					<< hname << "));\n#endif\n";
+					<< hname << "));" << eol << "#endif" << eol;
 		}
-		ofs << "\n#endif /* " << name_upper_h << " */\n";
+		ofs << eol << "#endif /* " << name_upper_h << " */" << eol;
 
 		ofs.close();
 

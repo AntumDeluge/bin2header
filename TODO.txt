@@ -1,6 +1,5 @@
 
 TODO:
-- allow user input to set line endings
 - create GUI frontend
 - optimize for speed
 - use non-resizable type instead of std::vector for C++

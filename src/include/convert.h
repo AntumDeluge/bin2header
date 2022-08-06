@@ -21,6 +21,7 @@ extern void setOutputBitLength(const unsigned int bl);
 extern void setReadOffset(const unsigned long ofs);
 extern void setReadLength(const unsigned long lgt);
 extern void setSwapEndianess(void);
+extern void setEol(const std::string newEol);
 
 extern void sigintHandler(int sig_num);
 

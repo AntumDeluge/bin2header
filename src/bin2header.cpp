@@ -53,6 +53,8 @@ void showUsage() {
 	cout << "\t\t\t\t  Default: 8" << endl;
 	cout << "\t-e  --endianess\t\tSwap endianess for 16 or 32 bit integer types." << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
+	cout << "\t    --eol\t\tSet end of line character (cr, lf, or crlf)." << endl;
+	cout << "\t\t\t\t  Default: lf" << endl;
 }
 
 
@@ -118,7 +120,8 @@ int main(int argc, char** argv) {
 			("l,length", "", cxxopts::value<unsigned long>())
 			("p,pack", "", cxxopts::value<unsigned int>())
 			("e,swap", "")
-			("stdvector", "");
+			("stdvector", "")
+			("eol", "", cxxopts::value<string>());
 
 	cxxopts::ParseResult args = parseArgs(options, &argc, &argv);
 
@@ -159,6 +162,10 @@ int main(int argc, char** argv) {
 
 	if (args.count("swap") > 0) {
 		setSwapEndianess();
+	}
+
+	if (args.count("eol") > 0) {
+		setEol(args["eol"].as<string>());
 	}
 
 	// too many input files
