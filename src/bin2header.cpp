@@ -57,9 +57,12 @@ void showUsage() {
 
 /** Prints a message to stderr & exits program.
  *
- * @tparam string msg Message to print.
- * @tparam int ecode Error code to exit with.
- * @tparam bool show_usage If `true` will print usage info
+ * @tparam string msg
+ *     Message to print.
+ * @tparam int ecode
+ *     Error code to exit with.
+ * @tparam bool show_usage
+ *     If `true` will print usage info.
  */
 void exitWithError(const string msg, const int ecode, const bool show_usage) {
 	cerr << "\nERROR: " << msg << endl;
@@ -75,10 +78,14 @@ void exitWithError(const string msg, const int ecode) {
 
 /** Parses command line arguments & returns result.
  *
- * @tparam opts cxxopts::Options
- * @tparam argc int
- * @tparam argv char**
+ * @tparam cxxopts::Options opts
+ *     Options object.
+ * @tparam int argc
+ *     Number of specified command line arguments.
+ * @tparam char** argv
+ *     Specified command line arguments.
  * @treturn cxxopts::ParseResult
+ *     Result of parsing command line arguments.
  */
 cxxopts::ParseResult parseArgs(cxxopts::Options opts, int* argc, char*** argv) {
 	try {
