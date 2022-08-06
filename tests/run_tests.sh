@@ -4,12 +4,31 @@ cd "$(dirname $0)"
 
 mkdir "new/"
 
-compare() {
-	diff -q "orig/flower.$1.h" "new/flower.$1.h"
-	if test $? -gt 0; then
+check_result() {
+	if test $1 -gt 0; then
 		exit 1
 	fi
 }
+
+compare() {
+	diff -q "orig/flower.$1.h" "new/flower.$1.h"
+	check_result $?
+}
+
+./bin2header -h
+check_result $?
+
+./bin2header -v
+check_result $?
+
+./bin2header -s 1024 -o "new/out.h" "flower.png"
+check_result $?
+
+./bin2header "flower.png"
+diff -q "flower.png.h" "orig/flower.default.h"
+check_result $?
+
+rm "flower.png.h"
 
 ./bin2header -o "new/flower.default.h" "flower.png"
 compare "default"
@@ -31,3 +50,9 @@ compare "rock"
 
 ./bin2header -c -o "new/flower.comment.h" "flower.png"
 compare "comment"
+
+./bin2header -d 4 -o "new/flower.nbdata.h" "flower.png"
+compare "nbdata"
+
+./bin2header --stdvector -o "new/flower.vector.h" "flower.png"
+compare "vector"
