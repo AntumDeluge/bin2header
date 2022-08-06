@@ -28,8 +28,6 @@ check_result $?
 diff -q "flower.png.h" "orig/flower.default.h"
 check_result $?
 
-rm "flower.png.h"
-
 ./bin2header -o "new/flower.default.h" "flower.png"
 compare "default"
 
@@ -56,3 +54,10 @@ compare "nbdata"
 
 ./bin2header --stdvector -o "new/flower.vector.h" "flower.png"
 compare "vector"
+
+
+echo -e "\nChecking header data to flower copy export ..."
+g++ export_flower.cpp -o export_flower
+./export_flower
+diff -q flower.png flower_copy.png
+check_result $?
