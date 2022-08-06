@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright © 2019 Jordan Irwin (AntumDeluge) <antumdeluge@gmail.com>
+# Copyright © 2017-2022 Jordan Irwin (AntumDeluge) <antumdeluge@gmail.com>
 #
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
@@ -61,7 +61,7 @@ def GetDirName(f):
 
 def PrintUsage():
 	executable = os.path.basename(__file__)
-	print('\nbin2header version {} (Python)\nCopyright © 2019 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
+	print('\nbin2header version {} (Python)\nCopyright © 2017-2022 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
 
 
 def main(argv):
