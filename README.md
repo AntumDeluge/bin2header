@@ -8,7 +8,7 @@ Converter for binary files to C/C++ headers.
 ***bin2header*** takes any file as an argument and converts its binary data into a source header file for use in C/C++
 applications. The data is stored as a character array.
 
-See [manpage](docs/reference/bin2header.1.html) for usage information.
+See [manpage](https://antumdeluge.github.io/bin2header/reference/bin2header.1.html) for usage information.
 
 ## Licensing
 
