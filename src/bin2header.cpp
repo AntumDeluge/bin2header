@@ -197,7 +197,7 @@ int main(int argc, char** argv) {
 	int x;
 	for (int current = 0; current < hname.length(); current++) {
 		for (x = 0; x < len(badchars); x++) {
-			if ((hname[current] == badchars[x]) or (hname[current] == '.'))
+			if ((hname[current] == badchars[x]) || (hname[current] == '.'))
 				hname.replace(current, 1, "_");
 			if (basename[current] == badchars[x])
 				basename.replace(current, 1, "_");
