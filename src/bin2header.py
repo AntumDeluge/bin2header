@@ -13,7 +13,7 @@ if sys.version_info.major < 3:
 	sys.exit(2)
 
 
-__WIN32__ = 'windows' in os.getenv('OS').lower();
+__WIN32__ = 'windows' in str(os.getenv('OS')).lower();
 
 version = '0.1.2'
 symbolcp = '©'
