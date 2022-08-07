@@ -9,15 +9,18 @@ jobs:
   cpp-linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cpp-linter/cpp-linter-action@v1
-        id: linter
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: C++ linter
+        uses: cpp-linter/cpp-linter-action@v1
+        id: cpplinter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           style: file
 
       - name: Fail fast!?
-        if: steps.linter.outputs.checks-failed > 0
+        if: steps.cpplinter.outputs.checks-failed > 0
         run: |
           echo "Some files failed the linting checks!"
