@@ -2,6 +2,10 @@
 name: Check Python Code
 
 on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/**.py'
   pull_request:
   workflow_dispatch:
 

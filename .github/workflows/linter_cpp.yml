@@ -2,6 +2,13 @@
 name: Check C/C++ Code
 
 on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'src/**.c'
+      - 'src/**.cpp'
+      - 'src/**.h'
+      - 'src/**.hpp'
   pull_request:
   workflow_dispatch:
 
