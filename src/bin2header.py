@@ -1,5 +1,4 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
 
 # Copyright © 2017-2022 Jordan Irwin (AntumDeluge) <antumdeluge@gmail.com>
 #
@@ -16,11 +15,16 @@ if sys.version_info.major < 3:
 
 __WIN32__ = 'windows' in os.getenv('OS').lower();
 
-
 version = '0.1.2'
 
-## Normalizes the path for they current system
-def NormalizePath(path):
+
+## Normalizes the path for the current system.
+#
+#  @tparam str path
+#      Path to be normalized.
+#  @treturn str
+#      Path with directory/node delimeters for current system.
+def normalizePath(path):
 	new_path = path
 	to_replace = '\\'
 	replace_with = '/'
@@ -39,8 +43,14 @@ def NormalizePath(path):
 	return new_path;
 
 
-def GetBaseName(f):
-	base_name = os.path.basename(f)
+## Removes prefixes from a path.
+#
+#  @tparam str path
+#      Path to be parsed.
+#  @treturn str
+#      Last node of path.
+def getBaseName(path):
+	base_name = os.path.basename(path)
 
 	# MSYS versions of Python appear to not understand Windows paths
 	if __WIN32__ and '\\' in base_name:
@@ -49,8 +59,14 @@ def GetBaseName(f):
 	return base_name
 
 
-def GetDirName(f):
-	dir_name = os.path.dirname(f)
+## Removes basename from a path.
+#
+#  @tparam str path
+#      Path to be parsed.
+#  @treturn
+#      Path with last node removed.
+def getDirName(path):
+	dir_name = os.path.dirname(path)
 
 	# MSYS versions of Python appear to not understand Windows paths
 	if not dir_name and __WIN32__:
@@ -59,26 +75,31 @@ def GetDirName(f):
 	return dir_name
 
 
-def PrintUsage():
+## Prints usage information to console.
+def printUsage():
 	executable = os.path.basename(__file__)
 	print('\nbin2header version {} (Python)\nCopyright © 2017-2022 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
 
 
+## Main function called at program start.
+#
+#  @tparam list argv
+#      Command line arguments.
 def main(argv):
-	source_file = NormalizePath(argv[1])
+	source_file = normalizePath(argv[1])
 
-	# Check if file exists
+	# check if file exists
 	if not os.path.isfile(source_file):
 		print('\nFile "{}" does not exist'.format(source_file))
-		PrintUsage()
+		printUsage()
 		sys.exit(1)
 
-	### Get filenames and target directory ###
-	filename = list(GetBaseName(source_file))
+	# get filenames and target directory
+	filename = list(getBaseName(source_file))
 	hname = list(filename)
-	target_dir = GetDirName(source_file)
+	target_dir = getDirName(source_file)
 
-	### Remove Unwanted Characters ###
+	# remove unwanted characters
 	badchars = ('\\', '+', '-', '*', ' ')
 	for x in range(len(hname)):
 		if hname[x] in badchars or hname[x] == '.':
@@ -90,14 +111,14 @@ def main(argv):
 	hname = ''.join(hname)
 	target_file = os.path.join(target_dir, filename) + '.h'
 
-	### Uppercase Name for Header ###
+	# uppercase name for header
 	hname_upper = hname.upper()
 	hname_upper += '_H'
 
-	### Read Data In ###
+	# read data in
 	data = array.array('B', open(source_file, 'rb').read())
 
-	### START Read Data Out to Header ###
+	### START: read data out to header ###
 
 	# adds C++ std::vector support
 	# TODO: make optional
@@ -134,17 +155,19 @@ def main(argv):
 
 	outfile.write(text)
 	outfile.close()
-	### END Read Data Out to Header ###
+
+	### END: read eata out to header ###
 
 	print('Exported to: {}'.format(target_file))
 
 	return 0
 
 
+## Program entry point.
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print('\nERROR: Missing <file> argument')
-		PrintUsage()
+		printUsage()
 		sys.exit(1)
 
 	main(sys.argv)
