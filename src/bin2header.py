@@ -16,6 +16,10 @@ if sys.version_info.major < 3:
 __WIN32__ = 'windows' in os.getenv('OS').lower();
 
 version = '0.1.2'
+symbolcp = '©'
+if __WIN32__:
+	# some characters don't display correctly in Windows console
+	symbolcp = '(C)'
 
 
 ## Normalizes the path for the current system.
@@ -78,7 +82,9 @@ def getDirName(path):
 ## Prints usage information to console.
 def printUsage():
 	executable = os.path.basename(__file__)
-	print('\nbin2header version {} (Python)\nCopyright © 2017-2022 Jordan Irwin <antumdeluge@gmail.com>\n\n\tUsage:\t{} <file>\n'.format(version, executable))
+	print('\nbin2header version {} (Python)'.format(version)
+			+ '\nCopyright {} 2017-2022 Jordan Irwin <antumdeluge@gmail.com>'.format(symbolcp)
+			+ '\n\n\tUsage:\t{} <file>\n'.format(executable))
 
 
 ## Main function called at program start.
