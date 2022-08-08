@@ -134,12 +134,13 @@ def setOpt(key, value):
 	options[long_key] = value
 
 
-## Normalizes the path for the current system.
+
+## Normalizes the path node separators for the current system.
 #
 #  @tparam str path
 #      Path to be normalized.
 #  @treturn str
-#      Path with directory/node delimeters for current system.
+#      Path formatted with native directory/node delimeters.
 def normalizePath(path):
 	new_path = path
 	to_replace = '\\'
@@ -159,12 +160,12 @@ def normalizePath(path):
 	return new_path;
 
 
-## Removes prefixes from a path.
+## Removes path to parent directory from path name.
 #
 #  @tparam str path
 #      Path to be parsed.
 #  @treturn str
-#      Last node of path.
+#      Name of last node in path.
 def getBaseName(path):
 	base_name = os.path.basename(path)
 
@@ -175,12 +176,12 @@ def getBaseName(path):
 	return base_name
 
 
-## Removes basename from a path.
+## Removes last node from path name.
 #
 #  @tparam str path
 #      Path to be parsed.
 #  @treturn
-#      Path with last node removed.
+#      Path to parent directory.
 def getDirName(path):
 	dir_name = os.path.dirname(path)
 
@@ -236,7 +237,7 @@ def main(argv):
 	# read data in
 	data = array.array('B', open(source_file, 'rb').read())
 
-	### START: read data out to header ###
+	# *** START: write data *** #
 
 	# adds C++ std::vector support
 	# TODO: make optional
@@ -274,14 +275,14 @@ def main(argv):
 	outfile.write(text)
 	outfile.close()
 
-	### END: read eata out to header ###
+	# *** END: write data *** #
 
 	print('Exported to: {}'.format(target_file))
 
 	return 0
 
 
-## Program entry point.
+# program entry point.
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print('\nERROR: Missing <file> argument')

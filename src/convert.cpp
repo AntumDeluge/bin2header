@@ -16,33 +16,20 @@
 using namespace std;
 
 
-unsigned int chunk_size = 1024 * 1024; // default 1MB
-unsigned int nbData     = 12;          // default 12 as before
-unsigned long offset    = 0;           // Start processing the file from this position
-unsigned long length    = 0;           // process only given amount of bytes (0 - disables)
-bool showDataContent    = false;       // default
-unsigned int outlen     = 8;           // output type bit length (8/16/32)
-bool swap_bytes         = false;       // swap byte order for bigger types (changes endianess)
+unsigned int chunk_size = 1024 * 1024; // buffer size (default: 1MB)
+unsigned int nbData     = 12;          // number of bytes to write per line
+unsigned long offset    = 0;           // position at which to start reading file
+unsigned long length    = 0;           // number of bytes to process (0 = all)
+unsigned int outlen     = 8;           // output data type bit length (8/16/32)
+bool showDataContent    = false;       // enable to show data content in comments
+bool swap_bytes         = false;       // enable to swap byte order for bigger types (changes endianess)
 string eol              = "\n";        // end of line character
 
 bool cancelled = false;
 
-
-char toPrintableChar(char c)
-{
-	if ((c >= ' ') && (c <= '~') ) {
-		return c;
-	} else {
-		return '.';
-	}
-}
-
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
-
 void setNumberDataPerLine(const unsigned int nd) { nbData = nd; }
-
 void setShowDataContent(const bool dc) { showDataContent = dc; }
-
 void setOutputBitLength(const unsigned int bl) { if ((bl == 16) || (bl == 32)) outlen = bl; }
 void setReadOffset(const unsigned long ofs) { offset = ofs; }
 void setReadLength(const unsigned long lgt) { length = lgt; }
@@ -58,25 +45,41 @@ void setEol(const string newEol) {
 	}
 }
 
-// Cancels current write iteration.
 void sigintHandler(int sig_num) {
 	cancelled = true;
 	// reset handler to catch SIGINT next time
 	signal(SIGINT, sigintHandler);
 }
 
+
+/** Converts non-printable characters to ".".
+ *
+ *  @tparam char c
+ *      Character to evaluate.
+ *  @return
+ *      Same character or "." non-printable.
+ */
+char toPrintableChar(char c) {
+	if ((c >= ' ') && (c <= '~') ) {
+		return c;
+	} else {
+		return '.';
+	}
+}
+
+
 int convert(const string fin, const string fout, string hname, const bool store_vector) {
 	// file streams
 	ifstream ifs;
 	ofstream ofs;
 
-	/* Add '_' when first char is a number */
+	// add '_' when first char is a number
 	if (isdigit(hname[0]))
 	{
 		hname.insert(0, 1, '_');
 	}
 
-	/* START Uppercase Name for Header */
+	/* *** START: uppercase header name *** */
 
 	char hname_upper[hname.length() + 2];
 	for (int current = 0; current < len(hname_upper); current++) {
@@ -87,8 +90,10 @@ int convert(const string fin, const string fout, string hname, const bool store_
 	string name_upper_h = hname_upper;
 	name_upper_h.append("_H");
 
+	/* *** END: uppercase header name *** */
+
 	try {
-		/* START Read Data In */
+		/* *** START: read data *** */
 
 		ifs.open(fin.c_str(), ifstream::binary);
 
@@ -118,7 +123,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		if (outlen != 8) cout << "Pack into " << to_string(outlen) << " bit ints" << endl;
 		if (outlen > 8 && swap_bytes) cout << "Swap endianess" << endl;
 
-		/* START Read Data Out to Header */
+		/* *** START: write header *** */
 
 		ofs.open(fout.c_str(), ofstream::binary);
 		ofs << "#ifndef " << name_upper_h.c_str() << eol << "#define " << name_upper_h.c_str() << eol;
@@ -140,11 +145,12 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// write array data
 		unsigned long long bytes_written = 0;
 
-		//How many bytes to write
+		// how many bytes to write
 		unsigned long long bytes_to_go = data_length - offset;
 		if (length > 0 && length < bytes_to_go) bytes_to_go = length;
 
-		//Check if there are any bytes to omit during packing (not full words will not be processed)
+		// check if there are any bytes to omit during packing
+		// FIXME: incomplete words not processed
 		int omit = bytes_to_go % (outlen / 8);
 		if(omit) {
 			cout << "Warning: Last " << to_string(omit) << " byte(s) will be ignored as not forming full data word" << endl;
@@ -179,7 +185,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 				stringstream ss;
 				unsigned int word;
 				if (wordbytes == 2) {
-					// Pack input bytes into 16 bit ints
+					// pack input bytes into 16 bit ints
 					if (swap_bytes) {
 						word = (unsigned char) chunk[byte_idx++];
 						word += (unsigned char) chunk[byte_idx] << 8;
@@ -203,7 +209,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 					}
 					ss << "0x" << hex << setw(8) << setfill('0') << (int) word;
 				} else {
-					// Pack single bytes
+					// pack single bytes
 					ss << "0x" << hex << setw(2) << setfill('0') << (int)(unsigned char) chunk[byte_idx];
 				}
 				ofs << ss.str();
@@ -242,6 +248,8 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		// release input file after read
 		ifs.close();
 
+		/* *** END: read data *** */
+
 		ofs << "};" << eol;
 		if (store_vector) {
 			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<char> "
@@ -251,6 +259,8 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		ofs << eol << "#endif /* " << name_upper_h << " */" << eol;
 
 		ofs.close();
+
+		/* *** END: write header *** */
 
 		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
 

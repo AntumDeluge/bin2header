@@ -86,6 +86,13 @@ void exitWithError(const int code, const string msg) {
 }
 
 
+/** Program entry point.
+ *
+ *  @tparam int argc
+ *      Number of command line arguments.
+ *  @tparam char** argv
+ *      Command line arguments.
+ */
 int main(int argc, char** argv) {
 	// get executable name
 	executable = getBaseName(normalizePath(argv[0]));

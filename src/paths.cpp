@@ -12,7 +12,6 @@
 using namespace std;
 
 
-/** Normalizes the path for they current system */
 string normalizePath(string path) {
 	string new_path = path;
 	string to_replace;
