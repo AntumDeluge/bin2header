@@ -37,7 +37,10 @@ if __WIN32__:
 #      Message level (or message text if `msg` is omitted).
 #  @tparam str msg
 #      Message text to be printed.
-def printInfo(lvl, msg=None):
+#  @tparam bool newline
+#      If `True` prepend message with newline character
+#      (default: `False`).
+def printInfo(lvl, msg=None, newline=False):
 	if msg == None:
 		msg = lvl
 		lvl = "i"
@@ -60,6 +63,9 @@ def printInfo(lvl, msg=None):
 
 	if lvl != "q":
 		msg = "{}: {}".format(lvl, msg)
+
+	if newline:
+		msg = "\n{}".format(msg)
 
 	print(msg)
 
