@@ -58,24 +58,30 @@ void showUsage() {
 }
 
 
-/** Prints a message to stderr & exits program.
+/** Prints message to stderr & exits program.
  *
- * @tparam string msg
- *     Message to print.
- * @tparam int ecode
- *     Error code to exit with.
- * @tparam bool show_usage
- *     If `true` will print usage info.
+ *  @tparam int code
+ *      Program exit code.
+ *  @tparam string msg
+ *      Message to print.
+ *  @tparam bool show_usage
+ *      If `true` will print usage info.
  */
-void exitWithError(const string msg, const int ecode, const bool show_usage) {
+void exitWithError(const int code, const string msg, const bool show_usage) {
 	cerr << "\nERROR: " << msg << endl;
 	if (show_usage) showUsage();
-	exit(ecode);
+	exit(code);
 }
 
-/** Overloaded function defaulting to not show usage info */
-void exitWithError(const string msg, const int ecode) {
-	exitWithError(msg, ecode, false);
+/** Prints message to stderr & exits program.
+ *
+ *  @tparam int code
+ *      Program exit code.
+ *  @tparam string msg
+ *      Message to print.
+ */
+void exitWithError(const int code, const string msg) {
+	exitWithError(code, msg, false);
 }
 
 
@@ -107,7 +113,7 @@ int main(int argc, char** argv) {
 	try {
 		args = options.parse(argc, argv);
 	} catch (const cxxopts::OptionParseException& e) {
-		exitWithError(e.what(), 1, true);
+		exitWithError(1, e.what(), true);
 	}
 
 
@@ -159,13 +165,13 @@ int main(int argc, char** argv) {
 	#if 0	/* Multiple switches */
 	if (argc > 2) {
 		// FIXME: correct error return code?
-		exitWithError("Too many input files specified", 1, true);
+		exitWithError(1, "Too many input files specified", true);
 	}
 	#endif
 
 	if (argc < 2) {
 		// FIXME: correct error return code
-		exitWithError("Missing <file> argument", 1, true);
+		exitWithError(1, "Missing <file> argument", true);
 	}
 
 	// only remaining argument should be input file
@@ -182,7 +188,7 @@ int main(int argc, char** argv) {
 		ss << "File: \"" << source_file << "\" does not exist";
 
 		// 2 = enoent (file or directory not found)
-		exitWithError(ss.str(), 2, true);
+		exitWithError(2, ss.str(), true);
 	}
 
 	/* Get filenames and target directory */
