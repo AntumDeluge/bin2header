@@ -37,3 +37,7 @@ div.content {
   margin: auto;
   vertical-align: middle;
 }
+
+p {
+  max-width: 800px;
+}
