@@ -58,10 +58,10 @@ def printInfo(lvl, msg=None):
 		print("ERROR: (printInfo) Unknown message level: {}".format(lvl))
 		sys.exit(1)
 
-	if lvl == "q":
-		print(msg)
-	else:
-		print("{}: {}".format(lvl, msg))
+	if lvl != "q":
+		msg = "{}: {}".format(lvl, msg)
+
+	print(msg)
 
 
 ## Normalizes the path for the current system.
