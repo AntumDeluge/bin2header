@@ -1,6 +1,6 @@
 next
 - Updated cxxopts to v3.0.0
-- Added PYTHON option to CMake config to build for Python
+- Added NATIVE option to CMake config (set to "OFF" to configure for Python script)
 
 0.3.0
 - Added option -f to begin reading file at given offset

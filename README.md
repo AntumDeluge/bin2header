@@ -53,7 +53,7 @@ Notable CMake configuration options:
 - `CMAKE_INSTALL_PREFIX`: target directory where files are installed with `cmake --install`
 - `STATIC`: link to dependencies statically (default: OFF, native only)
 - `EMBED_ICON`: (Windows only) add icon resource to PE32 executable (default: OFF, native only)
-- `PYTHON`: configure for Python instead of native executable (default: OFF)
+- `NATIVE`: build native executable (set to "OFF" to configure for Python script) (default: ON)
 
 Example of building on Windows with MinGW:
 

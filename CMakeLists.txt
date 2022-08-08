@@ -6,9 +6,9 @@ project(bin2header
 )
 set(PROJECT_PY_VERSION 0.1.2)
 
-set(PYTHON OFF CACHE BOOL "Configure for Python instead of native executable")
+set(NATIVE ON CACHE BOOL "Build native executable (set to \"OFF\" to configure for Python script)")
 
-if(NOT PYTHON)
+if(NATIVE)
 	message("Configuring ${PROJECT_NAME} ${PROJECT_VERSION}")
 
 	set(CMAKE_CXX_STANDARD 11)
@@ -45,7 +45,7 @@ else()
 		TARGET ${PROJECT_NAME}
 		COMMAND cp "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}.py" "${CMAKE_CURRENT_BINARY_DIR}"
 	)
-endif() # NOT PYTHON
+endif() # NATIVE
 
 # Manpage package/install
 add_custom_target(man ALL)
@@ -57,7 +57,7 @@ add_custom_command(
 
 set(DOCDIR "share/doc/${PROJECT_NAME}")
 
-if(NOT PYTHON)
+if(NATIVE)
 	install(TARGETS ${PROJECT_NAME}
 		RUNTIME DESTINATION bin
 	)
@@ -66,7 +66,7 @@ else()
 		DESTINATION "bin/"
 		RENAME "${PROJECT_NAME}"
 	)
-endif() # NOT PYTHON
+endif() # NATIVE
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.1.gz" DESTINATION share/man/man1)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.txt" DESTINATION ${DOCDIR})
 
