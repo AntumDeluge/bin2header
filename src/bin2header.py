@@ -22,6 +22,46 @@ if __WIN32__:
 	symbolcp = '(C)'
 
 
+## Prints message to console.
+#
+#  If the `msg` parameter is omitted, `lvl` is used for message
+#  `lvl` is used for message text & level defaults to INFO.
+#
+#  Levels:
+#  - q: QUIET (displays message with level info)
+#  - i: INFO
+#  - w: WARNING
+#  - e: ERROR
+#
+#  @tparam str lvl
+#      Message level (or message text if `msg` is omitted).
+#  @tparam str msg
+#      Message text to be printed.
+def printInfo(lvl, msg=None):
+	if msg == None:
+		msg = lvl
+		lvl = "i"
+
+	lvl = lvl.lower()
+	if lvl == "q":
+		# quiet displays message without level
+		pass
+	elif lvl == "i":
+		lvl = "INFO"
+	elif lvl == "w":
+		lvl = "WARNING"
+	elif lvl == "e":
+		lvl = "ERROR"
+	else:
+		print("ERROR: (printInfo) Unknown message level")
+		sys.exit(1)
+
+	if lvl == "q":
+		print(msg)
+	else:
+		print("{}: {}".format(lvl, msg))
+
+
 ## Normalizes the path for the current system.
 #
 #  @tparam str path
