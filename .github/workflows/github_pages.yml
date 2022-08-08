@@ -18,7 +18,7 @@ jobs:
       - name: Copy files
         run: |
           cp "LICENSE.txt" "docs/"
-          cp "data/icon_64.png" "docs/icon.png"
+          cp "data/icon_32.png" "docs/icon.png"
 
       - name: Publish
         uses: peaceiris/actions-gh-pages@v3
