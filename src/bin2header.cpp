@@ -23,8 +23,8 @@ const string appname = "Binary to Header";
 string executable;
 
 
-/** Prints app name & version */
-void showVersion() {
+/** Prints app name & version. */
+void printVersion() {
 	cout << "\n" << appname << " version " << version << endl;
 #ifdef WIN32
 	cout << "Copyright (C) 2017-2022 Jordan Irwin <antumdeluge@gmail.com>" << endl;
@@ -34,9 +34,9 @@ void showVersion() {
 }
 
 
-/** Prints usage info */
-void showUsage() {
-	showVersion();
+/** Prints usage information. */
+void printUsage() {
+	printVersion();
 	cout << "\n  Usage:\n\t" << executable << " [options] <file>" << endl;
 	cout << "\n  Options:" << endl;
 	cout << "\t-h, --help\t\tPrint help information & exit." << endl;
@@ -70,7 +70,7 @@ void showUsage() {
  */
 void exitWithError(const int code, const string msg, const bool show_usage) {
 	cerr << "\nERROR: " << msg << endl;
-	if (show_usage) showUsage();
+	if (show_usage) printUsage();
 	exit(code);
 }
 
@@ -119,10 +119,10 @@ int main(int argc, char** argv) {
 
 
 	if (args["help"].as<bool>()) {
-		showUsage();
+		printUsage();
 		return 0;
 	} else if (args["version"].as<bool>()) {
-		showVersion();
+		printVersion();
 		return 0;
 	}
 
