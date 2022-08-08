@@ -207,7 +207,7 @@ def printVersion():
 ## Prints usage information.
 def printUsage():
 	printVersion()
-	print("\n  Usage:\n\t{} <file>\n".format(executable)
+	print("\n  Usage:\n\t{} <file>\n".format(executable))
 
 
 ## Main function called at program start.
