@@ -236,13 +236,23 @@ def getDirName(path):
 #  @tparam list argv
 #      Command line arguments.
 def main(argv):
-	source_file = normalizePath(argv[1])
+	# copy args list & remove executable name from it
+	args = list(argv)
+	args.pop(0)
+
+	if len(args) < 1:
+		exitWithError(1, "Missing <file> argument", True)
+
+	# parse input file
+	source_file = normalizePath(argv[len(argv)-1])
+	if not os.path.isfile(source_file):
+		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(source_file), True)
 
 	# check if file exists
 	if not os.path.isfile(source_file):
 		print('\nFile "{}" does not exist'.format(source_file))
 		printUsage()
-		sys.exit(1)
+		return 1
 
 	# get filenames and target directory
 	filename = list(getBaseName(source_file))
@@ -315,7 +325,4 @@ def main(argv):
 
 # program entry point.
 if __name__ == '__main__':
-	if len(sys.argv) < 2:
-		exitWithError(1, "Missing <file> argument", True)
-
-	main(sys.argv)
+	sys.exit(main(sys.argv))
