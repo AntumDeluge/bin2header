@@ -181,8 +181,8 @@ int main(int argc, char** argv) {
 		ss.str("");
 		ss << "File: \"" << source_file << "\" does not exist";
 
-		// FIXME: correct error return code?
-		exitWithError(ss.str(), 1, true);
+		// 2 = enoent (file or directory not found)
+		exitWithError(ss.str(), 2, true);
 	}
 
 	/* Get filenames and target directory */
