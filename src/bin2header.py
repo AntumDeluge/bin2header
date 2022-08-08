@@ -25,6 +25,14 @@ if __WIN32__:
 	symbolcp = '(C)'
 
 
+# options configured from command parameters
+options = {}
+options_defaults = {
+	"help": {"short": "h", "value": False},
+	"version": {"short": "v", "value": False},
+}
+
+
 ## Prints message to console.
 #
 #  If the `msg` parameter is omitted, `lvl` is used for message
@@ -77,9 +85,33 @@ def printInfo(lvl, msg=None, newline=False):
 	cout.write("{}\n".format(msg))
 
 
-# options configured from command parameters
-options = {}
-options_defaults = {}
+## Prints app name & version.
+def printVersion():
+	print("\n{} version {} (Python)".format(appname, version)
+			+ "\nCopyright {} 2017-2022 Jordan Irwin <antumdeluge@gmail.com>".format(symbolcp))
+
+## Prints usage information.
+def printUsage():
+	printVersion()
+	print("\n  Usage:\n\t{} [options] <file>\n".format(executable)
+			+ "\n  Options:"
+			+ "\n\t-h, --help\t\tPrint help information & exit."
+			+ "\n\t-v, --version\t\tPrint version information & exit.")
+
+## Prints message to stderr & exits program.
+#
+#  @tparam int code
+#      Program exit code.
+#  @tparam str msg
+#      Message to print.
+#  @tparam bool show_usage
+#      If `True` will print usage info.
+def exitWithError(code, msg, show_usage=False):
+	printInfo("e", msg, True)
+	if show_usage:
+		printUsage()
+	sys.exit(code)
+
 
 ## Retrieves a configured option.
 #
@@ -197,31 +229,6 @@ def getDirName(path):
 		dir_name = '\\'.join(f.split('\\')[:-1])
 
 	return dir_name
-
-
-## Prints app name & version.
-def printVersion():
-	print("\n{} version {} (Python)".format(appname, version)
-			+ "\nCopyright {} 2017-2022 Jordan Irwin <antumdeluge@gmail.com>".format(symbolcp))
-
-## Prints usage information.
-def printUsage():
-	printVersion()
-	print("\n  Usage:\n\t{} <file>\n".format(executable))
-
-## Prints message to stderr & exits program.
-#
-#  @tparam int code
-#      Program exit code.
-#  @tparam str msg
-#      Message to print.
-#  @tparam bool show_usage
-#      If `True` will print usage info.
-def exitWithError(code, msg, show_usage=False):
-	printInfo("e", msg, True)
-	if show_usage:
-		printUsage()
-	sys.exit(code)
 
 
 ## Main function called at program start.
