@@ -9,6 +9,7 @@
 #include "cxxopts.hpp"
 #include "paths.h"
 
+#include <cerrno>
 #include <cctype> // toupper
 #include <iostream>
 #include <sstream>
@@ -188,7 +189,7 @@ int main(int argc, char** argv) {
 		ss << "File: \"" << source_file << "\" does not exist";
 
 		// 2 = enoent (file or directory not found)
-		exitWithError(2, ss.str(), true);
+		exitWithError(ENOENT, ss.str(), true);
 	}
 
 	/* Get filenames and target directory */
