@@ -2,12 +2,11 @@
 
 # Script for creating a distributable archive
 
-DIR_ROOT="$(dirname $0)/../"
-cd "${DIR_ROOT}"
-DIR_ROOT="$(pwd)"
+cd "$(dirname "$0")/../"
+dir_root="$(pwd)"
 
 # import settings
-. "${DIR_ROOT}/info.cfg"
+. "${dir_root}/info.cfg"
 
 STAGE="${NAME}-${VERSION}"
 
