@@ -52,6 +52,8 @@ def printInfo(lvl, msg=None):
 		lvl = "WARNING"
 	elif lvl in ("e", "error"):
 		lvl = "ERROR"
+	elif lvl in ("d", "debug"):
+		lvl = "DEBUG"
 	else:
 		print("ERROR: (printInfo) Unknown message level: {}".format(lvl))
 		sys.exit(1)
