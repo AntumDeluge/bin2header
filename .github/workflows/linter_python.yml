@@ -27,3 +27,4 @@ jobs:
         id: mypy
         with:
           path: "src/*.py"
+          mypy_flags: "--allow-untyped-globals"
