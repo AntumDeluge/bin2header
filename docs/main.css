@@ -5,13 +5,32 @@ html, body {
 
 body {
   display: table;
-  margin: auto;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-div.title {
+div.header {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  column-gap: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   background-color: #b7bfe4;
-  text-align: center;
   font-size: 2em;
+}
+
+span#icon {
+  grid-column: 1;
+  display: grid;
+  align-content: center;
+}
+
+span#title {
+  grid-column: 2;
+  display: grid;
+  align-content: center;
 }
 
 div.content {
