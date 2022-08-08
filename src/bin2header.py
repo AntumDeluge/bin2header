@@ -15,7 +15,10 @@ if sys.version_info.major < 3:
 
 __WIN32__ = 'windows' in str(os.getenv('OS')).lower();
 
+appname = "Binary to Header"
 version = '0.1.2'
+executable = os.path.basename(__file__)
+
 symbolcp = '©'
 if __WIN32__:
 	# some characters don't display correctly in Windows console
@@ -196,12 +199,15 @@ def getDirName(path):
 	return dir_name
 
 
-## Prints usage information to console.
+## Prints app name & version.
+def printVersion():
+	print("\n{} version {} (Python)".format(appname, version)
+			+ "\nCopyright {} 2017-2022 Jordan Irwin <antumdeluge@gmail.com>".format(symbolcp))
+
+## Prints usage information.
 def printUsage():
-	executable = os.path.basename(__file__)
-	print('\nbin2header version {} (Python)'.format(version)
-			+ '\nCopyright {} 2017-2022 Jordan Irwin <antumdeluge@gmail.com>'.format(symbolcp)
-			+ '\n\n\tUsage:\t{} <file>\n'.format(executable))
+	printVersion()
+	print("\n  Usage:\n\t{} <file>\n".format(executable)
 
 
 ## Main function called at program start.
