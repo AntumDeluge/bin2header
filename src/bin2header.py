@@ -209,6 +209,20 @@ def printUsage():
 	printVersion()
 	print("\n  Usage:\n\t{} <file>\n".format(executable))
 
+## Prints message to stderr & exits program.
+#
+#  @tparam int code
+#      Program exit code.
+#  @tparam str msg
+#      Message to print.
+#  @tparam bool show_usage
+#      If `True` will print usage info.
+def exitWithError(code, msg, show_usage=False):
+	printInfo("e", msg, True)
+	if show_usage:
+		printUsage()
+	sys.exit(code)
+
 
 ## Main function called at program start.
 #
@@ -295,8 +309,6 @@ def main(argv):
 # program entry point.
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
-		print('\nERROR: Missing <file> argument')
-		printUsage()
-		sys.exit(1)
+		exitWithError(1, "Missing <file> argument", True)
 
 	main(sys.argv)
