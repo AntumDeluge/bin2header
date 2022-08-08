@@ -25,7 +25,7 @@ if test ${have_python} -gt 0; then
 	python "scripts/update_copyright.py"
 
 	# run script to set changelog entry labeled "next" to current version
-	python "scripts/update_changelog.py"
+	python "scripts/update_version.py"
 else
 	echo "Python not found, not updating copyright year"
 	echo "Python not found, not updating changelog version"
