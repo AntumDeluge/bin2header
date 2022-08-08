@@ -41,20 +41,22 @@ void printUsage() {
 	cout << "\n  Options:" << endl;
 	cout << "\t-h, --help\t\tPrint help information & exit." << endl;
 	cout << "\t-v, --version\t\tPrint version information & exit." << endl;
-	cout << "\t-o, --output\t\tSet output file name." << endl;
-	cout << "\t-n, --hname\t\tSet header name." << endl;
-	cout << "\t-s, --chunksize\t\tSet the buffer chunk size (in bytes)." << endl;
+	cout << "\t-o, --output\t\tOutput file name." << endl;
+	cout << "\t-n, --hname\t\tHeader name. Default is file name with \".\" replaced by \"_\"." << endl;
+	cout << "\t-s, --chunksize\t\tRead buffer chunk size (in bytes)." << endl;
 	cout << "\t\t\t\t  Default: 1048576 (1 megabyte)" << endl;
-	cout << "\t-d, --nbdata\t\tSet number of bytes per line." << endl;
+	cout << "\t-d, --nbdata\t\tNumber of bytes to write per line." << endl;
 	cout << "\t\t\t\t  Default: 12" << endl;
-	cout << "\t-c, --datacontent\tShow data content as comment." << endl;
-	cout << "\t-f  --offset\t\tStart reading at given offset from file beginning." << endl;
-	cout << "\t-l  --length\t\tNumber of bytes to process." << endl;
-	cout << "\t-p  --pack\t\tStore data using 8, 16, or 32 bit integer types." << endl;
+	cout << "\t-c, --datacontent\tShow data content as comments." << endl;
+	cout << "\t-f  --offset\t\tPosition offset to begin reading file (in bytes)." << endl;
+	cout << "\t\t\t\t  Default: 0" << endl;
+	cout << "\t-l  --length\t\tNumber of bytes to process (0 = all)." << endl;
+	cout << "\t\t\t\t  Default: 0" << endl;
+	cout << "\t-p  --pack\t\tStored data type bit length (8/16/32)." << endl;
 	cout << "\t\t\t\t  Default: 8" << endl;
-	cout << "\t-e  --endianess\t\tSwap endianess for 16 or 32 bit integer types." << endl;
+	cout << "\t-e  --endianess\t\tSet endianess to big endian for 16 & 32 bit data types." << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
-	cout << "\t    --eol\t\tSet end of line character (cr, lf, or crlf)." << endl;
+	cout << "\t    --eol\t\tSet end of line character (cr/lf/crlf)." << endl;
 	cout << "\t\t\t\t  Default: lf" << endl;
 }
 

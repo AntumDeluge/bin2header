@@ -21,18 +21,18 @@ Print help information & exit.
 Print version information & exit.
 .TP
 .BR \-o ", " \-\-output
-Set output file name.
+Output file name.
 .TP
 .BR \-n ", " \-\-hname
-Set header name.
+Header name. Default is file name with "." replaced by "_".
 .TP
 .BR \-s ", " \-\-chunksize
-Set the buffer chunk size (in bytes).
+Read buffer chunk size (in bytes).
 .br
 Default: 1048576 (1 megabyte)
 .TP
 .BR \-d ", " \-\-nbdata
-Set number of bytes per line.
+Number of bytes to write per line.
 .br
 Default: 12
 .TP
@@ -40,24 +40,28 @@ Default: 12
 Show data content as comment.
 .TP
 .BR \-f ", " \-\-offset
-Start reading at given offset from file beginning.
+Position offset to begin reading file (in bytes).
+.br
+Default: 0
 .TP
 .BR \-l ", " \-\-length
-Number of bytes to process.
+Number of bytes to process (0 = all).
+.br
+Default: 0
 .TP
 .BR \-p ", " \-\-pack
-Store data using 8, 16, or 32 bit integer types.
+Stored data type bit length (8/16/32).
 .br
 Default: 8
 .TP
 .BR \-e ", " \-\-swap
-Swap endianess for 16 or 32 bit integer types.
+Set endianess to big endian for 16 & 32 bit data types.
 .TP
 .BR \-\-stdvector
 Additionally store data in std::vector for C++.
 .TP
 .BR \-\-eol
-Set end of line character (cr, lf, or crlf).
+Set end of line character (cr/lf/crlf).
 .br
 Default: lf
 
