@@ -3,8 +3,6 @@
 cd "$(dirname "$0")/../"
 dir_root="$(pwd)"
 
-year="$(date +"%Y")"
-
 # import settings
 . "${dir_root}/info.cfg"
 
@@ -15,19 +13,8 @@ sed -i -e "s|Latest release: \[v.*\]\(.*\)/tag/v.*)|Latest release: \[v${VERSION
 sed -i -e "s|Latest Python release: \[v.*\]\(.*\)/tag/v.*)|Latest Python release: \[v${PYVERSION}\]\1/tag/v${PYVERSION})|" "${dir_root}/README.md"
 sed -i -e "s|\"bin2header-.*\"|\"bin2header-${VERSION}\"|" "${dir_root}/man/bin2header.1"
 
-update_copyright_files=()
-for f in $(grep -rl --exclude="cxxopts.hpp" "Copyright \(©\|(C)\|{}\)" src/); do
-	update_copyright_files+=("${f}")
-done
-
-for F in ${update_copyright_files[@]}; do
-	sed -i \
-		-e "s|Copyright © [^ ]*|Copyright © 2017-${year}|g" \
-		-e "s|Copyright (C) [^ ]*|Copyright (C) 2017-${year}|g" \
-		-e "s|Copyright {} [^ ]*|Copyright {} 2017-${year}|g" \
-		"${F}"
-	echo "Updated copyright year in ${F}"
-done
+# run script to update copyright year
+. "scripts/update_copyright.sh"
 
 # set changelog entry labelled "Next" to current version
 sed -i -e "s|^next$|${VERSION}|" "${dir_root}/CHANGES.txt"
