@@ -43,14 +43,14 @@ def printInfo(lvl, msg=None):
 		lvl = "i"
 
 	lvl = lvl.lower()
-	if lvl == "q":
+	if lvl in ("q", "quiet"):
 		# quiet displays message without level
-		pass
-	elif lvl == "i":
+		lvl = "q"
+	elif lvl in ("i", "info"):
 		lvl = "INFO"
-	elif lvl == "w":
+	elif lvl in ("w", "warn"):
 		lvl = "WARNING"
-	elif lvl == "e":
+	elif lvl in ("e", "error"):
 		lvl = "ERROR"
 	else:
 		print("ERROR: (printInfo) Unknown message level")
