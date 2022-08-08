@@ -5,7 +5,7 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import sys, os, array
+import array, os, sys
 
 
 if sys.version_info.major < 3:
