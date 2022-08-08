@@ -5,7 +5,7 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, os, sys
+import array, errno, os, sys, traceback
 
 
 if sys.version_info.major < 3:
@@ -68,6 +68,70 @@ def printInfo(lvl, msg=None, newline=False):
 		msg = "\n{}".format(msg)
 
 	print(msg)
+
+
+# options configured from command parameters
+options = {}
+options_defaults = {}
+
+## Retrieves a configured option.
+#
+#  @tparam str key
+#      Option identifier.
+#  @tparam bool default
+#      If `True` retrieves default value (default: `False`).
+#  @treturn str,str
+#      Returns option identifier & configured
+#      value (or `None`,`None` if identifier not found).
+def getOpt(key, default=False):
+	if len(key) == 1:
+		key_match = False
+		for long_key in options_defaults:
+			opt_value = options_defaults[long_key]
+
+			# convert short id to long
+			if "short" in opt_value and key == opt_value["short"]:
+				key = long_key
+				key_match = True
+				break
+
+		# invalid short id
+		if not key_match:
+			return None, None
+
+	if not default and key in options:
+		return key, options[key]
+
+	# get default if not configured manually
+	if key in options_defaults:
+		return key, options_defaults[key]["value"]
+
+	return None, None
+
+## Configures an option from a command line parameter.
+#
+#  @tparam str key
+#      Option identifier.
+#  @tparam str value
+#      New value to be set.
+def setOpt(key, value):
+	long_key, default_val = getOpt(key, True)
+
+	# not a valid parameter id
+	if long_key == None:
+		printInfo("e", "({}) Unknown parameter: {}".format(setOpt.__name__, key))
+		traceback.print_stack()
+		sys.exit(errno.EINVAL)
+
+	# only compatible types can be set
+	opt_type, val_type = type(default_val), type(value)
+	if opt_type != val_type:
+		printInfo("e", "({}) Value for option \"{}\" must be \"{}\" but found \"{}\""
+				.format(setOpt.__name__, long_key, opt_type.__name__, val_type.__name__))
+		traceback.print_stack()
+		sys.exit(errno.EINVAL)
+
+	options[long_key] = value
 
 
 ## Normalizes the path for the current system.
