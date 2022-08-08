@@ -67,7 +67,11 @@ def printInfo(lvl, msg=None, newline=False):
 	if newline:
 		msg = "\n{}".format(msg)
 
-	print(msg)
+	cout = sys.stdout
+	if lvl == "ERROR":
+		cout = sys.stderr
+
+	cout.write("{}\n".format(msg))
 
 
 # options configured from command parameters
