@@ -17,7 +17,13 @@ sed -i -e "s|\"bin2header-.*\"|\"bin2header-${VERSION}\"|" "${dir_root}/man/bin2
 . "scripts/update_copyright.sh"
 
 # set changelog entry labelled "Next" to current version
-sed -i -e "s|^next$|${VERSION}|" "${dir_root}/CHANGES.txt"
+grep -q "^next$" "${dir_root}/CHANGES.txt"
+res=$?
+
+if test ${res} -eq 0; then
+	sed -i -e "s|^next$|${VERSION}|" "${dir_root}/CHANGES.txt"
+	echo "Updated changelog"
+fi
 
 # update HTML manpage for webpage
 which pandoc > /dev/null 2>&1
