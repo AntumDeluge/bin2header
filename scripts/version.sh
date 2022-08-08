@@ -16,13 +16,14 @@ sed -i -e "s|\"bin2header-.*\"|\"bin2header-${VERSION}\"|" "${dir_root}/man/bin2
 # run script to update copyright year
 . "scripts/update_copyright.sh"
 
-# set changelog entry labelled "Next" to current version
-grep -q "^next$" "${dir_root}/CHANGES.txt"
+# set changelog entry labelled "next" to current version
+which python > /dev/null 2>&1
 res=$?
 
 if test ${res} -eq 0; then
-	sed -i -e "s|^next$|${VERSION}|" "${dir_root}/CHANGES.txt"
-	echo "Updated changelog"
+	python "scripts/update_changelog.py"
+else
+	echo "Python not found, not updating changelog version"
 fi
 
 # update HTML manpage for webpage
