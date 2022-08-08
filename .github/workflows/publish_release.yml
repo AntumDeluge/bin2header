@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p builds/win64/stage/ && cd builds/win64
           cmake -G "Unix Makefiles" \
-            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-x86_64.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-x86_64.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             ../../
@@ -45,7 +45,7 @@ jobs:
         run: |
           mkdir -p builds/win32/stage/ && cd builds/win32
           cmake -G "Unix Makefiles" \
-            -DCMAKE_TOOLCHAIN_FILE=cmake_modules/mingw-w64-i686.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-i686.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             ../../
