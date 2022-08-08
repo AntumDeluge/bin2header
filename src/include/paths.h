@@ -11,13 +11,13 @@
 #include <string>
 
 
-extern std::string NormalizePath(std::string path);
+extern std::string normalizePath(std::string path);
 
-extern std::string JoinPath(std::string a, std::string b);
+extern std::string joinPath(std::string a, std::string b);
 
-extern std::string GetBaseName(std::string f);
+extern std::string getBaseName(std::string f);
 
-extern std::string GetDirName(std::string f);
+extern std::string getDirName(std::string f);
 
 
 #endif /* B2H_PATHS_H_ */

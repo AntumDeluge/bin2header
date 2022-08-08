@@ -88,7 +88,7 @@ void exitWithError(const int code, const string msg) {
 
 int main(int argc, char** argv) {
 	// get executable name
-	executable = GetBaseName(NormalizePath(argv[0]));
+	executable = getBaseName(normalizePath(argv[0]));
 
 	// remove extension from executable name
 	const unsigned int ext_idx = executable.find_last_of(".");
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
 	}
 
 	// only remaining argument should be input file
-	string source_file = NormalizePath(argv[argc-1]);
+	string source_file = normalizePath(argv[argc-1]);
 
 	// Check if file exists
 	FILE* test;
@@ -193,7 +193,7 @@ int main(int argc, char** argv) {
 	}
 
 	/* Get filenames and target directory */
-	string basename = GetBaseName(source_file);
+	string basename = getBaseName(source_file);
 	string hname = basename;
 
 	if (args.count("hname") > 0) {
@@ -222,8 +222,8 @@ int main(int argc, char** argv) {
 	if (args.count("output") > 0) {
 		target_file = args["output"].as<string>();
 	} else {
-		const string target_dir = GetDirName(source_file);
-		target_file = JoinPath(target_dir, basename).append(".h");
+		const string target_dir = getDirName(source_file);
+		target_file = joinPath(target_dir, basename).append(".h");
 	}
 
 	// set SIGINT (Ctrl+C) handler

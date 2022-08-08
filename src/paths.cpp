@@ -13,7 +13,7 @@ using namespace std;
 
 
 /** Normalizes the path for they current system */
-string NormalizePath(string path) {
+string normalizePath(string path) {
 	string new_path = path;
 	string to_replace;
 	string replace_with;
@@ -50,7 +50,7 @@ string NormalizePath(string path) {
 }
 
 
-string JoinPath(string a, string b) {
+string joinPath(string a, string b) {
 #ifdef __WIN32__
 	return a.append("\\").append(b);
 #else
@@ -59,7 +59,7 @@ string JoinPath(string a, string b) {
 }
 
 
-string GetBaseName(string f) {
+string getBaseName(string f) {
 	int split;
 
 #ifdef __WIN32__
@@ -75,7 +75,7 @@ string GetBaseName(string f) {
 }
 
 
-string GetDirName(string f) {
+string getDirName(string f) {
 	int split;
 
 #ifdef __WIN32__
@@ -88,7 +88,7 @@ string GetDirName(string f) {
 		return ".";
 	} else if (split == 0) {
 		// root of the filesystem
-		return NormalizePath("/");
+		return normalizePath("/");
 	} else {
 		f.erase(split, f.length() - split);
 	}
