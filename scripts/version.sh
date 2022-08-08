@@ -13,16 +13,21 @@ sed -i -e "s|Latest release: \[v.*\]\(.*\)/tag/v.*)|Latest release: \[v${VERSION
 sed -i -e "s|Latest Python release: \[v.*\]\(.*\)/tag/v.*)|Latest Python release: \[v${PYVERSION}\]\1/tag/v${PYVERSION})|" "${dir_root}/README.md"
 sed -i -e "s|\"bin2header-.*\"|\"bin2header-${VERSION}\"|" "${dir_root}/man/bin2header.1"
 
-# run script to update copyright year
-. "scripts/update_copyright.sh"
-
-# set changelog entry labelled "next" to current version
+# check for Python executable
+have_python=0
 which python > /dev/null 2>&1
-res=$?
+if test $? -eq 0; then
+	have_python=1
+fi
 
-if test ${res} -eq 0; then
+if test ${have_python} -gt 0; then
+	# run script to update copyright year
+	python "scripts/update_copyright.py"
+
+	# run script to set changelog entry labeled "next" to current version
 	python "scripts/update_changelog.py"
 else
+	echo "Python not found, not updating copyright year"
 	echo "Python not found, not updating changelog version"
 fi
 
