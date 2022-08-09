@@ -30,6 +30,7 @@ options = {}
 options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
+	"nbdata": {"short": "d", "value": 12},
 	"stdvector": {"value": False},
 	"eol": {"value": "lf"},
 }
@@ -99,9 +100,11 @@ def printUsage():
 			+ "\n  Options:"
 			+ "\n\t-h, --help\t\tPrint help information & exit."
 			+ "\n\t-v, --version\t\tPrint version information & exit."
+			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
-			+ "\n\t\t\t\t  Default: lf")
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol")[1], True))
 
 ## Prints message to stderr & exits program.
 #
@@ -347,6 +350,9 @@ def convert(fin):
 	elif newEol != "lf":
 		printInfo("w", "Unknown EOL type \"{}\", using default \"lf\"\n".format(newEol), True)
 
+	# columns per line
+	cols = getOpt("nbdata")[1]
+
 	# get filenames and target directory
 	filename = list(getBaseName(fin))
 	hname = list(filename)
@@ -387,11 +393,11 @@ def convert(fin):
 
 	bytes_written = 0
 	for byte in data:
-		if (bytes_written % 12) == 0:
+		if (bytes_written % cols) == 0:
 			text += "\t"
 		text += "0x%02x" % byte
 
-		if (bytes_written % 12) == 11:
+		if (bytes_written % cols) == cols - 1:
 			text += ",{}".format(eol)
 		elif (bytes_written + 1) < data_length:
 			text += ", "
