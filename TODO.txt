@@ -6,4 +6,15 @@ TODO:
 - show a timer (that can optionally be disable) to show elapsed time
 - deploy github-pages build on new tag only
 - update manpage date with version script
-- update Python script for same functionality as native binary
+- Python:
+	- split read/write data into buffer chunks
+	- add option to set line endings
+	- add option to customize target filename
+	- add option to customize header name
+	- add option to set number of bytes to write per line
+	- add option to show data content as comments
+	- add option to set read offset
+	- add option to set number of bytes to process
+	- add option to pack into 16 & 32 bit data types
+	- add option to swap endianess
+	- allow job to be cancelled with Ctrl+C
