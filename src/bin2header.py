@@ -331,7 +331,7 @@ def getDirName(path):
 
 	# MSYS versions of Python appear to not understand Windows paths
 	if not dir_name and __WIN32__:
-		dir_name = "\\".join(f.split("\\")[:-1])
+		dir_name = "\\".join(path.split("\\")[:-1])
 
 	return dir_name
 
