@@ -332,7 +332,7 @@ def getDirName(path):
 def convert(fin):
 	# check if file exists
 	if not os.path.isfile(fin):
-		exitWithError(errno.ENOENT, "\nFile \"{}\" does not exist".format(fin))
+		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
 
 	# get filenames and target directory
 	filename = list(getBaseName(fin))

@@ -195,7 +195,7 @@ int main(int argc, char** argv) {
 	if (!test) {
 		// clear stringstream
 		ss.str("");
-		ss << "File: \"" << source_file << "\" does not exist";
+		ss << "File \"" << source_file << "\" does not exist";
 
 		exitWithError(ENOENT, ss.str(), true);
 	}
