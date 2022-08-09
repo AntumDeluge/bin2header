@@ -30,6 +30,7 @@ options = {}
 options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
+	"stdvector": {"value": False},
 }
 
 
@@ -96,7 +97,8 @@ def printUsage():
 	print("\n  Usage:\n\t{} [options] <file>\n".format(executable)
 			+ "\n  Options:"
 			+ "\n\t-h, --help\t\tPrint help information & exit."
-			+ "\n\t-v, --version\t\tPrint version information & exit.")
+			+ "\n\t-v, --version\t\tPrint version information & exit."
+			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++.")
 
 ## Prints message to stderr & exits program.
 #
@@ -381,7 +383,7 @@ def main(argv):
 
 	# adds C++ std::vector support
 	# TODO: make optional
-	store_vector = True
+	store_vector = getOpt("stdvector")[1]
 
 	# currently only support LF line endings output
 	outfile = open(target_file, "w", newline="\n")
