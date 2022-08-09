@@ -5,7 +5,7 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, codecs, errno, os, sys, traceback
+import array, codecs, errno, math, os, sys, traceback
 
 
 if sys.version_info.major < 3:
@@ -32,6 +32,7 @@ options_defaults = {
 	"version": {"short": "v", "value": False},
 	"output": {"short": "o", "value": ""},
 	"hname": {"short": "n", "value": ""},
+	"chunksize": {"short": "s", "value": 1024 * 1024},
 	"nbdata": {"short": "d", "value": 12},
 	"length": {"short": "l", "value": 0},
 	"stdvector": {"value": False},
@@ -105,6 +106,8 @@ def printUsage():
 			+ "\n\t-v, --version\t\tPrint version information & exit."
 			+ "\n\t-o, --output\t\tOutput file name."
 			+ "\n\t-n, --hname\t\tHeader name. Default is file name with \".\" replaced by \"_\"."
+			+ "\n\t-s, --chunksize\t\tRead buffer chunk size (in bytes)."
+			+ "\n\t\t\t\t  Default: {} (1 megabyte)".format(getOpt("chunksize")[1], True)
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
@@ -415,10 +418,7 @@ def convert(fin):
 	# TODO: add 16 & 32
 	outlen = 8
 
-	# read data in
-	# TODO: split into buffer chunks
-	data = array.array("B", open(fin, "rb").read())
-	data_length = len(data)
+	data_length = os.path.getsize(fin)
 
 	# amount of bytes to process
 	process_bytes = getOpt("length")[1]
@@ -433,10 +433,21 @@ def convert(fin):
 		printInfo("w", "Last {} byte(s) will be ignored as not forming full data word".format(omit))
 		bytes_to_go -= omit
 
-	print("File size: {} bytes".format(data_length))
-	print("Process maximum {} bytes".format(process_bytes))
+	chunk_size = getOpt("chunksize")[1]
+	if process_bytes == 0:
+		chunk_count = math.ceil(data_length / chunk_size)
+	else:
+		chunk_count = math.ceil(process_bytes / chunk_size)
 
-	# *** START: write data *** #
+	print("File size:  {} bytes".format(data_length))
+	print("Chunk size: {} bytes".format(chunk_size))
+	if process_bytes:
+		print("Process maximum {} bytes".format(process_bytes))
+
+	# *** START: read/write *** #
+
+	# open file stream for writing
+	ofs = codecs.open(fout, "w", "utf-8")
 
 	# adds C++ std::vector support
 	store_vector = getOpt("stdvector")[1]
@@ -446,40 +457,65 @@ def convert(fin):
 		text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
 	text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
 
+	ofs.write(text)
+
+	# open file stream for reading
+	ifs = codecs.open(fin, "rb")
+
+	# empty line
+	print()
+
 	eof = False
-	bytes_written = 0
-	for byte in data:
-		if (bytes_written % cols) == 0:
-			text += "\t"
-		text += "0x%02x" % byte
+	bytes_out = 0
+	for chunk_idx in range(chunk_count):
+		sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
 
-		if bytes_written + 1 < bytes_to_go:
-			if (bytes_written % cols) == cols - 1:
-				text += ",{}".format(eol)
-			elif (bytes_written + 1) < data_length:
-				text += ", "
-		else:
-			eof = True
+		ifs.seek(ifs.tell())
+		read_chunk = array.array("B", ifs.read(chunk_size))
 
-		bytes_written += 1
+		write_chunk = ""
+		for byte in read_chunk:
+			if (bytes_out % cols) == 0:
+				write_chunk += "\t"
+			write_chunk += "0x%02x" % byte
 
+			if bytes_out + 1 < bytes_to_go:
+				if (bytes_out % cols) == cols - 1:
+					write_chunk += ",{}".format(eol)
+				elif (bytes_out + 1) < data_length:
+					write_chunk += ", "
+			else:
+				eof = True
+
+			bytes_out += 1
+			if eof:
+				break
+
+		ofs.write(write_chunk)
 		if eof:
 			break
 
-	text += "{0}}};{0}".format(eol)
+	# flush stdout
+	print()
+
+	# close file read stream
+	ifs.close()
+
+	text = "{0}}};{0}".format(eol)
 	if store_vector:
 		text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
 		+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
 		+ "));{0}#endif{0}".format(eol)
 	text +="{0}#endif /* {1} */{0}".format(eol, hname_upper)
 
-	outfile = codecs.open(fout, "w", "utf-8")
-	outfile.write(text)
-	outfile.close()
+	ofs.write(text)
 
-	# *** END: write data *** #
+	# close file write stream
+	ofs.close()
 
-	print("\nWrote {} bytes".format(bytes_written))
+	# *** END: read/write *** #
+
+	print("\nWrote {} bytes".format(bytes_out))
 
 	print("Exported to: {}".format(fout))
 

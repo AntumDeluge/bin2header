@@ -7,7 +7,6 @@ TODO:
 - deploy github-pages build on new tag only
 - update manpage date with version script
 - Python:
-	- split read/write data into buffer chunks
 	- add option to show data content as comments
 	- add option to set read offset
 	- add option to pack into 16 & 32 bit data types
