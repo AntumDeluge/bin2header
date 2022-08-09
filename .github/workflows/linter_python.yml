@@ -27,4 +27,6 @@ jobs:
         id: mypy
         with:
           path: "src/*.py"
-          mypy_flags: '--allow-untyped-globals'
+          # documentation from jashparekh/mypy-action appears to be incorrect
+          #mypy_flags: '--allow-untyped-globals'
+          mypy_options: '--allow-untyped-globals'
