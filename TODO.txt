@@ -12,7 +12,6 @@ TODO:
 	- add option to customize header name
 	- add option to show data content as comments
 	- add option to set read offset
-	- add option to set number of bytes to process
 	- add option to pack into 16 & 32 bit data types
 	- add option to swap endianess
 	- allow job to be cancelled with Ctrl+C

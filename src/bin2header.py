@@ -31,6 +31,7 @@ options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
 	"nbdata": {"short": "d", "value": 12},
+	"length": {"short": "l", "value": 0},
 	"stdvector": {"value": False},
 	"eol": {"value": "lf"},
 }
@@ -102,6 +103,8 @@ def printUsage():
 			+ "\n\t-v, --version\t\tPrint version information & exit."
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
+			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("length")[1], True)
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol")[1], True))
@@ -374,12 +377,30 @@ def convert(fin):
 	hname_upper = hname.upper()
 	hname_upper += "_H"
 
+	# data type length
+	# TODO: add 16 & 32
+	outlen = 8
+
 	# read data in
 	# TODO: split into buffer chunks
 	data = array.array("B", open(fin, "rb").read())
 	data_length = len(data)
 
+	# amount of bytes to process
+	process_bytes = getOpt("length")[1]
+	bytes_to_go = data_length
+	if process_bytes > 0 and process_bytes < bytes_to_go:
+		bytes_to_go = process_bytes
+
+	# check if there are any bytes to omit during packing
+	# FIXME: incomplete words not processed
+	omit = bytes_to_go % (outlen / 8)
+	if omit:
+		printInfo("w", "Last {} byte(s) will be ignored as not forming full data word".format(omit))
+		bytes_to_go -= omit
+
 	print("File size: {} bytes".format(data_length))
+	print("Process maximum {} bytes".format(process_bytes))
 
 	# *** START: write data *** #
 
@@ -391,18 +412,25 @@ def convert(fin):
 		text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
 	text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
 
+	eof = False
 	bytes_written = 0
 	for byte in data:
 		if (bytes_written % cols) == 0:
 			text += "\t"
 		text += "0x%02x" % byte
 
-		if (bytes_written % cols) == cols - 1:
-			text += ",{}".format(eol)
-		elif (bytes_written + 1) < data_length:
-			text += ", "
+		if bytes_written + 1 < bytes_to_go:
+			if (bytes_written % cols) == cols - 1:
+				text += ",{}".format(eol)
+			elif (bytes_written + 1) < data_length:
+				text += ", "
+		else:
+			eof = True
 
 		bytes_written += 1
+
+		if eof:
+			break
 
 	text += "{0}}};{0}".format(eol)
 	if store_vector:
