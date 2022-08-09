@@ -107,14 +107,14 @@ def printUsage():
 			+ "\n\t-o, --output\t\tOutput file name."
 			+ "\n\t-n, --hname\t\tHeader name. Default is file name with \".\" replaced by \"_\"."
 			+ "\n\t-s, --chunksize\t\tRead buffer chunk size (in bytes)."
-			+ "\n\t\t\t\t  Default: {} (1 megabyte)".format(getOpt("chunksize")[1], True)
+			+ "\n\t\t\t\t  Default: {} (1 megabyte)".format(getOpt("chunksize", True)[1])
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
-			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata", True)[1])
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
-			+ "\n\t\t\t\t  Default: {}".format(getOpt("length")[1], True)
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("length", True)[1])
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
-			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol")[1], True))
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol", True)[1]))
 
 ## Prints message to stderr & exits program.
 #
