@@ -33,7 +33,7 @@ void setShowDataContent(const bool dc) { showDataContent = dc; }
 void setOutputBitLength(const unsigned int bl) { if ((bl == 16) || (bl == 32)) outlen = bl; }
 void setReadOffset(const unsigned long ofs) { offset = ofs; }
 void setReadLength(const unsigned long lgt) { length = lgt; }
-void setSwapEndianess(void) { swap_bytes = true; }
+void setSwapEndianess() { swap_bytes = true; }
 
 void setEol(const string newEol) {
 	if (newEol == "cr") {
@@ -45,7 +45,7 @@ void setEol(const string newEol) {
 	}
 }
 
-void sigintHandler(int sig_num) {
+void sigintHandler(const int sig_num) {
 	cancelled = true;
 	// reset handler to catch SIGINT next time
 	signal(SIGINT, sigintHandler);

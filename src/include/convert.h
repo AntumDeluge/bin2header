@@ -62,7 +62,7 @@ extern void setReadLength(const unsigned long lgt);
  *
  *  16 & 32 bit data types only.
  */
-extern void setSwapEndianess(void);
+extern void setSwapEndianess();
 
 /** Sets end of line character.
  *
@@ -74,9 +74,8 @@ extern void setEol(const std::string newEol);
 /** Cancels current write iteration.
  *
  *  @tparam int sig_num
- *      Unused.
  */
-extern void sigintHandler(int sig_num);
+extern void sigintHandler(const int sig_num);
 
 /** Reads data from input & writes header.
  *

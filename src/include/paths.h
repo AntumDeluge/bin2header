@@ -18,7 +18,7 @@
  *  @return
  *      Path formatted with native directory/node delimeters.
  */
-extern std::string normalizePath(std::string path);
+extern std::string normalizePath(const std::string path);
 
 /** Concatenates two paths into one.
  *
@@ -29,25 +29,25 @@ extern std::string normalizePath(std::string path);
  *  @return
  *     Concatenated path.
  */
-extern std::string joinPath(std::string a, std::string b);
+extern std::string joinPath(std::string a, const std::string b);
 
 /** Removes path to parent directory from path name.
  *
- *  @tparam string f
+ *  @tparam string path
  *      Path to be parsed.
  *  @return
  *      Name of last node in path.
  */
-extern std::string getBaseName(std::string f);
+extern std::string getBaseName(std::string path);
 
 /** Removes last node from path name.
  *
- *  @tparam string f
+ *  @tparam string path
  *      Path to be parsed.
  *  @return
  *      Path to parent directory.
  */
-extern std::string getDirName(std::string f);
+extern std::string getDirName(std::string path);
 
 
 #endif /* B2H_PATHS_H_ */

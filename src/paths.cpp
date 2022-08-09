@@ -12,7 +12,7 @@
 using namespace std;
 
 
-string normalizePath(string path) {
+string normalizePath(const string path) {
 	string new_path = path;
 	string to_replace;
 	string replace_with;
@@ -49,7 +49,7 @@ string normalizePath(string path) {
 }
 
 
-string joinPath(string a, string b) {
+string joinPath(string a, const string b) {
 #ifdef __WIN32__
 	return a.append("\\").append(b);
 #else
@@ -58,29 +58,29 @@ string joinPath(string a, string b) {
 }
 
 
-string getBaseName(string f) {
+string getBaseName(string path) {
 	int split;
 
 #ifdef __WIN32__
-	split = f.find_last_of('\\');
+	split = path.find_last_of('\\');
 #else
-	split = f.find_last_of('/');
+	split = path.find_last_of('/');
 #endif
 	if (split >= 0) {
-		f.erase(0, split + 1);
+		path.erase(0, split + 1);
 	}
 
-	return f;
+	return path;
 }
 
 
-string getDirName(string f) {
+string getDirName(string path) {
 	int split;
 
 #ifdef __WIN32__
-	split = f.find_last_of('\\');
+	split = path.find_last_of('\\');
 #else
-	split = f.find_last_of('/');
+	split = path.find_last_of('/');
 #endif
 	if (split < 0) {
 		// working directory
@@ -89,8 +89,8 @@ string getDirName(string f) {
 		// root of the filesystem
 		return normalizePath("/");
 	} else {
-		f.erase(split, f.length() - split);
+		path.erase(split, path.length() - split);
 	}
 
-	return f;
+	return path;
 }
