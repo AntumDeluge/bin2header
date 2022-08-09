@@ -349,7 +349,9 @@ def getDirName(path):
 #      Path to file to be written.
 #  @tparam[opt] str hname
 #      Text to be used for header definition & array variable name.
-def convert(fin, fout, hname=""):
+#  @tparam[opt] bool stdvector
+#      Flag to additionally store data in C++ std::vector.
+def convert(fin, fout, hname="", stdvector=False):
 	# check if file exists
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
@@ -443,11 +445,8 @@ def convert(fin, fout, hname=""):
 	# open file stream for writing
 	ofs = codecs.open(fout, "w", "utf-8")
 
-	# adds C++ std::vector support
-	store_vector = getOpt("stdvector")[1]
-
 	text = "#ifndef {0}{1}#define {0}{1}".format(hname_upper, eol)
-	if store_vector:
+	if stdvector:
 		text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
 	text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
 
@@ -496,7 +495,7 @@ def convert(fin, fout, hname=""):
 	ifs.close()
 
 	text = "{0}}};{0}".format(eol)
-	if store_vector:
+	if stdvector:
 		text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
 		+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
 		+ "));{0}#endif{0}".format(eol)
@@ -550,7 +549,7 @@ def main(argv):
 		# use source file to define default target file
 		target_file = os.path.join(getDirName(source_file), source_basename + ".h")
 
-	ret = convert(source_file, target_file, getOpt("hname")[1])
+	ret = convert(source_file, target_file, getOpt("hname")[1], getOpt("stdvector")[1])
 	if ret > 0:
 		print("An error occured. Error code: {}".format(ret))
 
