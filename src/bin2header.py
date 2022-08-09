@@ -393,19 +393,19 @@ def main(argv):
 		text += "\n#ifdef __cplusplus\n#include <vector>\n#endif\n"
 	text += "\nstatic const unsigned char {}[] = {{\n".format(hname)
 
-	current = 0
+	bytes_written = 0
 	data_length = len(data)
 	for byte in data:
-		if (current % 12) == 0:
+		if (bytes_written % 12) == 0:
 			text += "\t"
 		text += "0x%02x" % byte
 
-		if (current + 1) < data_length:
+		if (bytes_written % 12) == 11:
+			text += ",\n"
+		elif (bytes_written + 1) < data_length:
 			text += ", "
-		if (current % 12) == 11:
-			text += "\n"
 
-		current += 1
+		bytes_written += 1
 
 	text += "\n};\n"
 	if store_vector:
@@ -418,6 +418,9 @@ def main(argv):
 	outfile.close()
 
 	# *** END: write data *** #
+
+	# cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
+	print("\nWrote {} bytes".format(bytes_written))
 
 	print("Exported to: {}".format(target_file))
 
