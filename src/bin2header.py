@@ -343,15 +343,17 @@ def getDirName(path):
 
 ## Reads data from input & writes header.
 #
-#  @tparam string fin
+#  @tparam str fin
 #      Path to file to be read.
-def convert(fin):
+#  @tparam str fout
+#      Path to file to be written.
+def convert(fin, fout):
 	# check if file exists
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
 
 	# set EOL
-	eol = "\n"
+	eol = "\n" # default
 	newEol = getOpt("eol")[1].lower()
 	if newEol == "cr":
 		eol = "\r"
@@ -363,19 +365,10 @@ def convert(fin):
 	# columns per line
 	cols = getOpt("nbdata")[1]
 
-	default_filename = getBaseName(fin)
-
-	# get target file & directory
-	target_file = getOpt("output")[1]
-	if not target_file.strip():
-		target_file = default_filename + ".h"
-		target_dir = getDirName(fin)
-	else:
-		target_dir = getDirName(target_file)
-		target_file = getBaseName(target_file)
-
-	target_file = list(target_file)
+	target_basename = list(getBaseName(fout))
+	target_dir = getDirName(fout)
 	if not target_dir.strip():
+		# use working dirkectory if parent cannot be parsed
 		target_dir = os.getcwd()
 
 	if os.path.isfile(target_dir):
@@ -392,23 +385,24 @@ def convert(fin):
 	if hname.strip(" \t\r\n" + "".join(badchars)):
 		hname = list(hname)
 	else:
-		hname = list(default_filename)
+		# use source filename as default
+		hname = list(getBaseName(fin))
 
 	# remove unwanted characters
 	for x in range(len(hname)):
 		if hname[x] in badchars or hname[x] == ".":
 			hname[x] = "_"
-	for x in range(len(target_file)):
-		if target_file[x] in badchars:
-			target_file[x] = "_"
+	for x in range(len(target_basename)):
+		if target_basename[x] in badchars:
+			target_basename[x] = "_"
 
 	# prefix with '_' when first char is a number
 	if hname[0].isnumeric():
 		hname.insert(0, "_")
 
-	target_file = "".join(target_file)
+	target_basename = "".join(target_basename)
 	hname = "".join(hname)
-	fout = os.path.join(target_dir, target_file)
+	fout = os.path.join(target_dir, target_basename)
 
 	# uppercase name for header
 	hname_upper = hname.upper()
@@ -541,13 +535,22 @@ def main(argv):
 	if len(argv) == 0:
 		exitWithError(1, "Missing <file> argument", True)
 
+	# file to read
 	source_file = argv[0]
 	argv.pop(0)
 
 	if len(argv) > 0:
 		printInfo("w", "Some command arguments were not parsed: {}".format(argv))
 
-	ret = convert(source_file)
+	source_basename = getBaseName(source_file)
+
+	# file to write
+	target_file = getOpt("output")[1]
+	if not target_file.strip():
+		# use source file to define default target file
+		target_file = os.path.join(getDirName(source_file), source_basename + ".h")
+
+	ret = convert(source_file, target_file)
 	if ret > 0:
 		print("An error occured. Error code: {}".format(ret))
 
