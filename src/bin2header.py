@@ -5,7 +5,7 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, errno, os, sys, traceback
+import array, codecs, errno, os, sys, traceback
 
 
 if sys.version_info.major < 3:
@@ -367,9 +367,6 @@ def convert(fin):
 	# adds C++ std::vector support
 	store_vector = getOpt("stdvector")[1]
 
-	# currently only support LF line endings output
-	outfile = open(fout, "w", newline="\n")
-
 	text = "#ifndef {0}\n#define {0}\n".format(hname_upper)
 	if store_vector:
 		text += "\n#ifdef __cplusplus\n#include <vector>\n#endif\n"
@@ -395,6 +392,8 @@ def convert(fin):
 		+ "));\n#endif\n"
 	text +="\n#endif /* {} */\n".format(hname_upper)
 
+	# currently only support LF line endings output
+	outfile = codecs.open(fout, "w", "utf-8")
 	outfile.write(text)
 	outfile.close()
 
