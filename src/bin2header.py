@@ -250,9 +250,7 @@ def main(argv):
 
 	# check if file exists
 	if not os.path.isfile(source_file):
-		print("\nFile \"{}\" does not exist".format(source_file))
-		printUsage()
-		return 1
+		exitWithError(errno.ENOENT, "\nFile \"{}\" does not exist".format(source_file))
 
 	# get filenames and target directory
 	filename = list(getBaseName(source_file))
