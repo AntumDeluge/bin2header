@@ -397,7 +397,7 @@ def main(argv):
 	data_length = len(data)
 	for byte in data:
 		if (current % 12) == 0:
-			text += "    "
+			text += "\t"
 		text += "0x%02x" % byte
 
 		if (current + 1) < data_length:
