@@ -347,7 +347,9 @@ def getDirName(path):
 #      Path to file to be read.
 #  @tparam str fout
 #      Path to file to be written.
-def convert(fin, fout):
+#  @tparam[opt] str hname
+#      Text to be used for header definition & array variable name.
+def convert(fin, fout, hname=""):
 	# check if file exists
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
@@ -379,9 +381,7 @@ def convert(fin, fout):
 
 	badchars = ("\\", "+", "-", "*", " ")
 
-	# header name
-	hname = getOpt("hname")[1]
-	# don't allow use of all unusable characters
+	# don't allow use of all unusable characters in header name
 	if hname.strip(" \t\r\n" + "".join(badchars)):
 		hname = list(hname)
 	else:
@@ -550,7 +550,7 @@ def main(argv):
 		# use source file to define default target file
 		target_file = os.path.join(getDirName(source_file), source_basename + ".h")
 
-	ret = convert(source_file, target_file)
+	ret = convert(source_file, target_file, getOpt("hname")[1])
 	if ret > 0:
 		print("An error occured. Error code: {}".format(ret))
 
