@@ -331,6 +331,14 @@ def main(argv):
 	argc = len(argv)
 	argv = parseCommandLine(argv)
 
+	if getOpt("help")[1]:
+		printUsage()
+		return 0
+
+	if getOpt("version")[1]:
+		printVersion()
+		return 0
+
 	if len(argv) == 0:
 		exitWithError(1, "Missing <file> argument", True)
 
