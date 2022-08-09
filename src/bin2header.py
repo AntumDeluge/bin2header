@@ -325,40 +325,19 @@ def getDirName(path):
 	return dir_name
 
 
-## Main function called at program start.
+## Reads data from input & writes header.
 #
-#  @tparam list argv
-#      Command line arguments.
-def main(argv):
-	argc = len(argv)
-	argv = parseCommandLine(argv)
-
-	if getOpt("help")[1]:
-		printUsage()
-		return 0
-
-	if getOpt("version")[1]:
-		printVersion()
-		return 0
-
-	if len(argv) == 0:
-		exitWithError(1, "Missing <file> argument", True)
-
-	# XXX: make this global?
-	source_file = argv[0]
-	argv.pop(0)
-
-	if len(argv) > 0:
-		printInfo("w", "Some command arguments were not parsed: {}".format(argv))
-
+#  @tparam string fin
+#      Path to file to be read.
+def convert(fin):
 	# check if file exists
-	if not os.path.isfile(source_file):
-		exitWithError(errno.ENOENT, "\nFile \"{}\" does not exist".format(source_file))
+	if not os.path.isfile(fin):
+		exitWithError(errno.ENOENT, "\nFile \"{}\" does not exist".format(fin))
 
 	# get filenames and target directory
-	filename = list(getBaseName(source_file))
+	filename = list(getBaseName(fin))
 	hname = list(filename)
-	target_dir = getDirName(source_file)
+	target_dir = getDirName(fin)
 
 	# remove unwanted characters
 	badchars = ("\\", "+", "-", "*", " ")
@@ -370,7 +349,7 @@ def main(argv):
 
 	filename = "".join(filename)
 	hname = "".join(hname)
-	target_file = os.path.join(target_dir, filename) + ".h"
+	fout = os.path.join(target_dir, filename) + ".h"
 
 	# uppercase name for header
 	hname_upper = hname.upper()
@@ -378,7 +357,7 @@ def main(argv):
 
 	# read data in
 	# TODO: split into buffer chunks
-	data = array.array("B", open(source_file, "rb").read())
+	data = array.array("B", open(fin, "rb").read())
 	data_length = len(data)
 
 	print("File size: {} bytes".format(data_length))
@@ -386,11 +365,10 @@ def main(argv):
 	# *** START: write data *** #
 
 	# adds C++ std::vector support
-	# TODO: make optional
 	store_vector = getOpt("stdvector")[1]
 
 	# currently only support LF line endings output
-	outfile = open(target_file, "w", newline="\n")
+	outfile = open(fout, "w", newline="\n")
 
 	text = "#ifndef {0}\n#define {0}\n".format(hname_upper)
 	if store_vector:
@@ -422,12 +400,43 @@ def main(argv):
 
 	# *** END: write data *** #
 
-	# cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
 	print("\nWrote {} bytes".format(bytes_written))
 
-	print("Exported to: {}".format(target_file))
+	print("Exported to: {}".format(fout))
 
 	return 0
+
+
+## Main function called at program start.
+#
+#  @tparam list argv
+#      Command line arguments.
+def main(argv):
+	argc = len(argv)
+	argv = parseCommandLine(argv)
+
+	if getOpt("help")[1]:
+		printUsage()
+		return 0
+
+	if getOpt("version")[1]:
+		printVersion()
+		return 0
+
+	if len(argv) == 0:
+		exitWithError(1, "Missing <file> argument", True)
+
+	source_file = argv[0]
+	argv.pop(0)
+
+	if len(argv) > 0:
+		printInfo("w", "Some command arguments were not parsed: {}".format(argv))
+
+	ret = convert(source_file)
+	if ret > 0:
+		print("An error occured. Error code: {}".format(ret))
+
+	return ret
 
 
 # program entry point.
