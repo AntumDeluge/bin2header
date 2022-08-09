@@ -23,10 +23,8 @@ jobs:
           path: "src/*.py"
 
       - name: Mypy action
-        uses: jashparekh/mypy-action@v3
+        uses: jpetrucciani/mypy-check@0.930
         id: mypy
         with:
           path: "src/*.py"
-          # documentation from jashparekh/mypy-action appears to be incorrect
-          #mypy_flags: '--allow-untyped-globals'
-          mypy_options: '--allow-untyped-globals'
+          mypy_flags: '--allow-untyped-globals'
