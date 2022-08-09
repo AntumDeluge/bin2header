@@ -172,6 +172,98 @@ def setOpt(key, value):
 
 	options[long_key] = value
 
+## Checks if an argument uses a short ID.
+#
+#  Does not differenciate between '-a' & '-abcd'.
+#
+#  @tparam str a
+#      String to be checked.
+def checkShortArg(a):
+	if a.startswith("-") and a.count("-") == 1:
+		return a.lstrip("-")
+
+	return None
+
+## Checks if an argument uses a long ID.
+#
+#  @tparam str a
+#      String to be checked.
+def checkLongArg(a):
+	if a.startswith("--"):
+		d_count = 0
+		for ch in a:
+			if ch != "-":
+				break
+
+			d_count = d_count + 1
+
+		if d_count == 2:
+			return a.lstrip("-")
+
+	return None
+
+## Parses options from command line.
+#
+#  @tparam list args
+#      Command line arguments.
+#  @treturn list
+#      Remaining arguments.
+def parseCommandLine(args):
+	# unparsed arguments
+	rem = []
+
+	while len(args) > 0:
+		cur_arg = args[0]
+
+		# skip values
+		if not cur_arg.startswith("-"):
+			if len(args) > 1:
+				# FIXME: error code?
+				exitWithError(1, "Unknown argument: {}".format(cur_arg))
+
+			rem.append(args.pop(0))
+			continue
+
+		res = checkShortArg(cur_arg)
+		if res == None:
+			res = checkLongArg(cur_arg)
+
+		if res == None and cur_arg.startswith("-"):
+			# FIXME: exit code?
+			exitWithError(1, "Malformed argument: {}".format(cur_arg))
+
+		if res != None:
+			# check if argument is recognized
+			key, val_default = getOpt(res, True)
+			val_type = type(val_default)
+
+			if val_default == None:
+				# FIXME: exit code?
+				exitWithError(1, "Unknown argument: {}".format(cur_arg), True)
+
+			if val_type == bool:
+				value = True
+			else:
+				if len(args) < 2:
+					# FIXME: exit code?
+					exitWithError(1, "\"{}\" requires value".format(cur_arg), True)
+
+				try:
+					value = val_type(args[1])
+				except ValueError:
+					# FIXME: error code?
+					exitWithError(1, "\"{}\" value must be of type \"{}\"".format(cur_arg, val_type.__name__))
+
+				# remove value from argument list
+				args.pop(1)
+
+			# update config
+			setOpt(key, value)
+			# remove from argument list
+			args.pop(0)
+
+	# input file should be only remaining argument
+	return rem
 
 
 ## Normalizes the path node separators for the current system.
@@ -236,17 +328,18 @@ def getDirName(path):
 #  @tparam list argv
 #      Command line arguments.
 def main(argv):
-	# copy args list & remove executable name from it
-	args = list(argv)
-	args.pop(0)
+	argc = len(argv)
+	argv = parseCommandLine(argv)
 
-	if len(args) < 1:
+	if len(argv) == 0:
 		exitWithError(1, "Missing <file> argument", True)
 
-	# parse input file
-	source_file = normalizePath(argv[len(argv)-1])
-	if not os.path.isfile(source_file):
-		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(source_file), True)
+	# XXX: make this global?
+	source_file = argv[0]
+	argv.pop(0)
+
+	if len(argv) > 0:
+		printInfo("w", "Some command arguments were not parsed: {}".format(argv))
 
 	# check if file exists
 	if not os.path.isfile(source_file):
@@ -323,4 +416,5 @@ def main(argv):
 
 # program entry point.
 if __name__ == "__main__":
-	sys.exit(main(sys.argv))
+	# remove executable name from arguments passed to main function
+	sys.exit(main(sys.argv[1:]))
