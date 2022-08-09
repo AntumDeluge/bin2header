@@ -31,6 +31,7 @@ options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
 	"stdvector": {"value": False},
+	"eol": {"value": "lf"},
 }
 
 
@@ -98,7 +99,9 @@ def printUsage():
 			+ "\n  Options:"
 			+ "\n\t-h, --help\t\tPrint help information & exit."
 			+ "\n\t-v, --version\t\tPrint version information & exit."
-			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++.")
+			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
+			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
+			+ "\n\t\t\t\t  Default: lf")
 
 ## Prints message to stderr & exits program.
 #
@@ -334,6 +337,16 @@ def convert(fin):
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
 
+	# set EOL
+	eol = "\n"
+	newEol = getOpt("eol")[1].lower()
+	if newEol == "cr":
+		eol = "\r"
+	elif newEol == "crlf":
+		eol = "\r\n"
+	elif newEol != "lf":
+		printInfo("w", "Unknown EOL type \"{}\", using default \"lf\"\n".format(newEol), True)
+
 	# get filenames and target directory
 	filename = list(getBaseName(fin))
 	hname = list(filename)
@@ -367,10 +380,10 @@ def convert(fin):
 	# adds C++ std::vector support
 	store_vector = getOpt("stdvector")[1]
 
-	text = "#ifndef {0}\n#define {0}\n".format(hname_upper)
+	text = "#ifndef {0}{1}#define {0}{1}".format(hname_upper, eol)
 	if store_vector:
-		text += "\n#ifdef __cplusplus\n#include <vector>\n#endif\n"
-	text += "\nstatic const unsigned char {}[] = {{\n".format(hname)
+		text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
+	text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
 
 	bytes_written = 0
 	for byte in data:
@@ -379,20 +392,19 @@ def convert(fin):
 		text += "0x%02x" % byte
 
 		if (bytes_written % 12) == 11:
-			text += ",\n"
+			text += ",{}".format(eol)
 		elif (bytes_written + 1) < data_length:
 			text += ", "
 
 		bytes_written += 1
 
-	text += "\n};\n"
+	text += "{0}}};{0}".format(eol)
 	if store_vector:
-		text += "\n#ifdef __cplusplus\nstatic const std::vector<char> " \
+		text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
 		+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
-		+ "));\n#endif\n"
-	text +="\n#endif /* {} */\n".format(hname_upper)
+		+ "));{0}#endif{0}".format(eol)
+	text +="{0}#endif /* {1} */{0}".format(eol, hname_upper)
 
-	# currently only support LF line endings output
 	outfile = codecs.open(fout, "w", "utf-8")
 	outfile.write(text)
 	outfile.close()

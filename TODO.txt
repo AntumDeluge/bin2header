@@ -8,7 +8,6 @@ TODO:
 - update manpage date with version script
 - Python:
 	- split read/write data into buffer chunks
-	- add option to set line endings
 	- add option to customize target filename
 	- add option to customize header name
 	- add option to set number of bytes to write per line

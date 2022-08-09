@@ -41,7 +41,7 @@ void setEol(const string newEol) {
 	} else if (newEol == "crlf") {
 		eol = "\r\n";
 	} else if (newEol != "lf") {
-		cout << "\nWarning: Unknown eol type \"" << newEol << "\", using default \"lf\"\n" << endl;
+		cout << "\nWARNING: Unknown EOL type \"" << newEol << "\", using default \"lf\"\n" << endl;
 	}
 }
 
