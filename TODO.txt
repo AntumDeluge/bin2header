@@ -9,7 +9,6 @@ TODO:
 - Python:
 	- split read/write data into buffer chunks
 	- add option to customize target filename
-	- add option to customize header name
 	- add option to show data content as comments
 	- add option to set read offset
 	- add option to pack into 16 & 32 bit data types

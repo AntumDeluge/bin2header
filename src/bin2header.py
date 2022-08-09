@@ -30,6 +30,7 @@ options = {}
 options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
+	"hname": {"short": "n", "value": ""},
 	"nbdata": {"short": "d", "value": 12},
 	"length": {"short": "l", "value": 0},
 	"stdvector": {"value": False},
@@ -101,6 +102,7 @@ def printUsage():
 			+ "\n  Options:"
 			+ "\n\t-h, --help\t\tPrint help information & exit."
 			+ "\n\t-v, --version\t\tPrint version information & exit."
+			+ "\n\t-n, --hname\t\tHeader name. Default is file name with \".\" replaced by \"_\"."
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
@@ -358,16 +360,29 @@ def convert(fin):
 
 	# get filenames and target directory
 	filename = list(getBaseName(fin))
-	hname = list(filename)
 	target_dir = getDirName(fin)
 
-	# remove unwanted characters
 	badchars = ("\\", "+", "-", "*", " ")
+
+	# header name
+	hname = getOpt("hname")[1]
+	# don't allow use of all unusable characters
+	if hname.strip(" \t\r\n" + "".join(badchars)):
+		hname = list(hname)
+	else:
+		hname = list(filename)
+
+	# remove unwanted characters
 	for x in range(len(hname)):
 		if hname[x] in badchars or hname[x] == ".":
 			hname[x] = "_"
+	for x in range(len(filename)):
 		if filename[x] in badchars:
 			filename[x] = "_"
+
+	# prefix with '_' when first char is a number
+	if hname[0].isnumeric():
+		hname.insert(0, "_")
 
 	filename = "".join(filename)
 	hname = "".join(hname)
