@@ -210,6 +210,7 @@ int main(int argc, char** argv) {
 
 	/* *** START: remove unwanted characters *** */
 
+	// FIXME: characters are being appended to basename/filename
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
 	int x;
 	for (int current = 0; current < hname.length(); current++) {
