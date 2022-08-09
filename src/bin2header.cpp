@@ -187,7 +187,7 @@ int main(int argc, char** argv) {
 	// only remaining argument should be input file
 	string source_file = normalizePath(argv[argc-1]);
 
-	// Check if file exists
+	// check if file exists
 	FILE* test;
 	test = fopen(source_file.c_str(), "r");
 	fclose(test);
@@ -197,11 +197,10 @@ int main(int argc, char** argv) {
 		ss.str("");
 		ss << "File: \"" << source_file << "\" does not exist";
 
-		// 2 = enoent (file or directory not found)
 		exitWithError(ENOENT, ss.str(), true);
 	}
 
-	/* Get filenames and target directory */
+	// get filenames and target directory
 	string basename = getBaseName(source_file);
 	string hname = basename;
 
@@ -209,7 +208,8 @@ int main(int argc, char** argv) {
 		hname = args["hname"].as<string>();
 	}
 
-	/* START Remove Unwanted Characters */
+	/* *** START: remove unwanted characters *** */
+
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
 	int x;
 	for (int current = 0; current < hname.length(); current++) {
@@ -220,9 +220,10 @@ int main(int argc, char** argv) {
 				basename.replace(current, 1, "_");
 		}
 	}
-	/* END Remove Unwanted Characters */
 
-	/* Add '_' when first char is a number */
+	/* *** END: remove unwanted characters *** */
+
+	// prefix with '_' when first char is a number
 	if (isdigit(hname[0])){
 		hname.insert(0, 1, '_');
 	}
@@ -235,7 +236,7 @@ int main(int argc, char** argv) {
 		target_file = joinPath(target_dir, basename).append(".h");
 	}
 
-	// set SIGINT (Ctrl+C) handler
+	// interrupt signal handler (Ctrl+C)
 	signal(SIGINT, sigintHandler);
 
 	int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
