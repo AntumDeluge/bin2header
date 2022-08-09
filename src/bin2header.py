@@ -30,6 +30,7 @@ options = {}
 options_defaults = {
 	"help": {"short": "h", "value": False},
 	"version": {"short": "v", "value": False},
+	"output": {"short": "o", "value": ""},
 	"hname": {"short": "n", "value": ""},
 	"nbdata": {"short": "d", "value": 12},
 	"length": {"short": "l", "value": 0},
@@ -102,6 +103,7 @@ def printUsage():
 			+ "\n  Options:"
 			+ "\n\t-h, --help\t\tPrint help information & exit."
 			+ "\n\t-v, --version\t\tPrint version information & exit."
+			+ "\n\t-o, --output\t\tOutput file name."
 			+ "\n\t-n, --hname\t\tHeader name. Default is file name with \".\" replaced by \"_\"."
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata")[1], True)
@@ -358,9 +360,26 @@ def convert(fin):
 	# columns per line
 	cols = getOpt("nbdata")[1]
 
-	# get filenames and target directory
-	filename = list(getBaseName(fin))
-	target_dir = getDirName(fin)
+	default_filename = getBaseName(fin)
+
+	# get target file & directory
+	target_file = getOpt("output")[1]
+	if not target_file.strip():
+		target_file = default_filename + ".h"
+		target_dir = getDirName(fin)
+	else:
+		target_dir = getDirName(target_file)
+		target_file = getBaseName(target_file)
+
+	target_file = list(target_file)
+	if not target_dir.strip():
+		target_dir = os.getcwd()
+
+	if os.path.isfile(target_dir):
+		# FIXME: error code?
+		exitWithError(1, "Cannot write to dir \"{}\", file exists".format(target_dir))
+	elif not os.path.isdir(target_dir):
+		exitWithError(errno.ENOENT, "Cannot write to dir \"{}\", does not exist".format(target_dir))
 
 	badchars = ("\\", "+", "-", "*", " ")
 
@@ -370,23 +389,23 @@ def convert(fin):
 	if hname.strip(" \t\r\n" + "".join(badchars)):
 		hname = list(hname)
 	else:
-		hname = list(filename)
+		hname = list(default_filename)
 
 	# remove unwanted characters
 	for x in range(len(hname)):
 		if hname[x] in badchars or hname[x] == ".":
 			hname[x] = "_"
-	for x in range(len(filename)):
-		if filename[x] in badchars:
-			filename[x] = "_"
+	for x in range(len(target_file)):
+		if target_file[x] in badchars:
+			target_file[x] = "_"
 
 	# prefix with '_' when first char is a number
 	if hname[0].isnumeric():
 		hname.insert(0, "_")
 
-	filename = "".join(filename)
+	target_file = "".join(target_file)
 	hname = "".join(hname)
-	fout = os.path.join(target_dir, filename) + ".h"
+	fout = os.path.join(target_dir, target_file)
 
 	# uppercase name for header
 	hname_upper = hname.upper()
