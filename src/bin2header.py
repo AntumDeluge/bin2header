@@ -377,7 +377,11 @@ def main(argv):
 	hname_upper += "_H"
 
 	# read data in
+	# TODO: split into buffer chunks
 	data = array.array("B", open(source_file, "rb").read())
+	data_length = len(data)
+
+	print("File size: {} bytes".format(data_length))
 
 	# *** START: write data *** #
 
@@ -394,7 +398,6 @@ def main(argv):
 	text += "\nstatic const unsigned char {}[] = {{\n".format(hname)
 
 	bytes_written = 0
-	data_length = len(data)
 	for byte in data:
 		if (bytes_written % 12) == 0:
 			text += "\t"
