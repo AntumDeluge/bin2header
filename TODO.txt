@@ -6,3 +6,4 @@ TODO:
 - show a timer (that can optionally be disable) to show elapsed time
 - deploy github-pages build on new tag only
 - update manpage date with version script
+- update Python script for same functionality as native binary
