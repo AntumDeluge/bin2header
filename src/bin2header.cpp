@@ -210,8 +210,5 @@ int main(int argc, char** argv) {
 	// interrupt signal handler (Ctrl+C)
 	signal(SIGINT, sigintHandler);
 
-	const int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
-	if (ret != 0) cout << "An error occured. Error code: " << ret << endl;
-
-	exit(ret);
+	exit(convert(source_file, target_file, hname, args["stdvector"].as<bool>()));
 }

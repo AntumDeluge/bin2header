@@ -8,6 +8,7 @@
 #include "convert.h"
 #include "paths.h"
 
+#include <cerrno>
 #include <cmath> // ceil
 #include <fstream>
 #include <sstream>
@@ -219,10 +220,7 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		unsigned long long chunk_idx;
 		std::string comment = "";
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
-			if (cancelled) {
-				cout << "\nCancelled" << endl;
-				break;
-			} else if (eof) {
+			if (eof || cancelled) {
 				break;
 			}
 
@@ -306,6 +304,12 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 		// release input file after read
 		ifs.close();
+		if (cancelled) {
+			// close write stream & exit
+			ofs.close();
+			cout << "Cancelled" << endl;
+			return ECANCELED;
+		}
 
 		ofs << "};" << eol;
 		if (stdvector) {
