@@ -223,11 +223,6 @@ int main(int argc, char** argv) {
 
 	/* *** END: remove unwanted characters *** */
 
-	// prefix with '_' when first char is a number
-	if (isdigit(hname[0])){
-		hname.insert(0, 1, '_');
-	}
-
 	string target_file;
 	if (args.count("output") > 0) {
 		target_file = args["output"].as<string>();

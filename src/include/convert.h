@@ -88,7 +88,7 @@ extern void sigintHandler(const int sig_num);
  *  @tparam stdvector
  *      Flag to additionally store data in C++ std::vector.
  */
-extern int convert(const std::string fin, const std::string fout, const std::string hname,
+extern int convert(const std::string fin, const std::string fout, std::string hname,
 		const bool stdvector=false);
 
 
