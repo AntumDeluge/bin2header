@@ -7,9 +7,6 @@
 
 import array, codecs, errno, math, os, signal, sys, traceback
 
-# Python standard library doesn't define ECANCELED
-errno.ECANCELED = 105
-
 
 if sys.version_info.major < 3:
 	print("\nERROR: Python " + str(sys.version_info.major) + " not supported. Please upgrade to Python 3.\n")
