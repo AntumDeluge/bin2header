@@ -331,7 +331,16 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
 
-	} catch (int e) {
+	} catch (const int e) {
+		// close read/write streams
+		if (ifs.is_open()) {
+			ifs.close();
+		}
+		if (ofs.is_open()) {
+			ofs.close();
+		}
+
+		cout << "An error occurred during read/write. Code: " << e << endl;
 		return e;
 	}
 
