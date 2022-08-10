@@ -216,5 +216,5 @@ int main(int argc, char** argv) {
 	const int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
 	if (ret != 0) cout << "An error occured. Error code: " << ret << endl;
 
-	return ret;
+	exit(ret);
 }
