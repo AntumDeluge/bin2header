@@ -46,7 +46,7 @@ void setEol(const string newEol) {
 	}
 }
 
-void sigintHandler(const int sig_num) {
+void sigintHandler(int sig_num) {
 	cancelled = true;
 	// reset handler to catch SIGINT next time
 	signal(SIGINT, sigintHandler);

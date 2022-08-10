@@ -75,7 +75,7 @@ extern void setEol(const std::string newEol);
  *
  *  @tparam int sig_num
  */
-extern void sigintHandler(const int sig_num);
+extern void sigintHandler(int sig_num);
 
 /** Reads data from input & writes header.
  *
