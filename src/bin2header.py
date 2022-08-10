@@ -34,7 +34,11 @@ options_defaults = {
 	"hname": {"short": "n", "value": ""},
 	"chunksize": {"short": "s", "value": 1024 * 1024},
 	"nbdata": {"short": "d", "value": 12},
+	#"datacontent": {"short": "c", "value": False},
+	#"offset": {"short": "f", "value": 0},
 	"length": {"short": "l", "value": 0},
+	#"pack": {"short": "p", "value": 8},
+	#"endianess": {"short": "e", "value": False},
 	"stdvector": {"value": False},
 	"eol": {"value": "lf"},
 }
@@ -110,8 +114,14 @@ def printUsage():
 			+ "\n\t\t\t\t  Default: {} (1 megabyte)".format(getOpt("chunksize", True)[1])
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata", True)[1])
+			#+ "\n\t-c, --datacontent\tShow data content as comments."
+			#+ "\n\t-f  --offset\t\tPosition offset to begin reading file (in bytes)."
+			#+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("length", True)[1])
+			#+ "\n\t-p  --pack\t\tStored data type bit length (8/16/32)."
+			#+ "\n\t\t\t\t  Default: {}".format(getOpt("pack", True)[1])
+			#+ "\n\t-e  --endianess\t\tSet endianess to big endian for 16 & 32 bit data types."
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol", True)[1]))
