@@ -349,12 +349,11 @@ cancelled = False
 ## Handles Ctrl+C press.
 def sigintHandler(signum, frame):
 	print("\nSignal interrupt caught, cancelling ...")
-
 	global cancelled
 	cancelled = True
 
-# set signal interrupt (Ctrl+C) handler
-signal.signal(signal.SIGINT, sigintHandler)
+	# reset handler to catch SIGINT next time
+	signal.signal(signal.SIGINT, sigintHandler)
 
 
 ## Reads data from input & writes header.
@@ -458,6 +457,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	# *** START: read/write *** #
 
+	# set signal interrupt (Ctrl+C) handler
+	signal.signal(signal.SIGINT, sigintHandler)
+
 	# open file stream for writing
 	ofs = codecs.open(fout, "w", "utf-8")
 
@@ -485,20 +487,21 @@ def convert(fin, fout, hname="", stdvector=False):
 		ifs.seek(ifs.tell())
 		read_chunk = array.array("B", ifs.read(chunk_size))
 
-		write_chunk = ""
+		write_word = ""
 		for byte in read_chunk:
 			if cancelled:
 				break
 
 			if (bytes_out % cols) == 0:
-				write_chunk += "\t"
-			write_chunk += "0x%02x" % byte
+				write_word += "\t"
+
+			write_word += "0x%02x" % byte
 
 			if bytes_out + 1 < bytes_to_go:
 				if (bytes_out % cols) == cols - 1:
-					write_chunk += ",{}".format(eol)
+					write_word += ",{}".format(eol)
 				elif (bytes_out + 1) < data_length:
-					write_chunk += ", "
+					write_word += ", "
 			else:
 				eof = True
 
@@ -506,18 +509,17 @@ def convert(fin, fout, hname="", stdvector=False):
 			if eof:
 				break
 
-		ofs.write(write_chunk)
-
-	# empty line
-	print()
+		ofs.write(write_word)
 
 	# close file read stream
 	ifs.close()
 	if cancelled:
 		# close write stream & exit
 		ofs.close()
-		print("Cancelled")
 		return errno.ECANCELED
+
+	# empty line
+	print()
 
 	text = "{0}}};{0}".format(eol)
 	if stdvector:

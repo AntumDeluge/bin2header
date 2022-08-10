@@ -10,6 +10,7 @@
 
 #include <cerrno>
 #include <cmath> // ceil
+#include <csignal>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
@@ -47,8 +48,11 @@ void setEol(const string newEol) {
 	}
 }
 
-void sigintHandler(int sig_num) {
+/** Cancels current write iteration. */
+void sigintHandler(int signum) {
+	cout << "\nSignal interrupt caught, cancelling ..." << endl;
 	cancelled = true;
+
 	// reset handler to catch SIGINT next time
 	signal(SIGINT, sigintHandler);
 }
@@ -151,6 +155,9 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 	/* *** END: uppercase header name *** */
 
 	/* *** START: read/write *** */
+
+	// set signal interrupt (Ctrl+C) handler
+	signal(SIGINT, sigintHandler);
 
 	// file streams
 	ifstream ifs;
@@ -299,17 +306,16 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 			}	/* for (byte_idx...) */
 		}
 
-		// empty line
-		cout << endl << endl;
-
 		// release input file after read
 		ifs.close();
 		if (cancelled) {
 			// close write stream & exit
 			ofs.close();
-			cout << "Cancelled" << endl;
 			return ECANCELED;
 		}
+
+		// empty line
+		cout << endl << endl;
 
 		ofs << "};" << eol;
 		if (stdvector) {

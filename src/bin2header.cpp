@@ -207,8 +207,5 @@ int main(int argc, char** argv) {
 		target_file = args["output"].as<string>();
 	}
 
-	// interrupt signal handler (Ctrl+C)
-	signal(SIGINT, sigintHandler);
-
 	exit(convert(source_file, target_file, hname, args["stdvector"].as<bool>()));
 }

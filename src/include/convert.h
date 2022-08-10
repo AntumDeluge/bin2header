@@ -8,7 +8,6 @@
 #ifndef B2H_CONVERT_H_
 #define B2H_CONVERT_H_
 
-#include <csignal>
 #include <string>
 
 
@@ -70,12 +69,6 @@ extern void setSwapEndianess();
  *      Character to be used for EOL.
  */
 extern void setEol(const std::string newEol);
-
-/** Cancels current write iteration.
- *
- *  @tparam int sig_num
- */
-extern void sigintHandler(int sig_num);
 
 /** Reads data from input & writes header.
  *
