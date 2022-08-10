@@ -68,7 +68,7 @@ char toPrintableChar(char c) {
 }
 
 
-int convert(const string fin, const string fout, string hname, const bool store_vector) {
+int convert(const string fin, const string fout, string hname, const bool stdvector) {
 	// file streams
 	ifstream ifs;
 	ofstream ofs;
@@ -127,7 +127,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 
 		ofs.open(fout.c_str(), ofstream::binary);
 		ofs << "#ifndef " << name_upper_h.c_str() << eol << "#define " << name_upper_h.c_str() << eol;
-		if (store_vector) {
+		if (stdvector) {
 			ofs << eol << "#ifdef __cplusplus" << eol << "#include <vector>" << eol << "#endif" << eol;
 		}
 
@@ -251,7 +251,7 @@ int convert(const string fin, const string fout, string hname, const bool store_
 		/* *** END: read data *** */
 
 		ofs << "};" << eol;
-		if (store_vector) {
+		if (stdvector) {
 			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
 					<< hname << "));" << eol << "#endif" << eol;

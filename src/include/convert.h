@@ -85,11 +85,11 @@ extern void sigintHandler(const int sig_num);
  *      Path to file to be written.
  *  @tparam string hname
  *      Text to be used for header definition & array variable name.
- *  @tparam store_vector
+ *  @tparam stdvector
  *      Flag to additionally store data in C++ std::vector.
  */
 extern int convert(const std::string fin, const std::string fout, const std::string hname,
-		const bool store_vector=false);
+		const bool stdvector=false);
 
 
 #endif /* B2H_CONVERT_H_ */
