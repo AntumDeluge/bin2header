@@ -14,6 +14,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unistd.h> // access,F_OK
 
 using namespace std;
 
@@ -187,12 +188,8 @@ int main(int argc, char** argv) {
 	// only remaining argument should be input file
 	string source_file = normalizePath(argv[argc-1]);
 
-	// check if file exists
-	FILE* test;
-	test = fopen(source_file.c_str(), "r");
-	fclose(test);
-
-	if (!test) {
+	// check if source file exists
+	if (access(source_file.c_str(), F_OK) == -1) {
 		// clear stringstream
 		ss.str("");
 		ss << "File \"" << source_file << "\" does not exist";
