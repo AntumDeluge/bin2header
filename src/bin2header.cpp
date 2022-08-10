@@ -212,9 +212,8 @@ int main(int argc, char** argv) {
 
 	// FIXME: characters are being appended to basename/filename
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
-	int x;
 	for (int current = 0; current < hname.length(); current++) {
-		for (x = 0; x < len(badchars); x++) {
+		for (int x = 0; x < len(badchars); x++) {
 			if ((hname[current] == badchars[x]) || (hname[current] == '.'))
 				hname.replace(current, 1, "_");
 			if (basename[current] == badchars[x])
@@ -240,8 +239,7 @@ int main(int argc, char** argv) {
 	// interrupt signal handler (Ctrl+C)
 	signal(SIGINT, sigintHandler);
 
-	int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
-
+	const int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
 	if (ret == 0)
 		cout << "Exported to: " << target_file << endl;
 	else
