@@ -19,16 +19,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: C++ linter
-        uses: cpp-linter/cpp-linter-action@v1
-        id: cpplinter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          style: file
+      # - name: C++ linter
+        # uses: cpp-linter/cpp-linter-action@v1
+        # id: cpplinter
+        # env:
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # with:
+          # style: file
 
-      - name: Notify failures
-        if: steps.cpplinter.outputs.checks-failed > 0
+      # - name: Notify failures
+        # if: steps.cpplinter.outputs.checks-failed > 0
+        # run: |
+          # echo "Some files failed the linting checks!"
+          # exit 1
+
+      - name: Setup cppcheck
+        run: sudo apt install cppcheck
+
+      - name: Analyze C++ code
         run: |
-          echo "Some files failed the linting checks!"
-          exit 1
+          cppcheck --error-exitcode=1 --std=c++11 \
+            --enable=style,performance,portability,missingInclude \
+            --suppress=\*:src/include/cxxopts.hpp \
+            --suppress=preprocessorErrorDirective:src/include/cxxopts.hpp \
+            --suppress=passedByValue \
+            --suppress=missingIncludeSystem \
+            -I src/include/ \
+            src/
