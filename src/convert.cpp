@@ -116,7 +116,6 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 	/* *** START: check characters *** */
 
-	// FIXME: characters are being appended to basename/filename
 	char badchars[6] = {'\\', '+', '-', '*', ' '};
 	for (int current = 0; current < hname.length(); current++) {
 		for (int x = 0; x < len(badchars); x++) {

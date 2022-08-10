@@ -1,5 +1,4 @@
 
 C++ bugs:
-- "_" is appended to filenames instead of prepended when replacing characters
 
 Python bugs:
