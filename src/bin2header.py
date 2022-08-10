@@ -454,81 +454,107 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	# *** START: read/write *** #
 
-	# set signal interrupt (Ctrl+C) handler
-	signal.signal(signal.SIGINT, sigintHandler)
+	# declare read/write streams
+	ofs, ifs = None, None
 
-	# open file stream for writing
-	ofs = codecs.open(fout, "w", "utf-8")
+	try:
+		# set signal interrupt (Ctrl+C) handler
+		signal.signal(signal.SIGINT, sigintHandler)
 
-	text = "#ifndef {0}{1}#define {0}{1}".format(hname_upper, eol)
-	if stdvector:
-		text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
-	text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
+		# open file stream for writing
+		ofs = codecs.open(fout, "w", "utf-8")
 
-	ofs.write(text)
+		text = "#ifndef {0}{1}#define {0}{1}".format(hname_upper, eol)
+		if stdvector:
+			text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
+		text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
 
-	# open file stream for reading
-	ifs = codecs.open(fin, "rb")
+		ofs.write(text)
 
-	# empty line
-	print()
+		# open file stream for reading
+		ifs = codecs.open(fin, "rb")
 
-	eof = False
-	bytes_out = 0
-	for chunk_idx in range(chunk_count):
-		if eof or cancelled:
-			break;
+		# empty line
+		print()
 
-		sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
+		eof = False
+		bytes_out = 0
+		for chunk_idx in range(chunk_count):
+			if eof or cancelled:
+				break;
 
-		ifs.seek(ifs.tell())
-		read_chunk = array.array("B", ifs.read(chunk_size))
+			sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
 
-		write_word = ""
-		for byte in read_chunk:
-			if cancelled:
-				break
+			ifs.seek(ifs.tell())
+			read_chunk = array.array("B", ifs.read(chunk_size))
 
-			if (bytes_out % cols) == 0:
-				write_word += "\t"
+			write_word = ""
+			for byte in read_chunk:
+				if cancelled:
+					break
 
-			write_word += "0x%02x" % byte
+				if (bytes_out % cols) == 0:
+					write_word += "\t"
 
-			if bytes_out + 1 < bytes_to_go:
-				if (bytes_out % cols) == cols - 1:
-					write_word += ",{}".format(eol)
-				elif (bytes_out + 1) < data_length:
-					write_word += ", "
-			else:
-				eof = True
+				write_word += "0x%02x" % byte
 
-			bytes_out += 1
-			if eof:
-				break
+				if bytes_out + 1 < bytes_to_go:
+					if (bytes_out % cols) == cols - 1:
+						write_word += ",{}".format(eol)
+					elif (bytes_out + 1) < data_length:
+						write_word += ", "
+				else:
+					eof = True
 
-		ofs.write(write_word)
+				bytes_out += 1
+				if eof:
+					break
 
-	# close file read stream
-	ifs.close()
-	if cancelled:
-		# close write stream & exit
+			ofs.write(write_word)
+
+		# close file read stream
+		ifs.close()
+		if cancelled:
+			# close write stream & exit
+			ofs.close()
+			return errno.ECANCELED
+
+		# empty line
+		print()
+
+		text = "{0}}};{0}".format(eol)
+		if stdvector:
+			text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
+			+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
+			+ "));{0}#endif{0}".format(eol)
+		text +="{0}#endif /* {1} */{0}".format(eol, hname_upper)
+
+		ofs.write(text)
+
+		# close file write stream
 		ofs.close()
-		return errno.ECANCELED
 
-	# empty line
-	print()
+	except Exception as e:
+		# close read/write streams
+		if ofs:
+			ofs.close()
+		if ifs:
+			ifs.close()
 
-	text = "{0}}};{0}".format(eol)
-	if stdvector:
-		text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
-		+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
-		+ "));{0}#endif{0}".format(eol)
-	text +="{0}#endif /* {1} */{0}".format(eol, hname_upper)
+		err = -1
+		msg = ["An error occurred during read/write."]
+		for eparam in e.args:
+			ptype = type(eparam)
+			if ptype == int and err < 0:
+				err = eparam
+			elif ptype == str:
+				msg.append("  " + eparam)
 
-	ofs.write(text)
+		if err > 0:
+			msg[0] = "{} Code: {}".format(msg[0], err)
 
-	# close file write stream
-	ofs.close()
+		print("\n".join(msg))
+		return err
 
 	# *** END: read/write *** #
 
