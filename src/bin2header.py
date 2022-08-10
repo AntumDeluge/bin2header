@@ -5,7 +5,10 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, codecs, errno, math, os, sys, traceback
+import array, codecs, errno, math, os, signal, sys, traceback
+
+# Python standard library doesn't define ECANCELED
+errno.ECANCELED = 105
 
 
 if sys.version_info.major < 3:
@@ -341,6 +344,19 @@ def getDirName(path):
 	return dir_name
 
 
+cancelled = False
+
+## Handles Ctrl+C press.
+def sigintHandler(signum, frame):
+	print("\nSignal interrupt caught, cancelling ...")
+
+	global cancelled
+	cancelled = True
+
+# set signal interrupt (Ctrl+C) handler
+signal.signal(signal.SIGINT, sigintHandler)
+
+
 ## Reads data from input & writes header.
 #
 #  @tparam str fin
@@ -461,7 +477,7 @@ def convert(fin, fout, hname="", stdvector=False):
 	eof = False
 	bytes_out = 0
 	for chunk_idx in range(chunk_count):
-		if eof:
+		if eof or cancelled:
 			break;
 
 		sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
@@ -489,11 +505,16 @@ def convert(fin, fout, hname="", stdvector=False):
 
 		ofs.write(write_chunk)
 
-	# flush stdout
+	# empty line
 	print()
 
 	# close file read stream
 	ifs.close()
+	if cancelled:
+		# close write stream & exit
+		ofs.close()
+		print("Cancelled")
+		return errno.ECANCELED
 
 	text = "{0}}};{0}".format(eol)
 	if stdvector:
@@ -550,11 +571,7 @@ def main(argv):
 		# use source file to define default target file
 		target_file = os.path.join(getDirName(source_file), source_basename + ".h")
 
-	ret = convert(source_file, target_file, getOpt("hname")[1], getOpt("stdvector")[1])
-	if ret > 0:
-		print("An error occured. Error code: {}".format(ret))
-
-	return ret
+	return convert(source_file, target_file, getOpt("hname")[1], getOpt("stdvector")[1])
 
 
 # program entry point.
