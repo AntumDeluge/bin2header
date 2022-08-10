@@ -461,6 +461,9 @@ def convert(fin, fout, hname="", stdvector=False):
 	eof = False
 	bytes_out = 0
 	for chunk_idx in range(chunk_count):
+		if eof:
+			break;
+
 		sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
 
 		ifs.seek(ifs.tell())
@@ -485,8 +488,6 @@ def convert(fin, fout, hname="", stdvector=False):
 				break
 
 		ofs.write(write_chunk)
-		if eof:
-			break
 
 	# flush stdout
 	print()
