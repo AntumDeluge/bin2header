@@ -226,7 +226,7 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 				break;
 			}
 
-			cout << "\rWriting chunk " << to_string(chunk_idx + 1) << " out of " << to_string(chunk_count) << " (Ctrl+C to cancel)";
+			cout << "\rWriting chunk " << to_string(chunk_idx + 1) << " out of " << to_string(chunk_count) << " (Ctrl+C to cancel)" << std::flush;
 
 			char chunk[chunk_size];
 			ifs.seekg(chunk_idx * chunk_size + offset);
@@ -301,7 +301,7 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 			}	/* for (byte_idx...) */
 		}
 
-		// flush stdout
+		// empty line
 		cout << endl << endl;
 
 		// release input file after read
