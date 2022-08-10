@@ -10,7 +10,7 @@ import array, codecs, errno, math, os, signal, sys, traceback
 
 if sys.version_info.major < 3:
 	print("\nERROR: Python " + str(sys.version_info.major) + " not supported. Please upgrade to Python 3.\n")
-	sys.exit(2)
+	sys.exit(-1)
 
 
 __WIN32__ = "windows" in str(os.getenv("OS")).lower();
