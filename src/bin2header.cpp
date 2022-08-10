@@ -200,45 +200,21 @@ int main(int argc, char** argv) {
 		exitWithError(ENOENT, ss.str(), true);
 	}
 
-	// get filenames and target directory
-	const string basename = getBaseName(source_file);
-	string hname = basename;
-
+	string hname = "";
 	if (args.count("hname") > 0) {
 		hname = args["hname"].as<string>();
 	}
 
-	/* *** START: remove unwanted characters *** */
-
-	// FIXME: characters are being appended to basename/filename
-	char badchars[6] = {'\\', '+', '-', '*', ' '};
-	for (int current = 0; current < hname.length(); current++) {
-		for (int x = 0; x < len(badchars); x++) {
-			if ((hname[current] == badchars[x]) || (hname[current] == '.'))
-				hname.replace(current, 1, "_");
-			if (basename[current] == badchars[x])
-				basename.replace(current, 1, "_");
-		}
-	}
-
-	/* *** END: remove unwanted characters *** */
-
-	string target_file;
+	string target_file = "";
 	if (args.count("output") > 0) {
 		target_file = args["output"].as<string>();
-	} else {
-		const string target_dir = getDirName(source_file);
-		target_file = joinPath(target_dir, basename).append(".h");
 	}
 
 	// interrupt signal handler (Ctrl+C)
 	signal(SIGINT, sigintHandler);
 
 	const int ret = convert(source_file, target_file, hname, args["stdvector"].as<bool>());
-	if (ret == 0)
-		cout << "Exported to: " << target_file << endl;
-	else
-		cout << "An error occured. Error code: " << ret << endl;
+	if (ret != 0) cout << "An error occured. Error code: " << ret << endl;
 
 	return ret;
 }

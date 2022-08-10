@@ -6,6 +6,7 @@
  */
 
 #include "convert.h"
+#include "paths.h"
 
 #include <cmath> // ceil
 #include <fstream>
@@ -68,16 +69,73 @@ char toPrintableChar(char c) {
 }
 
 
-int convert(const string fin, const string fout, string hname, const bool stdvector) {
-	// file streams
-	ifstream ifs;
-	ofstream ofs;
+/** Checks for an empty string.
+ *
+ *  Checks string length & if contains only whitespace characters.
+ *
+ *  @tparam string st
+ *      String to be checked.
+ *  @return
+ *      `true` if empty or only whitepace characters found.
+ */
+bool checkEmptyString(string st) {
+	if (st.empty()) {
+		return true;
+	}
+
+	if (st.find_first_not_of(' ') == string::npos) {
+		if (st.find_first_not_of('\t') == string::npos) {
+			if (st.find_first_not_of('\n') == string::npos) {
+				if (st.find_first_not_of('\r') == string::npos) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+
+int convert(const string fin, string fout, string hname, const bool stdvector) {
+	const string source_basename = getBaseName(fin);
+	string target_basename;
+	string target_dir;
+	if (checkEmptyString(fout)) {
+		target_basename = source_basename + ".h";
+		target_dir = getDirName(fin);
+	} else {
+		target_basename = getBaseName(fout);
+		target_dir = getDirName(fout);
+	}
+
+	if (checkEmptyString(hname)) {
+		// use source filename as default
+		hname = source_basename;
+	}
+
+	/* *** START: check characters *** */
+
+	// FIXME: characters are being appended to basename/filename
+	char badchars[6] = {'\\', '+', '-', '*', ' '};
+	for (int current = 0; current < hname.length(); current++) {
+		for (int x = 0; x < len(badchars); x++) {
+			if ((hname[current] == badchars[x]) || (hname[current] == '.'))
+				hname.replace(current, 1, "_");
+			if (target_basename[current] == badchars[x])
+				target_basename.replace(current, 1, "_");
+		}
+	}
+
+	fout = joinPath(target_dir, target_basename);
 
 	// add '_' when first char is a number
 	if (isdigit(hname[0]))
 	{
 		hname.insert(0, 1, '_');
 	}
+
+	/* *** END: check characters *** */
 
 	/* *** START: uppercase header name *** */
 
@@ -92,9 +150,13 @@ int convert(const string fin, const string fout, string hname, const bool stdvec
 
 	/* *** END: uppercase header name *** */
 
-	try {
-		/* *** START: read data *** */
+	/* *** START: read/write *** */
 
+	// file streams
+	ifstream ifs;
+	ofstream ofs;
+
+	try {
 		ifs.open(fin.c_str(), ifstream::binary);
 
 		unsigned long long data_length;
@@ -122,8 +184,6 @@ int convert(const string fin, const string fout, string hname, const bool stdvec
 		if (length) cout << "Process maximum " << to_string(length) << " bytes" << endl;
 		if (outlen != 8) cout << "Pack into " << to_string(outlen) << " bit ints" << endl;
 		if (outlen > 8 && swap_bytes) cout << "Swap endianess" << endl;
-
-		/* *** START: write header *** */
 
 		ofs.open(fout.c_str(), ofstream::binary);
 		ofs << "#ifndef " << name_upper_h.c_str() << eol << "#define " << name_upper_h.c_str() << eol;
@@ -248,8 +308,6 @@ int convert(const string fin, const string fout, string hname, const bool stdvec
 		// release input file after read
 		ifs.close();
 
-		/* *** END: read data *** */
-
 		ofs << "};" << eol;
 		if (stdvector) {
 			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<char> "
@@ -260,13 +318,15 @@ int convert(const string fin, const string fout, string hname, const bool stdvec
 
 		ofs.close();
 
-		/* *** END: write header *** */
+		/* *** END: read/write *** */
 
 		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
 
 	} catch (int e) {
 		return e;
 	}
+
+	cout << "Exported to: " << fout << endl;
 
 	return 0;
 }

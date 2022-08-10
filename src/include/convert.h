@@ -82,13 +82,13 @@ extern void sigintHandler(const int sig_num);
  *  @tparam string fin
  *      Path to file to be read.
  *  @tparam string fout
- *      Path to file to be written.
+ *      Path to file to be written (default: `fin` + ".h").
  *  @tparam string hname
- *      Text to be used for header definition & array variable name.
+ *      Text to be used for header definition & array variable name (default: `fin`).
  *  @tparam stdvector
  *      Flag to additionally store data in C++ std::vector (default: `false`).
  */
-extern int convert(const std::string fin, const std::string fout, std::string hname,
+extern int convert(const std::string fin, std::string fout="", std::string hname="",
 		const bool stdvector=false);
 
 
