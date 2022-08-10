@@ -201,7 +201,7 @@ int main(int argc, char** argv) {
 	}
 
 	// get filenames and target directory
-	string basename = getBaseName(source_file);
+	const string basename = getBaseName(source_file);
 	string hname = basename;
 
 	if (args.count("hname") > 0) {
