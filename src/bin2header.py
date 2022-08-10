@@ -77,7 +77,7 @@ def printInfo(lvl, msg=None, newline=False):
 		lvl = "DEBUG"
 	else:
 		print("ERROR: ({}) Unknown message level: {}".format(printInfo.__name__, lvl))
-		sys.exit(1)
+		sys.exit(errno.EINVAL)
 
 	if lvl != "q":
 		msg = "{}: {}".format(lvl, msg)

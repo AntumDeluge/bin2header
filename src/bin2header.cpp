@@ -175,8 +175,7 @@ int main(int argc, char** argv) {
 	// XXX: should we allow multiple inputs?
 	#if 0	/* Multiple switches */
 	if (argc > 2) {
-		// FIXME: correct error return code?
-		exitWithError(1, "Too many input files specified", true);
+		exitWithError(E2BIG, "Too many input files specified", true);
 	}
 	#endif
 
