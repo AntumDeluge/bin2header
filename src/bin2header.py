@@ -487,6 +487,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 		write_chunk = ""
 		for byte in read_chunk:
+			if cancelled:
+				break
+
 			if (bytes_out % cols) == 0:
 				write_chunk += "\t"
 			write_chunk += "0x%02x" % byte
