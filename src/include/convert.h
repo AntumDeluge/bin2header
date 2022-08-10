@@ -86,7 +86,7 @@ extern void sigintHandler(const int sig_num);
  *  @tparam string hname
  *      Text to be used for header definition & array variable name.
  *  @tparam stdvector
- *      Flag to additionally store data in C++ std::vector.
+ *      Flag to additionally store data in C++ std::vector (default: `false`).
  */
 extern int convert(const std::string fin, const std::string fout, std::string hname,
 		const bool stdvector=false);
