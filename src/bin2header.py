@@ -637,13 +637,12 @@ def convert(fin, fout, hname="", stdvector=False):
 
 				word = ""
 				for i in byte_order:
-					c = chunk[byte_idx + i]
-					word += "%02x" % c
-
-					if showDataContent:
-						comment += toPrintableChar(c)
-
+					word += "%02x" % chunk[byte_idx + i]
 				byte_idx += wordbytes
+
+				if showDataContent:
+					comment += toPrintableChar(chunk[byte_idx - 1])
+
 				ofs.write("0x{}".format(word))
 				bytes_written += wordbytes
 
