@@ -104,6 +104,10 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		for (int x = 0; x < len(badchars); x++) {
 			if ((hname[current] == badchars[x]) || (hname[current] == '.'))
 				hname.replace(current, 1, "_");
+		}
+	}
+	for (int current = 0; current < target_basename.length(); current++) {
+		for (int x = 0; x < len(badchars); x++) {
 			if (target_basename[current] == badchars[x])
 				target_basename.replace(current, 1, "_");
 		}
