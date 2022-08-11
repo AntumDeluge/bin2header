@@ -561,7 +561,7 @@ def convert(fin, fout, hname="", stdvector=False):
 		# empty line
 		print()
 
-		eof = False
+		eof = False # to check if we are at the end of file
 		for chunk_idx in range(chunk_count):
 			if eof or cancelled:
 				break;
@@ -573,32 +573,27 @@ def convert(fin, fout, hname="", stdvector=False):
 				ifs.seek(offset)
 			else:
 				ifs.seek(ifs.tell())
-
 			read_chunk = array.array("B", ifs.read(chunk_size))
 
-			write_word = ""
 			for byte in read_chunk:
-				if cancelled:
+				if eof or cancelled:
 					break
 
-				if (bytes_written % cols) == 0:
-					write_word += "\t"
+				if bytes_written % cols == 0:
+					ofs.write("\t")
 
-				write_word += "0x%02x" % byte
-
-				if bytes_written + 1 < bytes_to_go:
-					if (bytes_written % cols) == cols - 1:
-						write_word += ",{}".format(eol)
-					elif (bytes_written + 1) < data_length:
-						write_word += ", "
-				else:
-					eof = True
-
+				# pack single byte
+				ofs.write("0x%02x" % byte)
 				bytes_written += 1
-				if eof:
-					break
 
-			ofs.write(write_word)
+				if bytes_written >= bytes_to_go:
+					eof = True
+					ofs.write(eol)
+				else:
+					if bytes_written % cols == 0:
+						ofs.write(",{}".format(eol))
+					else:
+						ofs.write(", ")
 
 		# close file read stream
 		ifs.close()
@@ -610,7 +605,7 @@ def convert(fin, fout, hname="", stdvector=False):
 		# empty line
 		print()
 
-		text = "{0}}};{0}".format(eol)
+		text = "}};{0}".format(eol)
 		if stdvector:
 			text += "{0}#ifdef __cplusplus{0}static const std::vector<char> ".format(eol) \
 			+ hname + "_v(" + hname + ", " + hname + " + sizeof(" + hname \
