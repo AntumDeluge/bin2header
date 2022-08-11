@@ -98,7 +98,7 @@ def updateSource():
 		return errno.ENOENT
 
 	old_text = readText(src_py)
-	new_text = re.sub("^version = '.*'$", "version = '{}'".format(ver_py),
+	new_text = re.sub("^version = \".*\"$", "version = \"{}\"".format(ver_py),
 			old_text, flags=re.M)
 
 	if old_text == new_text:
