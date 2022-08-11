@@ -622,18 +622,17 @@ def convert(fin, fout, hname="", stdvector=False):
 			ifs.close()
 
 		err = -1
-		msg = ["An error occurred during read/write."]
+		msg = ["\nAn error occurred during read/write."]
 		for eparam in e.args:
 			ptype = type(eparam)
 			if ptype == int and err < 0:
 				err = eparam
-			elif ptype == str:
-				msg.append("  " + eparam)
 
 		if err > 0:
 			msg[0] = "{} Code: {}".format(msg[0], err)
 
 		print("\n".join(msg))
+		traceback.print_exc()
 		return err
 
 	endtime = time.time()
