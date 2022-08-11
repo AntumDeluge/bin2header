@@ -7,3 +7,4 @@ TODO:
 - command with valid source file should report missing param value before missing file argument
 	- Example: `--eol path/to/file` (reports missing file arg)
 - add option to change file encoding
+- Python: fix data content comments for 16 & 32 bit types

@@ -437,6 +437,9 @@ def formatDuration(ts, te):
 #  @return
 #      Same character or "." non-printable.
 def toPrintableChar(c):
+	if type(c) == str:
+		c = ord(c)
+
 	if c >= ord(" ") and c <= ord("~"):
 		return chr(c)
 
@@ -634,14 +637,15 @@ def convert(fin, fout, hname="", stdvector=False):
 
 				word = ""
 				for i in byte_order:
-					word += "%02x" % chunk[byte_idx + i]
+					c = chunk[byte_idx + i]
+					word += "%02x" % c
+
+					if showDataContent:
+						comment += toPrintableChar(c)
 
 				byte_idx += wordbytes
 				ofs.write("0x{}".format(word))
 				bytes_written += wordbytes
-
-				if showDataContent:
-					comment += toPrintableChar(word)
 
 				if bytes_written >= bytes_to_go:
 					eof = True
