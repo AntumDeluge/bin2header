@@ -14,6 +14,24 @@
 using namespace std;
 
 
+string replaceAll(string st, const string a, const string b) {
+	if (a == b) {
+		// don't get stuck in an infinite loop
+		return st;
+	}
+
+	// number of characters to replace
+	int to_replace = a.length();
+	int pos = st.find(a);
+	while (pos > -1) {
+		st = st.substr(0, pos) + b + st.substr(pos + to_replace, st.length() - pos);
+		pos = st.find(a);
+	}
+
+	return st;
+}
+
+
 bool checkEmptyString(const string st) {
 	if (st.empty()) {
 		return true;

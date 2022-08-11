@@ -13,6 +13,19 @@
 #include <string>
 
 
+/** Replaces all instances of substring in a string.
+ *
+ *  @param st
+ *      Source string.
+ *  @param a
+ *      Substring to be replaced.
+ *  @param b
+ *      String to be inserted in place.
+ *  @return
+ *      String.
+ */
+std::string replaceAll(std::string st, const std::string a, const std::string b);
+
 /** Checks for an empty string.
  *
  *  Checks string length & if contains only whitespace characters.
