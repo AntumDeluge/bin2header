@@ -1,5 +1,5 @@
 
-name: Output Comparison Tests
+name: Check Program Output
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  tests:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,7 +30,7 @@ jobs:
         run: |
           cd tests/
           cp ../build/native/bin2header ./
-          ./run_tests.sh
+          ./check_output.sh
           rm ./bin2header
 
       - name: Build Python executable
@@ -45,4 +45,4 @@ jobs:
           cd tests/
           cp ../build/python/bin2header.py ./bin2header
           chmod +x ./bin2header
-          ./run_tests.sh
+          ./check_output.sh
