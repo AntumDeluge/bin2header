@@ -34,7 +34,7 @@ bool cancelled = false;
 void setChunkSize(const unsigned int sz) { chunk_size = sz; }
 void setNumberDataPerLine(const unsigned int nd) { nbData = nd; }
 void setShowDataContent(const bool dc) { showDataContent = dc; }
-void setOutputBitLength(const unsigned int bl) { if ((bl == 16) || (bl == 32)) outlen = bl; }
+void setOutputBitLength(const unsigned int bl) { outlen = bl; }
 void setReadOffset(const unsigned long ofs) { offset = ofs; }
 void setReadLength(const unsigned long lgt) { length = lgt; }
 void setSwapEndianess() { swap_bytes = true; }
@@ -76,6 +76,11 @@ char toPrintableChar(char c) {
 
 
 int convert(const string fin, string fout, string hname, const bool stdvector) {
+	if (outlen > 32 || outlen % 8 != 0) {
+		cout << "ERROR: Unsupported pack size, must be 8, 16, or 32" << endl;
+		return -1;
+	}
+
 	const string source_basename = getBaseName(fin);
 	string target_basename;
 	string target_dir;
