@@ -58,6 +58,18 @@ jobs:
           cd builds/win32/stage/
           zip ../../bin2header-$(grep "^VERSION=" ../../../info.cfg | sed -e 's/^VERSION=//')-win32.zip *
 
+      - name: Package Python
+        run: |
+          mkdir -p builds/python/stage/
+          cp src/bin2header.py builds/python/stage/
+          cp LICENSE.txt builds/python/stage/
+          cd builds/python/stage/
+          PYVERSION="$(grep "^PYVERSION=" ../../../info.cfg | sed -e 's/^PYVERSION=//')"
+          TARFILE="../../bin2header-${PYVERSION}-python.tar"
+          tar -cf "${TARFILE}" --mode=0755 bin2header.py
+          tar -uf "${TARFILE}" LICENSE.txt
+          xz -z9 "${TARFILE}"
+
       - name: Package source
         run: ./scripts/dist.sh
 
@@ -72,4 +84,5 @@ jobs:
           files: |
             bin2header-*.tar.xz
             builds/bin2header-*.zip
+            builds/bin2header-*-python.tar.xz
           prerelease: true
