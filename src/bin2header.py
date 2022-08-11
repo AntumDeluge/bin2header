@@ -38,7 +38,7 @@ options_defaults = {
 	"chunksize": {"short": "s", "value": 1024 * 1024},
 	"nbdata": {"short": "d", "value": 12},
 	#"datacontent": {"short": "c", "value": False},
-	#"offset": {"short": "f", "value": 0},
+	"offset": {"short": "f", "value": 0},
 	"length": {"short": "l", "value": 0},
 	#"pack": {"short": "p", "value": 8},
 	#"endianess": {"short": "e", "value": False},
@@ -118,8 +118,8 @@ def printUsage():
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata", True)[1])
 			#+ "\n\t-c, --datacontent\tShow data content as comments."
-			#+ "\n\t-f  --offset\t\tPosition offset to begin reading file (in bytes)."
-			#+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
+			+ "\n\t-f  --offset\t\tPosition offset to begin reading file (in bytes)."
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("length", True)[1])
 			#+ "\n\t-p  --pack\t\tStored data type bit length (8/16/32)."
@@ -505,9 +505,14 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	data_length = os.path.getsize(fin)
 
+	offset = getOpt("offset")[1]
+	if offset > data_length:
+		print("ERROR: offset bigger than file length")
+		return -1
+
 	# amount of bytes to process
 	process_bytes = getOpt("length")[1]
-	bytes_to_go = data_length
+	bytes_to_go = data_length - offset
 	if process_bytes > 0 and process_bytes < bytes_to_go:
 		bytes_to_go = process_bytes
 
@@ -519,13 +524,12 @@ def convert(fin, fout, hname="", stdvector=False):
 		bytes_to_go -= omit
 
 	chunk_size = getOpt("chunksize")[1]
-	if process_bytes == 0:
-		chunk_count = ceil(data_length / chunk_size)
-	else:
-		chunk_count = ceil(process_bytes / chunk_size)
+	chunk_count = ceil((data_length - offset) / chunk_size)
 
 	print("File size:  {} bytes".format(data_length))
 	print("Chunk size: {} bytes".format(chunk_size))
+	if offset:
+		print("Start from position: {}".format(offset))
 	if process_bytes:
 		print("Process maximum {} bytes".format(process_bytes))
 
@@ -565,7 +569,11 @@ def convert(fin, fout, hname="", stdvector=False):
 			sys.stdout.write("\rWriting chunk {} out of {} (Ctrl+C to cancel)"
 					.format(chunk_idx + 1, chunk_count))
 
-			ifs.seek(ifs.tell())
+			if bytes_written == 0:
+				ifs.seek(offset)
+			else:
+				ifs.seek(ifs.tell())
+
 			read_chunk = array.array("B", ifs.read(chunk_size))
 
 			write_word = ""
