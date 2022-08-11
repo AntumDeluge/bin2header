@@ -55,7 +55,7 @@ void printUsage() {
 	cout << "\t\t\t\t  Default: 0" << endl;
 	cout << "\t-p  --pack\t\tStored data type bit length (8/16/32)." << endl;
 	cout << "\t\t\t\t  Default: 8" << endl;
-	cout << "\t-e  --endianess\t\tSet endianess to big endian for 16 & 32 bit data types." << endl;
+	cout << "\t-e  --swap\t\tSet endianess to big endian for 16 & 32 bit data types." << endl;
 	cout << "\t    --stdvector\t\tAdditionally store data in std::vector for C++." << endl;
 	cout << "\t    --eol\t\tSet end of line character (cr/lf/crlf)." << endl;
 	cout << "\t\t\t\t  Default: lf" << endl;
