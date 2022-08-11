@@ -4,6 +4,7 @@ next
 - Updated Python script to same functionality as native binary
 - Minor bug fixes
 - Fixed bug where underscores appended to out file basename if shorter than hname
+- Report elapsed time of finished job
 
 0.3.0
 - Added option -f to begin reading file at given offset
