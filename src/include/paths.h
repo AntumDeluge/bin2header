@@ -29,7 +29,7 @@ extern std::string normalizePath(const std::string path);
  *  @return
  *     Concatenated path.
  */
-extern std::string joinPath(std::string a, const std::string b);
+extern std::string joinPath(const std::string a, const std::string b);
 
 /** Removes path to parent directory from path name.
  *

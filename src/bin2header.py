@@ -297,6 +297,22 @@ def parseCommandLine(args):
 	return rem
 
 
+## Removes relative cwd prefix from path.
+#
+#  @param path
+#      String path to be trimmed.
+#  @return
+#      Trimmed path.
+def trimLeadingCWD(path):
+	if __WIN32__:
+		if path.startswith(".\\"):
+			return path.lstrip(".\\")
+	elif path.startswith("./"):
+		return path.lstrip("./")
+
+	return path
+
+
 ## Normalizes the path node separators for the current system.
 #
 #  @tparam str path
@@ -304,22 +320,42 @@ def parseCommandLine(args):
 #  @treturn str
 #      Path formatted with native directory/node delimeters.
 def normalizePath(path):
+	if path.strip(" \r\n\t") == "":
+		# replace empty path with relative cwd
+		return normalizePath("./")
+
 	new_path = path
-	to_replace = "\\"
-	replace_with = "/"
 
 	if __WIN32__:
-		to_replace = "/"
-		replace_with = "\\"
+		sep = "\\"
+		new_path = new_path.replace("/", sep).replace("\\\\", sep)
 
-	new_path = new_path.replace(to_replace, replace_with)
-
-	if __WIN32__:
-		# MSYS2/MinGW paths
 		if new_path.lower().startswith("\\c\\"):
 			new_path = "C:{}".format(new_path[2:])
 
-	return new_path;
+	else:
+		sep = "/"
+		new_path = new_path.replace("\\", sep).replace("//", sep)
+
+	# remove redundant node separators
+	new_path = new_path.replace("{0}.{0}".format(sep), sep)
+
+	# remove trailing node separator
+	new_path = new_path.rstrip(sep)
+
+	return trimLeadingCWD(new_path)
+
+
+## Concatenates two paths into one.
+#
+#  @tparam string a
+#      Leading path.
+#  @tparam string b
+#      Trailing path.
+#  @return
+#      Concatenated path.
+def joinPath(a, b):
+	return normalizePath("{}/{}".format(a, b))
 
 
 ## Removes path to parent directory from path name.
@@ -426,7 +462,7 @@ def convert(fin, fout, hname="", stdvector=False):
 	target_dir = getDirName(fout)
 	if not target_dir.strip():
 		# use working dirkectory if parent cannot be parsed
-		target_dir = os.getcwd()
+		target_dir = normalizePath("./")
 
 	if os.path.isfile(target_dir):
 		# FIXME: error code?
@@ -457,7 +493,7 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	target_basename = "".join(target_basename)
 	hname = "".join(hname)
-	fout = os.path.join(target_dir, target_basename)
+	fout = joinPath(target_dir, target_basename)
 
 	# uppercase name for header
 	hname_upper = hname.upper()

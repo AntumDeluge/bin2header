@@ -6,55 +6,77 @@
  */
 
 #include "paths.h"
+#include "util.h"
 
 #include <algorithm> // transform
+#include <sstream>
 
 using namespace std;
 
 
-string normalizePath(const string path) {
-	string new_path = path;
-	string to_replace;
-	string replace_with;
-
+/** Removes relative cwd prefix from path.
+ *
+ *  @param path
+ *      String path to be trimmed.
+ *  @return
+ *      Trimmed path.
+ */
+string trimLeadingCWD(const string path) {
 #ifdef __WIN32__
-	to_replace = '/';
-	replace_with = '\\';
+	if (path.substr(0, 3) == ".\\\\") {
+		return path.substr(3);
+	} else if (path.substr(0, 2) == ".\\") {
+		return path.substr(2);
+	}
 #else
-	to_replace = '\\';
-	replace_with = '/';
+	if (path.substr(0, 2) == "./") {
+		return path.substr(2);
+	}
 #endif
 
-	string cur_char;
-	for (int idx = 0; idx < path.length(); idx++) {
-		cur_char = path[idx];
-		if (cur_char == to_replace) {
-			new_path.replace(idx, 1, replace_with);
-		}
+	return path;
+}
+
+string normalizePath(const string path) {
+	if (checkEmptyString(path)) {
+		// replace empty path with relative cwd
+		return normalizePath("./");
 	}
 
+	string new_path = path;
+
 #ifdef __WIN32__
+	const string sep = "\\";
+	new_path = replaceAll(replaceAll(new_path, "/", sep), "\\\\", sep);
+
 	// MSYS2/MinGW paths
+	// FIXME: I don't remember why this is used
 	string first_chars = new_path.substr(0, 3);
-	// FIXME: use tolower from cstio?
 	transform(first_chars.begin(), first_chars.end(), first_chars.begin(), ::tolower);
 
 	// TODO: support all drive letters
 	if (first_chars == "\\c\\") {
 		new_path.replace(0, 2, "C:");
 	}
+#else
+	const string sep = "/";
+	new_path = replaceAll(replaceAll(new_path, "\\", sep), "//", sep);
 #endif
 
-	return new_path;
+	// remove redundant node separators
+	new_path = replaceAll(new_path, sep + "." + sep, sep);
+
+	// remove trailing node separator
+	if (new_path.substr(new_path.length() - 1, 1) == sep) {
+		new_path = new_path.substr(0, new_path.length() - 1);
+	}
+
+	return trimLeadingCWD(new_path);
 }
 
 
-string joinPath(string a, const string b) {
-#ifdef __WIN32__
-	return a.append("\\").append(b);
-#else
-	return a.append("/").append(b);
-#endif
+string joinPath(const string a, const string b) {
+	return normalizePath(a + "/" + b);
 }
 
 
