@@ -41,7 +41,7 @@ options_defaults = {
 	"offset": {"short": "f", "value": 0},
 	"length": {"short": "l", "value": 0},
 	"pack": {"short": "p", "value": 8},
-	#"endianess": {"short": "e", "value": False},
+	"swap": {"short": "e", "value": False},
 	"stdvector": {"value": False},
 	"eol": {"value": "lf"},
 }
@@ -118,13 +118,13 @@ def printUsage():
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata", True)[1])
 			+ "\n\t-c, --datacontent\tShow data content as comments."
-			+ "\n\t-f  --offset\t\tPosition offset to begin reading file (in bytes)."
+			+ "\n\t-f, --offset\t\tPosition offset to begin reading file (in bytes)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
-			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
+			+ "\n\t-l, --length\t\tNumber of bytes to process (0 = all)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("length", True)[1])
-			+ "\n\t-p  --pack\t\tStored data type bit length (8/16/32)."
+			+ "\n\t-p, --pack\t\tStored data type bit length (8/16/32)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("pack", True)[1])
-			#+ "\n\t-e  --endianess\t\tSet endianess to big endian for 16 & 32 bit data types."
+			+ "\n\t-e, --swap\t\tSet endianess to big endian for 16 & 32 bit data types."
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("eol", True)[1]))
@@ -458,6 +458,8 @@ def convert(fin, fout, hname="", stdvector=False):
 	if (outlen > 32 or outlen % 8 != 0):
 		exitWithError(-1, "Unsupported pack size, must be 8, 16, or 32")
 
+	swap_bytes = getOpt("swap")[1]
+
 	# check if file exists
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
@@ -626,8 +628,12 @@ def convert(fin, fout, hname="", stdvector=False):
 					ofs.write("\t")
 					comment = ""
 
+				byte_order = range(0, wordbytes)
+				if swap_bytes:
+					byte_order = reversed(byte_order)
+
 				word = ""
-				for i in range(0, wordbytes):
+				for i in byte_order:
 					word += "%02x" % chunk[byte_idx + i]
 
 				byte_idx += wordbytes
