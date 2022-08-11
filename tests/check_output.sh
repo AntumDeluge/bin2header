@@ -3,7 +3,8 @@
 cd "$(dirname $0)"
 
 dir_out="out"
-mkdir -p "{dir_out}"
+rm -rf "${dir_out}"
+mkdir -p "${dir_out}"
 
 check_result() {
 	if test $1 -gt 0; then
@@ -25,6 +26,13 @@ execute() {
 execute -h
 execute -v
 execute -s 1024 -o "${dir_out}/out.h" "flower.png"
+
+test -f "${dir_out}/out.h"
+res=$?
+if test ${res} -ne 0; then
+	echo "ERROR: cannot find output \"${dir_out}/out.h\""
+	exit ${res}
+fi
 
 execute "flower.png"
 diff -q "flower.png.h" "orig/flower.default.h"
