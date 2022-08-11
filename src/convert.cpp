@@ -7,15 +7,15 @@
 
 #include "convert.h"
 #include "paths.h"
+#include "util.h"
 
 #include <cerrno>
-#include <chrono>
 #include <cmath> // ceil
 #include <csignal>
 #include <fstream>
-#include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -72,74 +72,6 @@ char toPrintableChar(char c) {
 	} else {
 		return '.';
 	}
-}
-
-
-/** Checks for an empty string.
- *
- *  Checks string length & if contains only whitespace characters.
- *
- *  @tparam string st
- *      String to be checked.
- *  @return
- *      `true` if empty or only whitepace characters found.
- */
-bool checkEmptyString(string st) {
-	if (st.empty()) {
-		return true;
-	}
-
-	if (st.find_first_not_of(' ') == string::npos) {
-		if (st.find_first_not_of('\t') == string::npos) {
-			if (st.find_first_not_of('\n') == string::npos) {
-				if (st.find_first_not_of('\r') == string::npos) {
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
-}
-
-
-/** Retrieves current timestamp in milliseconds. */
-long long currentTimeMillis() {
-	return chrono::duration_cast<chrono::milliseconds>(
-			chrono::system_clock::now().time_since_epoch()).count();
-}
-
-
-/** Formats duration for printing.
- *
- *  @param ts
- *      Process start timestamp (milliseconds).
- *  @param te
- *      Process end timestamp (milliseconds).
- *  @return
- *      String formatted for readability.
- */
-string formatDuration(const long long ts, const long long te) {
-	const int duration = te - ts;
-	stringstream dmsg;
-
-	int dsec = floor(duration / 1000);
-	if (dsec < 1) {
-		dmsg << duration << " ms";
-	} else {
-			const int dmin = floor(dsec / 60);
-			if (dmin > 0) {
-				dmsg << dmin << " min";
-				dsec = dsec % (dmin * 60);
-				if (dsec > 0) {
-					dmsg << " " << dsec << " sec";
-				}
-			} else {
-				dmsg << dsec << " sec";
-			}
-	}
-
-	return dmsg.str();
 }
 
 
