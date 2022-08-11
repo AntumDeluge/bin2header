@@ -77,7 +77,7 @@ char toPrintableChar(char c) {
 
 int convert(const string fin, string fout, string hname, const bool stdvector) {
 	if (outlen > 32 || outlen % 8 != 0) {
-		cout << "ERROR: Unsupported pack size, must be 8, 16, or 32" << endl;
+		cout << "\nERROR: Unsupported pack size, must be 8, 16, or 32" << endl;
 		return -1;
 	}
 
@@ -193,7 +193,7 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		// check if there are any bytes to omit during packing
 		// FIXME: incomplete words not processed
 		int omit = bytes_to_go % (outlen / 8);
-		if(omit) {
+		if (omit) {
 			cout << "Warning: Last " << to_string(omit) << " byte(s) will be ignored as not forming full data word" << endl;
 			bytes_to_go -= omit;
 		}
