@@ -670,7 +670,7 @@ def convert(fin, fout, hname="", stdvector=False):
 			return errno.ECANCELED
 
 		# empty line
-		print()
+		print("\n")
 
 		text = "}};{0}".format(eol)
 		if stdvector:
@@ -709,9 +709,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	# *** END: read/write *** #
 
-	print("\nWrote {} bytes".format(bytes_written))
-	print("Elapsed:     {}".format(formatDuration(starttime, endtime)))
-	print("Exported to: {}".format(fout))
+	print("Bytes written: {}".format(bytes_written))
+	print("Time elapsed:  {}".format(formatDuration(starttime, endtime)))
+	print("Exported to:   {}".format(fout))
 
 	return 0
 

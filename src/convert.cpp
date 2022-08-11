@@ -324,9 +324,10 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 	/* *** END: read/write *** */
 
-	cout << "Wrote " << bytes_written << " bytes" << endl;
-	cout << "Elapsed:     " << formatDuration(starttime, endtime) << endl;
-	cout << "Exported to: " << fout << endl;
+	//cout << "Wrote " << bytes_written << " bytes" << endl;
+	cout << "Bytes written: " << bytes_written << endl;
+	cout << "Time elapsed:  " << formatDuration(starttime, endtime) << endl;
+	cout << "Exported to:   " << fout << endl;
 
 	return 0;
 }
