@@ -19,15 +19,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build executable
+      - name: Build native executable
         run: |
-          mkdir -p builds/local/
-          cd builds/local/
+          mkdir -p build/native/
+          cd build/native/
           cmake ../../
           cmake --build ./
 
-      - name: Run tests
+      - name: Run tests with native
         run: |
           cd tests/
-          cp ../builds/local/bin2header ./
+          cp ../build/native/bin2header ./
+          ./run_tests.sh
+          rm ./bin2header
+
+      - name: Build Python executable
+        run: |
+          mkdir -p build/python/
+          cd build/python/
+          cmake -DNATIVE=OFF ../../
+          cmake --build ./
+
+      - name: Run tests with Python
+        run: |
+          cd tests/
+          cp ../build/python/bin2header.py ./bin2header
+          chmod +x ./bin2header
           ./run_tests.sh
