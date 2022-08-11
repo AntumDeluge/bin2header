@@ -9,6 +9,7 @@
 #include "paths.h"
 
 #include <cerrno>
+#include <chrono>
 #include <cmath> // ceil
 #include <csignal>
 #include <fstream>
@@ -102,6 +103,46 @@ bool checkEmptyString(string st) {
 }
 
 
+/** Retrieves current timestamp in milliseconds. */
+long long currentTimeMillis() {
+	return chrono::duration_cast<chrono::milliseconds>(
+			chrono::system_clock::now().time_since_epoch()).count();
+}
+
+
+/** Formats duration for printing.
+ *
+ *  @param ts
+ *      Process start timestamp (milliseconds).
+ *  @param te
+ *      Process end timestamp (milliseconds).
+ *  @return
+ *      String formatted for readability.
+ */
+string formatDuration(const long long ts, const long long te) {
+	const int duration = te - ts;
+	stringstream dmsg;
+
+	int dsec = floor(duration / 1000);
+	if (dsec < 1) {
+		dmsg << duration << " ms";
+	} else {
+			const int dmin = floor(dsec / 60);
+			if (dmin > 0) {
+				dmsg << dmin << " min";
+				dsec = dsec % (dmin * 60);
+				if (dsec > 0) {
+					dmsg << " " << dsec << " sec";
+				}
+			} else {
+				dmsg << dsec << " sec";
+			}
+	}
+
+	return dmsg.str();
+}
+
+
 int convert(const string fin, string fout, string hname, const bool stdvector) {
 	const string source_basename = getBaseName(fin);
 	string target_basename;
@@ -154,14 +195,17 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 	/* *** END: uppercase header name *** */
 
-	/* *** START: read/write *** */
-
 	// set signal interrupt (Ctrl+C) handler
 	signal(SIGINT, sigintHandler);
+
+	/* *** START: read/write *** */
 
 	// file streams
 	ifstream ifs;
 	ofstream ofs;
+	unsigned long long bytes_written = 0;
+
+	const long long starttime = currentTimeMillis();
 
 	try {
 		ifs.open(fin.c_str(), ifstream::binary);
@@ -179,12 +223,12 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 		unsigned long long chunk_count = ceil((double) (data_length - offset) / chunk_size);
 
-		cout << "File size: " << to_string(data_length) << " bytes" << endl;
-
 		if (chunk_size % wordbytes) {
 			cout << "Warning: Chunk size truncated to full words length" << endl;
 			chunk_size -= chunk_size % wordbytes;
 		}
+
+		cout << "File size:  " << to_string(data_length) << " bytes" << endl;
 		cout << "Chunk size: " << to_string(chunk_size) << " bytes" << endl;
 
 		if (offset) cout << "Start from position: " << to_string(offset) << endl;
@@ -208,9 +252,6 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		// to check if we are at the end of file
 		// FIXME: better method?
 		bool eof = false;
-
-		// write array data
-		unsigned long long bytes_written = 0;
 
 		// how many bytes to write
 		unsigned long long bytes_to_go = data_length - offset;
@@ -327,10 +368,6 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 		ofs.close();
 
-		/* *** END: read/write *** */
-
-		cout << "Wrote " << to_string(bytes_written) << " bytes" << endl;
-
 	} catch (const int e) {
 		// close read/write streams
 		if (ifs.is_open()) {
@@ -344,6 +381,12 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		return e;
 	}
 
+	const long long endtime = currentTimeMillis();
+
+	/* *** END: read/write *** */
+
+	cout << "Wrote " << bytes_written << " bytes" << endl;
+	cout << "Elapsed:     " << formatDuration(starttime, endtime) << endl;
 	cout << "Exported to: " << fout << endl;
 
 	return 0;

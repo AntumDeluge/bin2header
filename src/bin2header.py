@@ -5,7 +5,10 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, codecs, errno, math, os, signal, sys, traceback
+import array, codecs, time, errno, math, os, signal, sys, traceback
+
+# define "round" in math module for convenience
+math.round = round
 
 
 if sys.version_info.major < 3:
@@ -363,6 +366,34 @@ def sigintHandler(signum, frame):
 	signal.signal(signal.SIGINT, sigintHandler)
 
 
+## Formats duration for printing.
+#
+#  @tparam float ts
+#      Process start timestamp (sec.ms).
+#  @tparam float te
+#      Process end timestamp (sec.ms).
+#  @return
+#      String formatted for readability.
+def formatDuration(ts, te):
+	duration = te - ts
+	dmsg = ""
+
+	dsec = math.floor(duration)
+	if dsec < 1:
+		dmsg += "{} ms".format(math.round(duration * 1000))
+	else:
+		dmin = math.floor(dsec / 60)
+		if dmin > 0:
+			dmsg += "{} min".format(dmin)
+			dsec = dsec % (dmin * 60)
+			if dsec > 0:
+				dmsg += " {} sec".format(dsec)
+		else:
+			dmsg += "{} sec".format(dsec)
+
+	return dmsg
+
+
 ## Reads data from input & writes header.
 #
 #  @tparam str fin
@@ -466,6 +497,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	# declare read/write streams
 	ofs, ifs = None, None
+	bytes_written = 0
+
+	starttime = time.time()
 
 	try:
 		# set signal interrupt (Ctrl+C) handler
@@ -488,7 +522,6 @@ def convert(fin, fout, hname="", stdvector=False):
 		print()
 
 		eof = False
-		bytes_out = 0
 		for chunk_idx in range(chunk_count):
 			if eof or cancelled:
 				break;
@@ -503,20 +536,20 @@ def convert(fin, fout, hname="", stdvector=False):
 				if cancelled:
 					break
 
-				if (bytes_out % cols) == 0:
+				if (bytes_written % cols) == 0:
 					write_word += "\t"
 
 				write_word += "0x%02x" % byte
 
-				if bytes_out + 1 < bytes_to_go:
-					if (bytes_out % cols) == cols - 1:
+				if bytes_written + 1 < bytes_to_go:
+					if (bytes_written % cols) == cols - 1:
 						write_word += ",{}".format(eol)
-					elif (bytes_out + 1) < data_length:
+					elif (bytes_written + 1) < data_length:
 						write_word += ", "
 				else:
 					eof = True
 
-				bytes_out += 1
+				bytes_written += 1
 				if eof:
 					break
 
@@ -566,10 +599,12 @@ def convert(fin, fout, hname="", stdvector=False):
 		print("\n".join(msg))
 		return err
 
+	endtime = time.time()
+
 	# *** END: read/write *** #
 
-	print("\nWrote {} bytes".format(bytes_out))
-
+	print("\nWrote {} bytes".format(bytes_written))
+	print("Elapsed:     {}".format(formatDuration(starttime, endtime)))
 	print("Exported to: {}".format(fout))
 
 	return 0
