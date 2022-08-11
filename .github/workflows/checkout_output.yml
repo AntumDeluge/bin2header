@@ -46,3 +46,7 @@ jobs:
           cp ../build/python/bin2header.py ./bin2header
           chmod +x ./bin2header
           ./check_output.sh
+
+      - name: Run export flower test
+        rune: |
+          cd tests/ && ./export_flower_test.sh
