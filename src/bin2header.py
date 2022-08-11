@@ -37,7 +37,7 @@ options_defaults = {
 	"hname": {"short": "n", "value": ""},
 	"chunksize": {"short": "s", "value": 1024 * 1024},
 	"nbdata": {"short": "d", "value": 12},
-	#"datacontent": {"short": "c", "value": False},
+	"datacontent": {"short": "c", "value": False},
 	"offset": {"short": "f", "value": 0},
 	"length": {"short": "l", "value": 0},
 	#"pack": {"short": "p", "value": 8},
@@ -117,7 +117,7 @@ def printUsage():
 			+ "\n\t\t\t\t  Default: {} (1 megabyte)".format(getOpt("chunksize", True)[1])
 			+ "\n\t-d, --nbdata\t\tNumber of bytes to write per line."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("nbdata", True)[1])
-			#+ "\n\t-c, --datacontent\tShow data content as comments."
+			+ "\n\t-c, --datacontent\tShow data content as comments."
 			+ "\n\t-f  --offset\t\tPosition offset to begin reading file (in bytes)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
@@ -430,6 +430,19 @@ def formatDuration(ts, te):
 	return dmsg
 
 
+## Converts non-printable characters to ".".
+#
+#  @tparam byte c
+#      Character to evaluate.
+#  @return
+#      Same character or "." non-printable.
+def toPrintableChar(c):
+	if c >= ord(" ") and c <= ord("~"):
+		return chr(c)
+
+	return "."
+
+
 ## Reads data from input & writes header.
 #
 #  @tparam str fin
@@ -457,6 +470,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	# columns per line
 	cols = getOpt("nbdata")[1]
+
+	# show data content in comments
+	showDataContent = getOpt("datacontent")[1]
 
 	target_basename = list(getBaseName(fout))
 	target_dir = getDirName(fout)
@@ -562,6 +578,7 @@ def convert(fin, fout, hname="", stdvector=False):
 		print()
 
 		eof = False # to check if we are at the end of file
+		comment = ""
 		for chunk_idx in range(chunk_count):
 			if eof or cancelled:
 				break;
@@ -581,17 +598,27 @@ def convert(fin, fout, hname="", stdvector=False):
 
 				if bytes_written % cols == 0:
 					ofs.write("\t")
+					comment = ""
 
 				# pack single byte
 				ofs.write("0x%02x" % byte)
+				if showDataContent:
+					comment += toPrintableChar(byte)
 				bytes_written += 1
 
 				if bytes_written >= bytes_to_go:
 					eof = True
+					if showDataContent:
+						for i in range(bytes_written % cols, cols):
+							ofs.write("      ")
+						ofs.write("  /* {} */".format(comment))
 					ofs.write(eol)
 				else:
 					if bytes_written % cols == 0:
-						ofs.write(",{}".format(eol))
+						ofs.write(",")
+						if showDataContent:
+							ofs.write(" /* {} */".format(comment))
+						ofs.write(eol)
 					else:
 						ofs.write(", ")
 
