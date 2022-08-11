@@ -5,7 +5,6 @@ TODO:
 - deploy github-pages build on new tag only
 - update manpage date with version script
 - Python:
-	- add option to pack into 16 & 32 bit data types
 	- add option to swap endianess
 	- command with valid source file should report missing param value before missing file argument
 		- Example: `--eol path/to/file` (reports missing file arg)

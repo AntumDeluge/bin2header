@@ -40,7 +40,7 @@ options_defaults = {
 	"datacontent": {"short": "c", "value": False},
 	"offset": {"short": "f", "value": 0},
 	"length": {"short": "l", "value": 0},
-	#"pack": {"short": "p", "value": 8},
+	"pack": {"short": "p", "value": 8},
 	#"endianess": {"short": "e", "value": False},
 	"stdvector": {"value": False},
 	"eol": {"value": "lf"},
@@ -122,8 +122,8 @@ def printUsage():
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("offset", True)[1])
 			+ "\n\t-l  --length\t\tNumber of bytes to process (0 = all)."
 			+ "\n\t\t\t\t  Default: {}".format(getOpt("length", True)[1])
-			#+ "\n\t-p  --pack\t\tStored data type bit length (8/16/32)."
-			#+ "\n\t\t\t\t  Default: {}".format(getOpt("pack", True)[1])
+			+ "\n\t-p  --pack\t\tStored data type bit length (8/16/32)."
+			+ "\n\t\t\t\t  Default: {}".format(getOpt("pack", True)[1])
 			#+ "\n\t-e  --endianess\t\tSet endianess to big endian for 16 & 32 bit data types."
 			+ "\n\t    --stdvector\t\tAdditionally store data in std::vector for C++."
 			+ "\n\t    --eol\t\tSet end of line character (cr/lf/crlf)."
@@ -454,6 +454,10 @@ def toPrintableChar(c):
 #  @tparam[opt] bool stdvector
 #      Flag to additionally store data in C++ std::vector.
 def convert(fin, fout, hname="", stdvector=False):
+	outlen = getOpt("pack")[1]
+	if (outlen > 32 or outlen % 8 != 0):
+		exitWithError(-1, "Unsupported pack size, must be 8, 16, or 32")
+
 	# check if file exists
 	if not os.path.isfile(fin):
 		exitWithError(errno.ENOENT, "File \"{}\" does not exist".format(fin))
@@ -515,11 +519,8 @@ def convert(fin, fout, hname="", stdvector=False):
 	hname_upper = hname.upper()
 	hname_upper += "_H"
 
-	# data type length
-	# TODO: add 16 & 32
-	outlen = 8
-
 	data_length = os.path.getsize(fin)
+	wordbytes = int(outlen / 8)
 
 	offset = getOpt("offset")[1]
 	if offset > data_length:
@@ -542,12 +543,18 @@ def convert(fin, fout, hname="", stdvector=False):
 	chunk_size = getOpt("chunksize")[1]
 	chunk_count = ceil((data_length - offset) / chunk_size)
 
+	if chunk_size % wordbytes:
+		printInfo("w", "Chunk size truncated to full words length")
+		chunk_size -= chunk_size % wordbytes;
+
 	print("File size:  {} bytes".format(data_length))
 	print("Chunk size: {} bytes".format(chunk_size))
 	if offset:
 		print("Start from position: {}".format(offset))
 	if process_bytes:
 		print("Process maximum {} bytes".format(process_bytes))
+	if outlen != 8:
+		print("Pack into {} bit ints".format(outlen))
 
 	# *** START: read/write *** #
 
@@ -567,7 +574,13 @@ def convert(fin, fout, hname="", stdvector=False):
 		text = "#ifndef {0}{1}#define {0}{1}".format(hname_upper, eol)
 		if stdvector:
 			text += "{0}#ifdef __cplusplus{0}#include <vector>{0}#endif{0}".format(eol)
-		text += "{0}static const unsigned char {1}[] = {{{0}".format(eol, hname)
+
+		data_type = "char"
+		if outlen == 32:
+			data_type = "int"
+		elif outlen == 16:
+			data_type = "short"
+		text += "{0}static const unsigned {1} {2}[] = {{{0}".format(eol, data_type, hname)
 
 		ofs.write(text)
 
@@ -576,6 +589,18 @@ def convert(fin, fout, hname="", stdvector=False):
 
 		# empty line
 		print()
+
+		# how many bytes to write
+		bytes_to_go = data_length - offset;
+		if process_bytes > 0 and process_bytes < bytes_to_go:
+			bytes_to_go = process_bytes
+
+		# check if there are any bytes to omit during packing
+		# FIXME: incomplete words not processed
+		omit = bytes_to_go % (outlen / 8);
+		if omit:
+			printInfo("w", "Last {} byte(s) will be ignored as not forming full data word".format(omit))
+			bytes_to_go -= omit;
 
 		eof = False # to check if we are at the end of file
 		comment = ""
@@ -590,31 +615,37 @@ def convert(fin, fout, hname="", stdvector=False):
 				ifs.seek(offset)
 			else:
 				ifs.seek(ifs.tell())
-			read_chunk = array.array("B", ifs.read(chunk_size))
+			chunk = array.array("B", ifs.read(chunk_size))
 
-			for byte in read_chunk:
+			byte_idx = 0
+			while byte_idx < len(chunk):
 				if eof or cancelled:
 					break
 
-				if bytes_written % cols == 0:
+				if bytes_written % (cols * wordbytes) == 0:
 					ofs.write("\t")
 					comment = ""
 
-				# pack single byte
-				ofs.write("0x%02x" % byte)
+				word = ""
+				for i in range(0, wordbytes):
+					word += "%02x" % chunk[byte_idx + i]
+
+				byte_idx += wordbytes
+				ofs.write("0x{}".format(word))
+				bytes_written += wordbytes
+
 				if showDataContent:
-					comment += toPrintableChar(byte)
-				bytes_written += 1
+					comment += toPrintableChar(word)
 
 				if bytes_written >= bytes_to_go:
 					eof = True
 					if showDataContent:
-						for i in range(bytes_written % cols, cols):
+						for i in range(bytes_written % (cols * wordbytes), (cols * wordbytes)):
 							ofs.write("      ")
 						ofs.write("  /* {} */".format(comment))
 					ofs.write(eol)
 				else:
-					if bytes_written % cols == 0:
+					if bytes_written % (cols * wordbytes) == 0:
 						ofs.write(",")
 						if showDataContent:
 							ofs.write(" /* {} */".format(comment))
