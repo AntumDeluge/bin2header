@@ -3,6 +3,7 @@ next
 - Added NATIVE option to CMake config (set to "OFF" to configure for Python script)
 - Updated Python script to same functionality as native binary
 - Minor bug fixes
+- Fixed bug where underscores appended to out file basename if shorter than hname
 
 0.3.0
 - Added option -f to begin reading file at given offset
