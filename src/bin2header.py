@@ -5,10 +5,10 @@
 # This file is part of the bin2header project & is distributed under the
 # terms of the MIT/X11 license. See: LICENSE.txt
 
-import array, codecs, time, errno, math, os, signal, sys, traceback
+import array, codecs, time, errno, os, signal, sys, traceback
 
-# define "round" in math module for convenience
-math.round = round
+from math import ceil
+from math import floor
 
 
 if sys.version_info.major < 3:
@@ -414,11 +414,11 @@ def formatDuration(ts, te):
 	duration = te - ts
 	dmsg = ""
 
-	dsec = math.floor(duration)
+	dsec = floor(duration)
 	if dsec < 1:
-		dmsg += "{} ms".format(math.round(duration * 1000))
+		dmsg += "{} ms".format(round(duration * 1000))
 	else:
-		dmin = math.floor(dsec / 60)
+		dmin = floor(dsec / 60)
 		if dmin > 0:
 			dmsg += "{} min".format(dmin)
 			dsec = dsec % (dmin * 60)
@@ -520,9 +520,9 @@ def convert(fin, fout, hname="", stdvector=False):
 
 	chunk_size = getOpt("chunksize")[1]
 	if process_bytes == 0:
-		chunk_count = math.ceil(data_length / chunk_size)
+		chunk_count = ceil(data_length / chunk_size)
 	else:
-		chunk_count = math.ceil(process_bytes / chunk_size)
+		chunk_count = ceil(process_bytes / chunk_size)
 
 	print("File size:  {} bytes".format(data_length))
 	print("Chunk size: {} bytes".format(chunk_size))
