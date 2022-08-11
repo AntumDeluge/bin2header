@@ -67,7 +67,7 @@ void sigintHandler(int signum) {
  *      Same character or "." non-printable.
  */
 char toPrintableChar(char c) {
-	if ((c >= ' ') && (c <= '~') ) {
+	if (c >= ' ' && c <= '~') {
 		return c;
 	} else {
 		return '.';
@@ -181,10 +181,6 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 		// empty line
 		cout << endl;
 
-		// to check if we are at the end of file
-		// FIXME: better method?
-		bool eof = false;
-
 		// how many bytes to write
 		unsigned long long bytes_to_go = data_length - offset;
 		if (length > 0 && length < bytes_to_go) bytes_to_go = length;
@@ -197,8 +193,9 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 			bytes_to_go -= omit;
 		}
 
-		unsigned long long chunk_idx;
+		bool eof = false; // to check if we are at the end of file
 		std::string comment = "";
+		unsigned long long chunk_idx;
 		for (chunk_idx = 0; chunk_idx < chunk_count; chunk_idx++) {
 			if (eof || cancelled) {
 				break;
@@ -212,7 +209,9 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 			unsigned int byte_idx;
 			for (byte_idx = 0; byte_idx < chunk_size; byte_idx++) {
-				if (cancelled) break;
+				if (eof || cancelled) {
+					break;
+				}
 
 				if ((bytes_written % (nbData * wordbytes)) == 0) {
 					ofs << "\t";
@@ -264,7 +263,6 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 						ofs << "  /* " << comment << " */";
 					}
 					ofs << eol;
-					break;
 				} else {
 					if ((bytes_written % (nbData * wordbytes)) == 0) {
 						ofs << ",";
