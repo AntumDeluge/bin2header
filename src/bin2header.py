@@ -526,7 +526,8 @@ def convert(fin, fout, hname="", stdvector=False):
 			if eof or cancelled:
 				break;
 
-			sys.stdout.write("\rWriting chunk {} out of {}".format(chunk_idx + 1, chunk_count))
+			sys.stdout.write("\rWriting chunk {} out of {} (Ctrl+C to cancel)"
+					.format(chunk_idx + 1, chunk_count))
 
 			ifs.seek(ifs.tell())
 			read_chunk = array.array("B", ifs.read(chunk_size))
