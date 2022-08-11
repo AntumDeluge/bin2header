@@ -48,5 +48,5 @@ jobs:
           ./check_output.sh
 
       - name: Run export flower test
-        rune: |
+        run: |
           cd tests/ && ./export_flower_test.sh
