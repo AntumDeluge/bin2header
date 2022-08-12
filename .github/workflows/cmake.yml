@@ -54,3 +54,13 @@ jobs:
 
     - name: Build from configure script (Python)
       run: make
+
+    - name: Check build from distribution package
+      run: |
+        ./scripts/dist_source.sh
+        mkdir distbuild/
+        mv bin2header-*.tar.xz distbuild/
+        cd distbuild/
+        tar -xJf bin2header-*.tar.xz
+        rm *.tar.xz
+        cmake ./bin2header-* && cmake --build ./
