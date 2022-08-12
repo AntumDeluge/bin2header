@@ -8,22 +8,27 @@ dir_root="$(pwd)"
 # import settings
 . "${dir_root}/info.cfg"
 
-STAGE="${NAME}-${VERSION}"
+stage="${NAME}-${VERSION}"
+pkgname="${stage}"
+if [ ! -x ${PKGREV} ] && [ ${PKGREV} -gt 0 ]; then
+  pkgname="${pkgname}-${PKGREV}"
+fi
+pkgname="${pkgname}.tar.xz"
 
 # Ensure creation of fresh staging directory & dist package
-if [ -d "${STAGE}" ]; then
-	rm -rf "${STAGE}"
+if [ -d "${stage}" ]; then
+	rm -rf "${stage}"
 fi
-if [ -f "${STAGE}.tar.xz" ]; then
-	rm -f "${STAGE}.tar.xz"
+if [ -f "${pkgname}" ]; then
+	rm -f "${pkgname}"
 fi
 
 echo "Staging files ..."
-mkdir -p "${STAGE}"
-cp -R ${DISTDIRS} "${STAGE}"
-cp ${DISTFILES} "${STAGE}"
-echo "Creating distribution archive: ${STAGE}.tar.xz ..."
-tar -cJf "${STAGE}.tar.xz" "${STAGE}"
+mkdir -p "${stage}"
+cp -R ${DISTDIRS} "${stage}"
+cp ${DISTFILES} "${stage}"
+echo "Creating distribution archive: ${pkgname} ..."
+tar -cJf "${pkgname}" "${stage}"
 echo "Cleaning staging directory ..."
-rm -rf "${STAGE}"
+rm -rf "${stage}"
 echo "Done!"
