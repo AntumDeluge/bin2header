@@ -84,4 +84,4 @@ set_property(
 	PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${PROJECT_NAME}.1.gz
 )
 
-include("cmake/print_config.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/print_config.cmake")
