@@ -23,55 +23,72 @@ jobs:
       - name: Set up build dependencies
         run: sudo apt install mingw-w64 cmake
 
+      - name: Set up environment
+        run: |
+          . "${{ github.workspace }}/info.cfg"
+          ver="${VERSION}"
+          pyver="${PYVERSION}"
+          if [ ! -z ${PKGREV} ] && [ ${PKGREV} -gt 0 ]; then
+            ver="${ver}-${PKGREV}"
+            pyver="${pyver}-${PKGREV}"
+          fi
+          stage="${{ github.workspace }}/build/stage"
+          mkdir -p "${stage}"
+          cp "${{ github.workspace }}/LICENSE.txt" "${stage}"
+          echo "ver=${ver}" >> $GITHUB_ENV
+          echo "pyver=${pyver}" >> $GITHUB_ENV
+          echo "stage=${stage}" >> $GITHUB_ENV
+
       - name: Compile 64-bit
         run: |
-          mkdir -p builds/win64/stage/ && cd builds/win64
+          dir_build="${{ github.workspace }}/build/win64"
+          mkdir -p "${dir_build}" && cd "${dir_build}"
           cmake -G "Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-x86_64.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
-            ../../
+            "${{ github.workspace }}"
           cmake --build ./
-          cp bin2header.exe stage/
-          cp ../../LICENSE.txt stage/
+          cp bin2header.exe "${{ env.stage }}"
 
       - name: Package 64-bit
         run: |
-          pwd
-          cd builds/win64/stage/
-          zip ../../bin2header-$(grep "^VERSION=" ../../../info.cfg | sed -e 's/^VERSION=//')-win64.zip *
+          pkgname="bin2header_${{ env.ver }}_win64.zip"
+          cd "${{ env.stage }}"
+          zip "${pkgname}" bin2header.exe LICENSE.txt
+          rm bin2header.exe
 
       - name: Compile 32-bit
         run: |
-          mkdir -p builds/win32/stage/ && cd builds/win32
+          dir_build="${{ github.workspace }}/build/win32"
+          mkdir -p "${dir_build}" && cd "${dir_build}"
           cmake -G "Unix Makefiles" \
             -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-i686.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
-            ../../
+            "${{ github.workspace }}"
           cmake --build ./
-          cp bin2header.exe stage/
-          cp ../../LICENSE.txt stage/
+          cp bin2header.exe "${{ env.stage }}"
 
       - name: Package 32-bit
         run: |
-          cd builds/win32/stage/
-          zip ../../bin2header-$(grep "^VERSION=" ../../../info.cfg | sed -e 's/^VERSION=//')-win32.zip *
+          pkgname="bin2header_${{ env.ver }}_win32.zip"
+          cd "${{ env.stage }}"
+          zip "${pkgname}" bin2header.exe LICENSE.txt
+          rm bin2header.exe
 
       - name: Package Python
         run: |
-          mkdir -p builds/python/stage/
-          cp src/bin2header.py builds/python/stage/
-          cp LICENSE.txt builds/python/stage/
-          cd builds/python/stage/
-          PYVERSION="$(grep "^PYVERSION=" ../../../info.cfg | sed -e 's/^PYVERSION=//')"
-          TARFILE="../../bin2header-${PYVERSION}-python.tar"
-          tar -cf "${TARFILE}" --mode=0755 bin2header.py
-          tar -uf "${TARFILE}" LICENSE.txt
-          xz -z9 "${TARFILE}"
+          pkgname="bin2header_${{ env.pyver }}_python.tar"
+          cd "${{ env.stage }}"
+          cp "${{ github.workspace }}/src/bin2header.py" "${{ env.stage }}"
+          tar -cf "${pkgname}" --mode=0755 bin2header.py
+          tar -uf "${pkgname}" LICENSE.txt
+          xz -z9 "${pkgname}"
+          rm bin2header.py
 
       - name: Package source
-        run: ./scripts/dist_source.sh
+        run: "${{ github.workspace }}/scripts/dist_source.sh"
 
       - name: Get changes
         run: sed -e '/^$/,$d' -e '1 s/^.*$/Changes:\n/' CHANGES.txt > release_notes.tmp
@@ -82,7 +99,7 @@ jobs:
         with:
           body_path: release_notes.tmp
           files: |
-            bin2header-*.tar.xz
-            builds/bin2header-*.zip
-            builds/bin2header-*-python.tar.xz
+            bin2header-${{ env.ver }}.tar.xz
+            build/stage/bin2header_${{ env.pyver }}_win*.zip
+            build/stage/bin2header_${{ env.ver }}_python.tar.xz
           prerelease: true
