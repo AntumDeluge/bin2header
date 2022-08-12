@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(bin2header
-	VERSION 0.3.0
+	VERSION 0.3.1
 	LANGUAGES CXX
 )
-set(PROJECT_PY_VERSION 0.1.2)
+set(PROJECT_PY_VERSION 0.3.1)
 
 set(NATIVE ON CACHE BOOL "Build native executable (set to \"OFF\" to configure for Python script)")
 

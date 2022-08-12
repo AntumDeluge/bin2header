@@ -19,7 +19,7 @@
 using namespace std;
 
 
-const string version = "0.3.0";
+const string version = "0.3.1";
 const string appname = "Binary to Header";
 string executable;
 

@@ -16,8 +16,8 @@ See [manpage](https://antumdeluge.github.io/bin2header/reference/bin2header.1.ht
 
 ## Downloads
 
-- Latest release: [v0.3.0](https://github.com/AntumDeluge/bin2header/releases/tag/v0.3.0)
-- Latest Python release: [v0.1.2](https://github.com/AntumDeluge/bin2header/releases/tag/v0.1.2)
+- Latest release: [v0.3.1](https://github.com/AntumDeluge/bin2header/releases/tag/v0.3.1)
+- Latest Python release: [v0.3.1](https://github.com/AntumDeluge/bin2header/releases/tag/v0.3.1)
 
 
 ## Building

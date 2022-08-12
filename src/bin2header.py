@@ -19,7 +19,7 @@ if sys.version_info.major < 3:
 __WIN32__ = "windows" in str(os.getenv("OS")).lower();
 
 appname = "Binary to Header"
-version = "0.1.2"
+version = "0.3.1"
 executable = os.path.basename(__file__)
 
 symbolcp = "©"

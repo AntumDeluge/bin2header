@@ -1,4 +1,4 @@
-next
+0.3.1
 - Updated cxxopts to 3.0.0
 - Added NATIVE option to CMake config (set to "OFF" to configure for Python script)
 - Updated Python script to same functionality as native binary

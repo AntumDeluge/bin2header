@@ -161,7 +161,7 @@
 <body>
 <header id="title-block-header">
 <h1 class="title">bin2header</h1>
-<p class="date">Aug 6, 2022</p>
+<p class="date">Aug 11, 2022</p>
 </header>
 <h1>NAME</h1>
 <p>Binary to Header</p>
@@ -180,20 +180,20 @@
 </dd>
 <dt><strong>-o</strong>, <strong>--output</strong></dt>
 <dd>
-<p>Set output file name.</p>
+<p>Output file name.</p>
 </dd>
 <dt><strong>-n</strong>, <strong>--hname</strong></dt>
 <dd>
-<p>Set header name.</p>
+<p>Header name. Default is file name with "." replaced by "_".</p>
 </dd>
 <dt><strong>-s</strong>, <strong>--chunksize</strong></dt>
 <dd>
-<p>Set the buffer chunk size (in bytes).<br />
+<p>Read buffer chunk size (in bytes).<br />
 Default: 1048576 (1 megabyte)</p>
 </dd>
 <dt><strong>-d</strong>, <strong>--nbdata</strong></dt>
 <dd>
-<p>Set number of bytes per line.<br />
+<p>Number of bytes to write per line.<br />
 Default: 12</p>
 </dd>
 <dt><strong>-c</strong>, <strong>--datacontent</strong></dt>
@@ -202,20 +202,22 @@ Default: 12</p>
 </dd>
 <dt><strong>-f</strong>, <strong>--offset</strong></dt>
 <dd>
-<p>Start reading at given offset from file beginning.</p>
+<p>Position offset to begin reading file (in bytes).<br />
+Default: 0</p>
 </dd>
 <dt><strong>-l</strong>, <strong>--length</strong></dt>
 <dd>
-<p>Number of bytes to process.</p>
+<p>Number of bytes to process (0 = all).<br />
+Default: 0</p>
 </dd>
 <dt><strong>-p</strong>, <strong>--pack</strong></dt>
 <dd>
-<p>Store data using 8, 16, or 32 bit integer types.<br />
+<p>Stored data type bit length (8/16/32).<br />
 Default: 8</p>
 </dd>
 <dt><strong>-e</strong>, <strong>--swap</strong></dt>
 <dd>
-<p>Swap endianess for 16 or 32 bit integer types.</p>
+<p>Set endianess to big endian for 16 &amp; 32 bit data types.</p>
 </dd>
 <dt><strong>--stdvector</strong></dt>
 <dd>
@@ -223,7 +225,7 @@ Default: 8</p>
 </dd>
 <dt><strong>--eol</strong></dt>
 <dd>
-<p>Set end of line character (cr, lf, or crlf).<br />
+<p>Set end of line character (cr/lf/crlf).<br />
 Default: lf</p>
 </dd>
 </dl>
