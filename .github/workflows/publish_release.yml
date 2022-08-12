@@ -97,6 +97,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
+          name: 'Version ${{ env.ver }}'
           body_path: release_notes.tmp
           files: |
             bin2header-${{ env.ver }}.tar.xz
