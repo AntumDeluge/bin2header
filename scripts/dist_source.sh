@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script for creating a distributable archive
+# script for creating a distributable source package
 
 cd "$(dirname "$0")/../"
 dir_root="$(pwd)"

@@ -71,7 +71,7 @@ jobs:
           xz -z9 "${TARFILE}"
 
       - name: Package source
-        run: ./scripts/dist.sh
+        run: ./scripts/dist_source.sh
 
       - name: Get changes
         run: sed -e '/^$/,$d' -e '1 s/^.*$/Changes:\n/' CHANGES.txt > release_notes.tmp
