@@ -66,7 +66,7 @@ jobs:
           dir_build="${{ github.workspace }}/build/linux32"
           mkdir -p "${dir_build}" && cd "${dir_build}"
           cmake -G "Unix Makefiles" \
-            -DCMAKE_TOOLCHAIN_FILE=cmake/i686-linux-gnu.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-i686-linux-gnu.cmake \
             -DSTATIC=ON \
             "${{ github.workspace }}"
           cmake --build ./
@@ -84,7 +84,7 @@ jobs:
           dir_build="${{ github.workspace }}/build/win64"
           mkdir -p "${dir_build}" && cd "${dir_build}"
           cmake -G "Unix Makefiles" \
-            -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-x86_64.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-x86_64-w64-mingw32.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             "${{ github.workspace }}"
@@ -103,7 +103,7 @@ jobs:
           dir_build="${{ github.workspace }}/build/win32"
           mkdir -p "${dir_build}" && cd "${dir_build}"
           cmake -G "Unix Makefiles" \
-            -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-i686.cmake \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-i686-w64-mingw32.cmake \
             -DSTATIC=ON \
             -DEMBED_ICON=ON \
             "${{ github.workspace }}"
