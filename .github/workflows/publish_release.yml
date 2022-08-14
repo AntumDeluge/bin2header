@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up build dependencies
-        run: sudo apt install mingw-w64 cmake
+        run: sudo apt install g++ mingw-w64 cmake
 
       - name: Set up environment
         run: |
@@ -39,7 +39,24 @@ jobs:
           echo "pyver=${pyver}" >> $GITHUB_ENV
           echo "stage=${stage}" >> $GITHUB_ENV
 
-      - name: Compile 64-bit
+      - name: Compile ELF (Linux) 64-bit
+        run: |
+          dir_build="${{ github.workspace }}/build/linux64"
+          mkdir -p "${dir_build}" && cd "${dir_build}"
+          cmake -G "Unix Makefiles" \
+            -DSTATIC=ON \
+            "${{ github.workspace }}"
+          cmake --build ./
+          cp bin2header "${{ env.stage }}"
+
+      - name: Package ELF (Linux) 64-bit
+        run: |
+          pkgname="bin2header_${{ env.ver }}_linux64.zip"
+          cd "${{ env.stage }}"
+          zip "${pkgname}" bin2header LICENSE.txt
+          rm bin2header
+
+      - name: Compile PE32 (Windows) 64-bit
         run: |
           dir_build="${{ github.workspace }}/build/win64"
           mkdir -p "${dir_build}" && cd "${dir_build}"
@@ -51,14 +68,14 @@ jobs:
           cmake --build ./
           cp bin2header.exe "${{ env.stage }}"
 
-      - name: Package 64-bit
+      - name: Package PE32 (Windows) 64-bit
         run: |
           pkgname="bin2header_${{ env.ver }}_win64.zip"
           cd "${{ env.stage }}"
           zip "${pkgname}" bin2header.exe LICENSE.txt
           rm bin2header.exe
 
-      - name: Compile 32-bit
+      - name: Compile PE32 (Windows) 32-bit
         run: |
           dir_build="${{ github.workspace }}/build/win32"
           mkdir -p "${dir_build}" && cd "${dir_build}"
@@ -70,7 +87,7 @@ jobs:
           cmake --build ./
           cp bin2header.exe "${{ env.stage }}"
 
-      - name: Package 32-bit
+      - name: Package PE32 (Windows) 32-bit
         run: |
           pkgname="bin2header_${{ env.ver }}_win32.zip"
           cd "${{ env.stage }}"
@@ -101,6 +118,6 @@ jobs:
           body_path: release_notes.tmp
           files: |
             bin2header-${{ env.ver }}.tar.xz
-            build/stage/bin2header_${{ env.ver }}_win*.zip
+            build/stage/bin2header_${{ env.ver }}_*.zip
             build/stage/bin2header_${{ env.pyver }}_python.tar.xz
           prerelease: true
