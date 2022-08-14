@@ -101,6 +101,6 @@ jobs:
           body_path: release_notes.tmp
           files: |
             bin2header-${{ env.ver }}.tar.xz
-            build/stage/bin2header_${{ env.pyver }}_win*.zip
-            build/stage/bin2header_${{ env.ver }}_python.tar.xz
+            build/stage/bin2header_${{ env.ver }}_win*.zip
+            build/stage/bin2header_${{ env.pyver }}_python.tar.xz
           prerelease: true
