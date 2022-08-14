@@ -21,7 +21,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up build dependencies
-        run: sudo apt install g++ mingw-w64 cmake
+        run: |
+          sudo apt install \
+            g++ \
+            g++-multilib-i686-linux-gnu \
+            mingw-w64 \
+            cmake
 
       - name: Set up environment
         run: |
@@ -52,6 +57,24 @@ jobs:
       - name: Package ELF (Linux) 64-bit
         run: |
           pkgname="bin2header_${{ env.ver }}_linux64.zip"
+          cd "${{ env.stage }}"
+          zip "${pkgname}" bin2header LICENSE.txt
+          rm bin2header
+
+      - name: Compile ELF (Linux) 32-bit
+        run: |
+          dir_build="${{ github.workspace }}/build/linux32"
+          mkdir -p "${dir_build}" && cd "${dir_build}"
+          cmake -G "Unix Makefiles" \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/i686-linux-gnu.cmake \
+            -DSTATIC=ON \
+            "${{ github.workspace }}"
+          cmake --build ./
+          cp bin2header "${{ env.stage }}"
+
+      - name: Package ELF (Linux) 32-bit
+        run: |
+          pkgname="bin2header_${{ env.ver }}_linux32.zip"
           cd "${{ env.stage }}"
           zip "${pkgname}" bin2header LICENSE.txt
           rm bin2header
