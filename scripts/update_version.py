@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import codecs, errno, os, re, sys
+from datetime import datetime
 
 file_exe = os.path.basename(__file__)
 dir_root = os.path.normpath(os.path.join(os.path.dirname(__file__), "../"))
@@ -168,21 +169,31 @@ def updateMan():
 	print()
 	printInfo("i", "Updating manpage ...")
 
+	dnow = datetime.now()
+	mandate = "{} {}, {}".format(dnow.strftime("%b"), dnow.day, dnow.year)
+
 	file_man = os.path.normpath(os.path.join(dir_root, "man/bin2header.1"))
 	if not os.path.isfile(file_man):
 		printInfo("e", "man/bin2header.1 not found")
 		return errno.ENOENT
 
-	old_text = readText(file_man)
-	new_text = re.sub("\"bin2header-.*\"$", "\"bin2header-{}\"".format(ver),
-			old_text,
-			flags=re.M)
+	old_lines = readLines(file_man)
+	new_lines = list(old_lines)
 
-	if new_text == old_text:
+	for idx in range(len(new_lines)):
+		li = new_lines[idx]
+		if li.startswith(".TH bin2header 1 "):
+			li = re.sub(r'^\.TH bin2header 1 ".*?"', r'.TH bin2header 1 "{}"'.format(mandate), li)
+			li = re.sub(r'"bin2header-.*"$', r'"bin2header-{}"'.format(ver), li)
+			new_lines[idx] = li
+
+			break
+
+	if new_lines == old_lines:
 		printInfo("i", "Manpage already up to date")
 		return 0
 
-	writeText(file_man, new_text)
+	writeLines(file_man, new_lines)
 	printInfo("i", "Updated manpage")
 	return 0
 
