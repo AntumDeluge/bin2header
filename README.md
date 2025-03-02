@@ -82,6 +82,7 @@ Options:<br>
 
 - [Codeberg](https://codeberg.org/AntumDeluge/bin2header)
 - [GitHub](https://github.com/AntumDeluge/bin2header)
+- [GitLab](https://gitlab.com/AntumDeluge/bin2header)
 - [SourceForge](https://sf.net/p/bin2header)
 
 ## Acknowledgements
