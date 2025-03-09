@@ -299,7 +299,7 @@ int convert(const string fin, string fout, string hname, const bool stdvector) {
 
 		ofs << "};" << eol;
 		if (stdvector) {
-			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<char> "
+			ofs << eol << "#ifdef __cplusplus" << eol << "static const std::vector<unsigned char> "
 					<< hname << "_v(" << hname << ", " << hname << " + sizeof("
 					<< hname << "));" << eol << "#endif" << eol;
 		}
