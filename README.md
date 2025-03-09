@@ -84,6 +84,8 @@ Options:<br>
 - [GitHub](https://github.com/AntumDeluge/bin2header)
 - [GitLab](https://gitlab.com/AntumDeluge/bin2header)
 - [SourceForge](https://sf.net/p/bin2header)
+- [TODO list](TODO.txt)
+- [known bugs](BUGS.txt)
 
 ## Acknowledgements
 
