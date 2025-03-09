@@ -3,7 +3,7 @@
 /.pydevproject
 
 # Output build
-build/
+build*/
 Makefile
 man/*.gz
 *.exe
